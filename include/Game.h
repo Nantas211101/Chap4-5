@@ -28,6 +28,6 @@ class Game{
     // Small variable
     private:
         bool mIsMoveUp = false, mIsMoveDown = false, mIsMoveLeft = false, mIsMoveRight = false;
-        
+        bool mIsPaused = false;
 };
 
