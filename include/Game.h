@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
+#include "CommandQueue.hpp"
+#include "Player.hpp"
 
 const float PlayerSpeed = 100.f;
 const auto TimePerFrame = sf::seconds(1.f /  60.f);
@@ -13,6 +15,7 @@ class Game{
     // main function
     private:
         void            processEvents();
+        void            processInput();
         void            update(sf::Time deltaTime);
         void            render();
 
@@ -23,8 +26,7 @@ class Game{
     // Big variable
     private:
         sf::RenderWindow mWindow;
-        sf::Texture mTexture;
-        sf::Sprite mPlayer;
+        Player mPlayer;
         World mWorld;
     // Small variable
     private:

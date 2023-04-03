@@ -5,14 +5,8 @@
 
 Game::Game():
     mWindow(sf::VideoMode(640, 480), "World"), 
-    mTexture(),
     mPlayer(),
     mWorld(mWindow){
-    if(!mTexture.loadFromFile("C:/Users/ADMIN/Pictures/Samsung Flow/IMG_20230214_230223_678.jpg")){
-        // Handle loading error    
-    }
-    mPlayer.setTexture(mTexture);
-    mPlayer.setPosition(100.f, 100.f);
 }
 
 void Game::run(){
@@ -46,6 +40,19 @@ void Game::processEvents(){
                 break;
         }
     }
+}
+
+void Game::processInput(){
+    CommandQueue& commands = mWorld.getCommandQueue();
+
+    sf::Event event;
+    while(mWindow.pollEvent(event)){
+        mPlayer.handleEvent(event, commands);
+
+        if(event.type == sf::Event::Closed)
+            mWindow.close();            
+    }
+    mPlayer.handleRealtimeInput(commands);
 }
 
 void Game::update(sf::Time deltaTime){

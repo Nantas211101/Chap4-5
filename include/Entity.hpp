@@ -19,6 +19,7 @@ public:
     void setVelocity(sf::Vector2f velocity);
     void setVelocity(float vx, float vy);
     auto getVelocity() -> sf::Vector2f const;
+    void accelerate(sf::Vector2f velocity);
 
 private:
     virtual void updateCurrent(sf::Time dt);

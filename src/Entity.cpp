@@ -19,3 +19,7 @@ auto Entity::getVelocity() -> sf::Vector2f const
 void Entity::updateCurrent(sf::Time dt){
     move(mVelocity * dt.asSeconds());
 }
+
+void Entity::accelerate(sf::Vector2f velocity){
+    setVelocity(getVelocity() + velocity);
+}
