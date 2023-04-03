@@ -4,9 +4,10 @@
 // Main function
 
 Game::Game():
-    mWindow(sf::VideoMode(640, 480), "SFML Application"), 
+    mWindow(sf::VideoMode(640, 480), "World"), 
     mTexture(),
-    mPlayer(){
+    mPlayer(),
+    mWorld(mWindow){
     if(!mTexture.loadFromFile("C:/Users/ADMIN/Pictures/Samsung Flow/IMG_20230214_230223_678.jpg")){
         // Handle loading error    
     }
@@ -48,31 +49,34 @@ void Game::processEvents(){
 }
 
 void Game::update(sf::Time deltaTime){
-    sf::Vector2f movement(0.f, 0.f);
-    // if(mIsMoveUp)
-    //     movement.y -= PlayerSpeed;
-    // if(mIsMoveDown)
-    //     movement.y += PlayerSpeed;
-    // if(mIsMoveLeft)
-    //     movement.x -= PlayerSpeed;
-    // if(mIsMoveRight)
-    //     movement.x += PlayerSpeed;
+    // sf::Vector2f movement(0.f, 0.f);
+    // // if(mIsMoveUp)
+    // //     movement.y -= PlayerSpeed;
+    // // if(mIsMoveDown)
+    // //     movement.y += PlayerSpeed;
+    // // if(mIsMoveLeft)
+    // //     movement.x -= PlayerSpeed;
+    // // if(mIsMoveRight)
+    // //     movement.x += PlayerSpeed;
     
-    // Using the real time input
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        movement.y -= PlayerSpeed;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        movement.y += PlayerSpeed;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        movement.x -= PlayerSpeed;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        movement.x += PlayerSpeed;
-    mPlayer.move(movement * deltaTime.asSeconds());
+    // // Using the real time input
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    //     movement.y -= PlayerSpeed;
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    //     movement.y += PlayerSpeed;
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    //     movement.x -= PlayerSpeed;
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    //     movement.x += PlayerSpeed;
+    // mPlayer.move(movement * deltaTime.asSeconds());
+    mWorld.update(deltaTime);
 }
 
 void Game::render(){
     mWindow.clear();
-    mWindow.draw(mPlayer);
+    mWorld.draw();
+
+    mWindow.setView(mWindow.getDefaultView());
     mWindow.display();
 }
 //===================================================//

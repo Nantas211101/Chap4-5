@@ -41,9 +41,11 @@ public:
     auto getWorldPosition() -> sf::Vector2f const;
 
     // Command and category
+public:
+    void onCommand(const Command &command, sf::Time dt);
+
 private:
     auto getCategory() -> unsigned int const;
-    void onCommand(const Command &command, sf::Time dt);
 
 private:
     std::vector<Ptr> mChildren;

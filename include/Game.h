@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "World.hpp"
 
 const float PlayerSpeed = 100.f;
 const auto TimePerFrame = sf::seconds(1.f /  60.f);
@@ -24,7 +25,7 @@ class Game{
         sf::RenderWindow mWindow;
         sf::Texture mTexture;
         sf::Sprite mPlayer;
-
+        World mWorld;
     // Small variable
     private:
         bool mIsMoveUp = false, mIsMoveDown = false, mIsMoveLeft = false, mIsMoveRight = false;
