@@ -1,7 +1,9 @@
 #pragma once
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Command.hpp"
 #include "CommandQueue.hpp"
+#include "AircraftMover.hpp"
 
 class Player
 {

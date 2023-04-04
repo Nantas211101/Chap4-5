@@ -43,7 +43,7 @@ void Game::processEvents(){
 }
 
 void Game::processInput(){
-    CommandQueue& commands = mWorld.getCommandQueue();
+    CommandQueue& commands = mWorld.getCommandQueue(); // take reference so that it can be change
 
     sf::Event event;
     while(mWindow.pollEvent(event)){
