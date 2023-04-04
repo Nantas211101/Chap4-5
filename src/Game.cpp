@@ -13,11 +13,13 @@ void Game::run(){
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     while(mWindow.isOpen()){
-        processEvents();
+        // processEvents();
+        processInput();
         timeSinceLastUpdate += clock.restart();
         while(timeSinceLastUpdate > TimePerFrame){
             timeSinceLastUpdate -= TimePerFrame;
-            processEvents();
+            // processEvents();
+            processInput();
             if(!mIsPaused)
                 update(TimePerFrame);
         }

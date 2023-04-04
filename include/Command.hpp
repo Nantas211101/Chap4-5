@@ -1,13 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <functional>
-#include "SceneNode.hpp"
 #include "Category.hpp"
+#include <assert.h>
+
+class SceneNode;
 
 struct Command
 {
     // Initialize
-    Command(){};
+    Command();
 
     // Variables
     std::function<void(SceneNode &, sf::Time)> action;
@@ -21,8 +23,8 @@ std::function<void(SceneNode&, sf::Time)> derivedAction(Function fn){
         assert(dynamic_cast<GameObject*>(&node) != nullptr);
 
         // Downcast node and invoke function on it
-        fn(static_cast<GameObject&(node), dt);
-    }
+        fn(static_cast<GameObject&>(node), dt);
+    };
 }
 
 /*

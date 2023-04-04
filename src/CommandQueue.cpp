@@ -7,6 +7,7 @@ void CommandQueue::push(const Command &command){
 auto CommandQueue::pop() -> Command{
     Command ans = mQueue.front();
     mQueue.pop();
+    return ans;
 }
 
 bool CommandQueue::isEmpty() const{

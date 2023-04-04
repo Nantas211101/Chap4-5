@@ -12,7 +12,7 @@ World::World(sf::RenderWindow &window) :
         mWorldView.getSize().x / 2.f,                           // X position
         mWorldBounds.height - mWorldView.getSize().y / 2.f),  // Y position
     mPlayerAircraft(nullptr),
-    mScrollSpeed(0.f),
+    mScrollSpeed(30.f),
     mCommandQueue(){
     
     loadTextures();
@@ -87,20 +87,20 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
+    // Init
     mWorldView.move(0.f, mScrollSpeed * dt.asSeconds());
-
-    sf::Vector2f position = mPlayerAircraft->getPosition();
-    sf::Vector2f velocity = mPlayerAircraft->getVelocity();
-
-    if(position.x <= mWorldBounds.left + 150
-    || position.x >= mWorldBounds.left + mWorldBounds.width - 150){
-        velocity.x = -velocity.x;
-        mPlayerAircraft->setVelocity(velocity);
-    }
-
-    // Forward commands to the scene graph
+    mPlayerAircraft->setVelocity(0.f, 0.f);
+    
+    // onCommand
     while(!mCommandQueue.isEmpty())
         mSceneGraph.onCommand(mCommandQueue.pop(), dt);
+    
+    // change the velocity
+    sf::Vector2f velocity = mPlayerAircraft->getVelocity();
+    if(velocity.x != 0.f && velocity.y != 0.f)
+        mPlayerAircraft->setVelocity(velocity / std::sqrt(2.f));
+
+    mPlayerAircraft->accelerate(0.f, mScrollSpeed); // accelerate according to the ScrollSpeed
 
     // Regular update step
     mSceneGraph.update(dt);
@@ -108,4 +108,23 @@ void World::update(sf::Time dt){
 
 auto World::getCommandQueue() -> CommandQueue&{
     return mCommandQueue;
+}
+
+void World::setPosition(){
+    sf::FloatRect viewBounds(
+        mWorldView.getCenter() - mWorldView.getSize() / 2.f,
+        mWorldView.getSize());   
+    const float borderDistance = 40.f;
+
+    sf::Vector2f position = mPlayerAircraft->getPosition();
+    // bounder the position inside the viewBounds with the borderDistance
+    // remember the coordinate according to reverse cartesian (similar to the table)
+    position.x = std::max(position.x, viewBounds.left + borderDistance);
+    position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
+    position.y = std::max(position.y, viewBounds.top + borderDistance);
+    position.y = std::min(position.y, viewBounds.top + viewBounds.height - borderDistance);
+
+    // return the position
+    mPlayerAircraft->setPosition(position);
+
 }

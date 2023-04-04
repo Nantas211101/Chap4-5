@@ -13,6 +13,6 @@ namespace Category
     };
 }
 
-unsigned int anyAircraft    = Category::PlayerAircraft 
-                            | Category::AlliedAircraft 
-                            | Category::EnemyAircraft;
+// unsigned int anyAircraft    = Category::PlayerAircraft 
+//                             | Category::AlliedAircraft 
+//                             | Category::EnemyAircraft;
