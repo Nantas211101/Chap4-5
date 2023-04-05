@@ -6,51 +6,31 @@ Player::Player(){
     mKeyBinding[sf::Keyboard::Up] = MoveUp;
     mKeyBinding[sf::Keyboard::Down] = MoveDown;
 
-    mActionBinding[MoveLeft].action = [] (SceneNode &node, sf::Time dt){
-        node.move(-playerSpeed * dt.asSeconds(), 0.f);
-    };
-
-    mActionBinding[MoveRight].action = [] (SceneNode &node, sf::Time dt){
-        node.move(playerSpeed * dt.asSeconds(), 0.f);
-    };
-
-    mActionBinding[MoveUp].action = [] (SceneNode &node, sf::Time dt){
-        node.move(0.f, -playerSpeed * dt.asSeconds());
-    };
-
-    mActionBinding[MoveDown].action = [] (SceneNode &node, sf::Time dt){
-        node.move(0.f, playerSpeed * dt.asSeconds());
-    };
+    initAction();
 
     for(auto &pair : mActionBinding)
         pair.second.category = Category::PlayerAircraft;
 }
 
 void Player::handleRealtimeInput(CommandQueue& commands){
-
     for(auto pair : mKeyBinding){
         if(sf::Keyboard::isKeyPressed(pair.first) && isRealtimeAction(pair.second))
             commands.push(mActionBinding[pair.second]);
     }
     //
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        Command moveUp;
-        moveUp.category = Category::PlayerAircraft;
-        moveUp.action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
-        commands.push(moveUp);
-    }
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+    //     Command moveUp;
+    //     moveUp.category = Category::PlayerAircraft;
+    //     moveUp.action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
+    //     commands.push(moveUp);
+    // }
 }
 
 void Player::handleEvent(const sf::Event& event, CommandQueue& commands){
-    if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P){
-        Command output;
-        output.category = Category::PlayerAircraft;
-        output.action = [] (SceneNode &s, sf::Time){
-            std::cout   << s.getPosition().x << "," 
-                        << s.getPosition().y << "\n";
-        };
-        commands.push(output);
+    if(event.type == sf::Event::KeyPressed){
+        for(auto &pair : mKeyBinding)
+            if(event.key.code == pair.first)
+                commands.push(mActionBinding[pair.second]);
     }
 }
 
@@ -58,15 +38,6 @@ void Player::assignKey(Action action, sf::Keyboard::Key key){
     for(auto itr = mKeyBinding.begin(); itr != mKeyBinding.end(); ++itr)
         if(itr->second == action)
             mKeyBinding.erase(itr);
-
-    // for (auto itr = mKeyBinding.begin(); itr != mKeyBinding.end(); ) {
-    //     if (itr->second == action) {
-    //         mKeyBinding.erase(itr++);
-    //     }
-    //     else {
-    //         ++itr;
-    //     }
-    // }
     mKeyBinding[key] = action;
 }
 
@@ -82,4 +53,29 @@ bool Player::isRealtimeAction(Action action){
         return true;
     }
     return false;
+}
+
+void Player::initAction(){
+    // Way 1 a little bit messy
+    // mActionBinding[MoveLeft].action = [] (SceneNode &node, sf::Time dt){
+    //     node.move(-playerSpeed * dt.asSeconds(), 0.f);
+    // };
+
+    // mActionBinding[MoveRight].action = [] (SceneNode &node, sf::Time dt){
+    //     node.move(playerSpeed * dt.asSeconds(), 0.f);
+    // };
+
+    // mActionBinding[MoveUp].action = [] (SceneNode &node, sf::Time dt){
+    //     node.move(0.f, -playerSpeed * dt.asSeconds());
+    // };
+
+    // mActionBinding[MoveDown].action = [] (SceneNode &node, sf::Time dt){
+    //     node.move(0.f, playerSpeed * dt.asSeconds());
+    // };
+
+    // beautiful way
+    mActionBinding[MoveLeft].action = derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
+    mActionBinding[MoveRight].action = derivedAction<Aircraft>(AircraftMover(playerSpeed, 0.f));
+    mActionBinding[MoveUp].action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
+    mActionBinding[MoveDown].action = derivedAction<Aircraft>(AircraftMover(0.f, playerSpeed));
 }

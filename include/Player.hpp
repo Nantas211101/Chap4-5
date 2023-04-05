@@ -4,7 +4,7 @@
 #include "Command.hpp"
 #include "CommandQueue.hpp"
 #include "AircraftMover.hpp"
-const float playerSpeed = 50.f;
+const float playerSpeed = 100.f;
 
 class Player
 {
@@ -17,6 +17,7 @@ class Player
             MoveRight,
             MoveUp,
             MoveDown,
+            CountMove,
         };
         
         void assignKey(Action action, sf::Keyboard::Key key);
@@ -28,7 +29,9 @@ class Player
 
     private:
         static bool isRealtimeAction(Action action);
-
+    
+    private:
+        void initAction();
     private:
         std::map<sf::Keyboard::Key, Action> mKeyBinding;
         std::map<Action, Command>           mActionBinding;

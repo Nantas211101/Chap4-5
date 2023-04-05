@@ -12,7 +12,7 @@ World::World(sf::RenderWindow &window) :
         mWorldView.getSize().x / 2.f,                           // X position
         mWorldBounds.height - mWorldView.getSize().y / 2.f),  // Y position
     mPlayerAircraft(nullptr),
-    mScrollSpeed(-30.f),
+    mScrollSpeed(-50.f),
     mCommandQueue(){
     
     loadTextures();

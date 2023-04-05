@@ -7,9 +7,9 @@
 #include <array>
 #include "CommandQueue.hpp"
 #include <math.h>
-const std::string Path_Eagle = "./resource/eagle.png"; // the adress will be use when you run the .exe which mean the address should according to the place you call exe
-const std::string Path_Raptor = "./resource/Raptor.jpg";
-const std::string Path_Desert = "./resource/Desert.jpg";
+const std::string Path_Eagle = "./resource/Textures/Eagle.png"; // the adress will be use when you run the .exe which mean the address should according to the place you call exe
+const std::string Path_Raptor = "./resource/Textures/Raptor.png";
+const std::string Path_Desert = "./resource/Textures/Desert.jpg";
 class World : private sf::NonCopyable
 {
 public:

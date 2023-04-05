@@ -6,23 +6,34 @@
 Game::Game():
     mWindow(sf::VideoMode(640, 480), "World"), 
     mPlayer(),
-    mWorld(mWindow){
+    mWorld(mWindow),
+    mFont(),
+    mStayText(),
+    mStayUpdateTime(),
+    mStayNumFrames(0){
+        mWindow.setKeyRepeatEnabled(false);
+
+        mFont.loadFromFile(Path_Font);
+        mStayText.setFont(mFont);
+        mStayText.setPosition(5.f, 5.f);
+        mStayText.setCharacterSize(10);
 }
 
 void Game::run(){
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     while(mWindow.isOpen()){
-        // processEvents();
-        processInput();
-        timeSinceLastUpdate += clock.restart();
+        // processInput(); 
+        // delete this line because now process even have realtimeinput so to keep the fps we have to delte
+        sf::Time elapsedTime = clock.restart();
+        timeSinceLastUpdate += elapsedTime;
         while(timeSinceLastUpdate > TimePerFrame){
             timeSinceLastUpdate -= TimePerFrame;
-            // processEvents();
             processInput();
             if(!mIsPaused)
                 update(TimePerFrame);
         }
+        updateStatic(elapsedTime);
         render();
     }
 }
@@ -50,9 +61,17 @@ void Game::processInput(){
     sf::Event event;
     while(mWindow.pollEvent(event)){
         mPlayer.handleEvent(event, commands);
-
-        if(event.type == sf::Event::Closed)
-            mWindow.close();            
+        switch(event.type){
+            case sf::Event::GainedFocus:
+                mIsPaused = false;
+                break;
+            case sf::Event::LostFocus:
+                mIsPaused = true;
+                break;
+            case sf::Event::Closed:
+                mWindow.close();
+                break;
+        }
     }
     mPlayer.handleRealtimeInput(commands);
 }
@@ -86,6 +105,7 @@ void Game::render(){
     mWorld.draw();
 
     mWindow.setView(mWindow.getDefaultView());
+    mWindow.draw(mStayText);
     mWindow.display();
 }
 //===================================================//
@@ -105,5 +125,21 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed){
         mIsMoveLeft = isPressed;
     else if(key == sf::Keyboard::D)
         mIsMoveRight = isPressed;
+}
+
+// The FPS showing follow the SFML
+void Game::updateStatic(sf::Time elapsedTime){
+    mStayUpdateTime += elapsedTime;
+    mStayNumFrames += 1;
+
+    if(mStayUpdateTime >= sf::seconds(1.0f)){
+        mStayText.setString(
+            "Frames / Second = " + toString(mStayNumFrames) + "\n" +
+            // mStayNumFrames can be consider at Numofupdate
+            "Time / Update = " + toString(mStayUpdateTime.asSeconds() / mStayNumFrames) + "us");
+        // reset the mStay
+        mStayUpdateTime -= sf::seconds(1.0f);
+        mStayNumFrames = 0;
+    }
 }
 //=========================================================//

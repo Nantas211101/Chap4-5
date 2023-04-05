@@ -45,7 +45,7 @@ public:
     void onCommand(const Command &command, sf::Time dt);
 
 private:
-    auto getCategory() -> unsigned int const;
+    virtual unsigned int const getCategory();
 
 private:
     std::vector<Ptr> mChildren;

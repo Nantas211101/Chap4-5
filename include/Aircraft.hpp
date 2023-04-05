@@ -16,7 +16,7 @@ public:
     virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
 
 public:
-    auto getCategory() -> unsigned int const;
+    virtual unsigned int const getCategory();
 
 private:
     Type mType;
