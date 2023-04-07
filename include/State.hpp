@@ -2,11 +2,23 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "StateStack.hpp"
+#include "ResourceHolder.hpp"
+#include "Player.hpp"
 
 class State{
     public:
         typedef std::unique_ptr<State> S_Ptr;
-        struct Context {};
+        struct Context{
+            Context(sf::RenderWindow& window,
+                    TextureHolder& textures,
+                    FontHolder& fonts,
+                    Player& player);
+            
+            sf::RenderWindow* window;
+            TextureHolder* textures;
+            FontHolder* fonts;
+            Player* player;
+        };
     
     public:
                         State(StateStack& stack, Context context);
