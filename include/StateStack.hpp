@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include "State.hpp"
+#include <assert.h>
 
 class StateStack : private sf::NonCopyable{
     public:
@@ -33,7 +34,7 @@ class StateStack : private sf::NonCopyable{
 
     private:
         struct PendingChange{
-            Action      Action;
+            Action      action;
             States::ID  stateID;
         };
 
