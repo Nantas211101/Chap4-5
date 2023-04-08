@@ -1,4 +1,5 @@
-#pragma 
+#pragma once
+#include <SFML/Graphics.hpp>
 
 namespace Textures{
     enum ID{
@@ -18,5 +19,5 @@ namespace Fonts{
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
-typedef ResourceHolder<sf::Textures, Textures::ID> TextureHolder;
-typedef ResourceHolder<sf::Fonts, Fonts::ID> FontHolder;
+typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
+typedef ResourceHolder<sf::Font, Fonts::ID> FontHolder;

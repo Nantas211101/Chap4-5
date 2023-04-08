@@ -1,6 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <StateStack.hpp>
+#include "StateStack.hpp"
+#include "ResourceIdentifiers.hpp"
+#include "ResourceHolder.hpp"
+#include "Player.hpp"
+#include "State.hpp"
+#include "StringConvert.hpp"
+
+const std::string Path_TitleScreen = "resource/Textures/TitleScreen";
+const std::string Path_Font = "resource/Sansation.ttf";
 
 class Application{
 
@@ -31,4 +39,4 @@ class Application{
 		sf::Text				mStayText;
 		sf::Time				mStayUpdateTime;
 		std::size_t				mStayNumFrames;
-}
+};
