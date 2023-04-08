@@ -20,7 +20,7 @@ class StateStack : private sf::NonCopyable{
         
         void update(sf::Time dt);
         void draw();
-        void handleEvent(const sf::Event *event);
+        void handleEvent(const sf::Event &event);
 
         // State manipulating with stack
         void pushState(States::ID stateID);
