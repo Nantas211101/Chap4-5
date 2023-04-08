@@ -11,9 +11,10 @@ class MenuState : public State{
         virtual void draw();
         virtual bool update(sf::Time dt);
         virtual bool handleEvent(const sf::Event &event);
+        void updateOptionText();
 
     private:
-        void setup_menu_text(const std::string &text, const sf::Vector2f additionPos);
+        void setMenuText(const std::string &text, const sf::Vector2f additionPos, const sf::Font &font, State::Context &context);
 
     private:
         enum OptionNames{

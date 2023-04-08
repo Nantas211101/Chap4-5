@@ -20,7 +20,7 @@ TitleState::TitleState(StateStack &stack, Context context):
 bool TitleState::handleEvent(const sf::Event &event){
     if(event.type ==sf::Event::KeyPressed){
         requestStackPop(); // pop the title screen
-        requestStackPush(States::Menu); // push the menu screen
+        requestStackPush(States::Menu); // push the menuState screen
     }
 
     return true;
