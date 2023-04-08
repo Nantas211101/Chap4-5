@@ -1,9 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "StateStack.hpp"
 #include "ResourceHolder.hpp"
 #include "Player.hpp"
+
+class StateStack;  
 
 class State{
     public:
@@ -22,7 +23,7 @@ class State{
     
     public:
                         State(StateStack& stack, Context context);
-        virtual         ~State();
+        // virtual         ~State();
 
         virtual void    draw() = 0;
         virtual bool    update(sf::Time dt) = 0;
