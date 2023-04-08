@@ -19,5 +19,16 @@ class Application{
 
 
     private:
-        StateStack mStateStack;
+        static const sf::Time	TimePerFrame;
+
+		sf::RenderWindow		mWindow;
+		TextureHolder			mTextures;
+	  	FontHolder				mFonts;
+		Player					mPlayer;
+
+		StateStack				mStateStack;
+
+		sf::Text				mStayText;
+		sf::Time				mStayUpdateTime;
+		std::size_t				mStayNumFrames;
 }
