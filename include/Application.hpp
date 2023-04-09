@@ -6,6 +6,12 @@
 #include "Player.hpp"
 #include "State.hpp"
 #include "StringConvert.hpp"
+#include "StateIdentifiers.hpp"
+// Include all the state
+#include "TitleState.hpp"
+#include "MenuState.hpp"
+#include "GameState.hpp"
+#include "PauseState.hpp"
 
 const std::string Path_TitleScreen = "resource/Textures/TitleScreen";
 const std::string Path_Font = "resource/Sansation.ttf";

@@ -1,19 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "ResourceIdentifiers.hpp"
+#include "StateIdentifiers.hpp"
 #include "ResourceHolder.hpp"
-#include "Player.hpp"
 
 class StateStack;  
-
+class Player;
 class State{
     public:
         typedef std::unique_ptr<State> S_Ptr;
         struct Context{
-            Context(sf::RenderWindow& window,
-                    TextureHolder& textures,
-                    FontHolder& fonts,
-                    Player& player);
+            Context(sf::RenderWindow &window, TextureHolder &textures, FontHolder &fonts, Player &player);
             
             sf::RenderWindow* window;
             TextureHolder* textures;
@@ -22,8 +20,8 @@ class State{
         };
     
     public:
-                        State(StateStack& stack, Context context);
-        // virtual         ~State();
+                        State(StateStack &stack, Context context);
+        virtual         ~State();
 
         virtual void    draw() = 0;
         virtual bool    update(sf::Time dt) = 0;
@@ -34,7 +32,7 @@ class State{
         void requestStackPop();
         void requestStateClear();
 
-        Context getContext() const;
+        auto getContext() -> Context const;
 
     private:
         StateStack* mStack;

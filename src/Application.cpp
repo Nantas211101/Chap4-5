@@ -5,7 +5,7 @@
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application():
-    mWindow(sf::VideoMode(640, 480), "States", sf::Style::Close),
+    mWindow(sf::VideoMode(640, 480), "Game States World", sf::Style::Close),
     mTextures(),
     mFonts(),
     mPlayer(),
@@ -27,7 +27,7 @@ Application::Application():
 
         registerStates();
         // start with the title state
-        mStateStack.pushState(States::Title)
+        mStateStack.pushState(States::Title);
 }
 
 void Application::registerStates(){

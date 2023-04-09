@@ -3,11 +3,11 @@ build: compile
 compile:
 	cd ./obj && g++ -c ../src/*.cpp -I "D:\SFML-2.5.1\include"
 #	cd ./obj && g++ -c ../src/Game.cpp -I "D:\SFML-2.5.1\include"
-#Player.cpp
-#Command.cpp
-#CommandQueue.cpp
-#Entity.hpp
-#Game.hpp
+# application
+# StateStack
+# State	
+# GameState
+#
 #
 #
 #

@@ -1,27 +1,60 @@
 #include "../include/StateStack.hpp"
 
-template <typename T>
-void StateStack::registerState(States::ID stateID){
-    mFactories[stateID] = [this] (){
-        return State::S_Ptr(new T(*this, mContext));
+StateStack::StateStack(State::Context context):
+    mStack(),
+    mPendingList(),
+    mContext(context),
+    mFactories(){
+}
+
+void StateStack::update(sf::Time elapsedTime){
+    // Iterate from top to bottom, stop if function return false
+    for(auto itr = mStack.rbegin(); itr != mStack.rend(); ++itr){
+        if(!(*itr)->update(elapsedTime))
+            break;
     }
+
+    applyPendingChanges();
 }
 
-void StateStack::createState(States::ID stateID) -> State::S_Ptr{
-    auto found = mFactories.find(stateID);
-    assert(found != mFactories.end());
-    return found->second();
+void StateStack::draw(){
+    // Draw state from bottom to top
+    for(State::S_Ptr &state : mStack)
+        state->draw();
 }
-
-// Input
 
 void StateStack::handleEvent(const sf::Event& event){
+    // Iterate from top to bottom, stop if function return false
     for(auto itr = mStack.rbegin(); itr != mStack.rend(); ++itr){
         if(!(*itr)->handleEvent(event))
             return;
     }
 
     applyPendingChanges();
+}
+
+// State manipulating on PendingList
+
+void StateStack::pushState(States::ID stateID){
+    mPendingList.push_back(PendingChange(Push, stateID));
+}   
+
+void StateStack::popState(){
+    mPendingList.push_back(PendingChange(Pop));
+}
+
+void StateStack::clearStates(){
+    mPendingList.push_back(PendingChange(Clear));
+}
+
+auto StateStack::isEmpty() -> bool const{
+    return mStack.empty();
+}
+
+auto StateStack::createState(States::ID stateID) -> State::S_Ptr{
+    auto found = mFactories.find(stateID);
+    assert(found != mFactories.end());
+    return found->second();
 }
 
 void StateStack::applyPendingChanges(){
@@ -35,7 +68,7 @@ void StateStack::applyPendingChanges(){
                 mStack.pop_back();
                 break;
             
-            case clear;
+            case Clear:
                 mStack.clear();
                 break;
         }
@@ -44,3 +77,7 @@ void StateStack::applyPendingChanges(){
     mPendingList.clear();
 }
 
+StateStack::PendingChange::PendingChange(Action action, States::ID stateID):
+    action(action),
+    stateID(stateID){
+}
