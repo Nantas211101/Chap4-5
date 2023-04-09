@@ -3,6 +3,8 @@
 #include "StateStack.hpp"
 #include "State.hpp"
 #include "ResourceIdentifiers.hpp"
+#include "ResourceHolder.hpp"
+#include "TextureManipulate.hpp"
 
 class MenuState : public State{
     public:
@@ -13,7 +15,7 @@ class MenuState : public State{
         virtual bool handleEvent(const sf::Event &event);
         void updateOptionText();
 
-    private:
+    private: // Additional
         void setMenuText(const std::string &text, const sf::Vector2f additionPos, const sf::Font &font, State::Context &context);
 
     private:

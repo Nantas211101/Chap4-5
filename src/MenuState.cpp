@@ -30,8 +30,9 @@ void MenuState::setMenuText(const std::string &text, const sf::Vector2f addition
     tOption.setFont(font);
     tOption.setString(text);
     // Set center origin
-    sf::FloatRect bounds = tOption.getLocalBounds();
-    tOption.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    // sf::FloatRect bounds = tOption.getLocalBounds();
+    // tOption.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    setCenterOrigin(tOption);
     //
     tOption.setPosition(context.window->getView().getSize() / 2.f + additionPos);
     mOptions.push_back(tOption);
@@ -64,7 +65,7 @@ bool MenuState::handleEvent(const sf::Event &event){
         return false;
     
     if(event.key.code == sf::Keyboard::Return){
-        // Don't be confust sf::Keyboard::Return is sf::Keyboard::Enter :)))
+        // Don't be confuse sf::Keyboard::Return is sf::Keyboard::Enter :)))
         if(mOptionIndex == Play){
             requestStackPop(); // pop MenuState
             requestStackPush(States::Game); // Push GameState
