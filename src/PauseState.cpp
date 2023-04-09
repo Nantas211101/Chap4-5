@@ -3,7 +3,7 @@
 PauseState::PauseState(StateStack &stack, Context context):
     State(stack, context),
     mBackgroundSprite(),
-    mPausedText()
+    mPausedText(),
     mInstructionText(){
         // mBackgroundSprite quite useless with PauseState
         sf::Font &font = context.fonts->get(Fonts::Main);
@@ -11,11 +11,17 @@ PauseState::PauseState(StateStack &stack, Context context):
 
         // Init the mPausedText
         mPausedText.setFont(font);
-        mPausedText.setString("World Stopbu");
+        mPausedText.setString(Paused_text);
         mPausedText.setCharacterSize(70);
+        setCenterOrigin(mPausedText);
+        mPausedText.setPosition(0.5f * viewSize.x, 0.4f * viewSize.y);
         //
 
-        //
+        // Init the mInstructionText
+        mInstructionText.setFont(font);
+        mInstructionText.setString(Instruction_text);
+        setCenterOrigin(mInstructionText);
+        mInstructionText.setPosition(0.5f * viewSize.x, 0.6f * viewSize.y);
 
 }
 
@@ -34,11 +40,15 @@ void PauseState::draw(){
     window.draw(mInstructionText);
 }
 
+bool PauseState::update(sf::Time dt){
+    return false;
+}
+
 bool PauseState::handleEvent(const sf::Event &event){
     if(event.type != sf::Event::KeyPressed)
         return false;
     if(event.key.code == sf::Keyboard::Escape){
-        requestStackPop(); // pop the PauseState
+        requestStackPop(); // pop the PauseState and return to the game
     }
     else if(event.key.code == sf::Keyboard::BackSpace){
         requestStateClear(); 
