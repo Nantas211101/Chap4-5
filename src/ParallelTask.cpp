@@ -1,16 +1,26 @@
 #include "../include/ParallelTask.hpp"
 
 ParallelTask::ParallelTask():
-    mThread(),
-    mFinished(),
+    mThread(&ParallelTask::runTask, this),
+    mFinished(false),
     mElapsedTime(),
     mMutex(){
 
 }
 
+void ParallelTask::execute(){
+    mFinished = false;
+    mElapsedTime.restart();
+}
+
 auto ParallelTask::isFinished() -> bool{
     sf::Lock lock(mMutex);
     return mFinished;
+}
+
+auto ParallelTask::getPercentComplete() -> float{
+    sf::Lock lock(mMutex);
+    return mElapsedTime.getElapsedTime().asSeconds() / waitTime;
 }
 
 void ParallelTask::runTask(){
