@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.hpp"
+#include "ResourceIdentifiers.hpp"
+#include "TextureManipulate.hpp"
 #include <SFML/Graphics.hpp>
 
 class Aircraft : public Entity // inherits indirectyly SceneNode
@@ -13,10 +15,10 @@ public:
 
 public:
     explicit Aircraft(Type type, const TextureHolder &textures);
-    virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
-
-public:
     virtual unsigned int const getCategory();
+
+private:
+    virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
 
 private:
     Type mType;
