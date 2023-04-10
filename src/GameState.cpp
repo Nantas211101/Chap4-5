@@ -25,5 +25,7 @@ bool GameState::handleEvent(const sf::Event &event){
     // Checking for escape press => Pause State
     if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
         requestStackPush(States::Pause);
+    else if(event.type == sf::Event::LostFocus)
+        requestStackPush(States::Pause);
     return true;
 }
