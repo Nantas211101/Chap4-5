@@ -10,11 +10,13 @@
 // Include all the state
 #include "TitleState.hpp"
 #include "MenuState.hpp"
+#include "LoadingState.hpp"
 #include "GameState.hpp"
 #include "PauseState.hpp"
 
 const std::string Path_TitleScreen = "resource/Textures/TitleScreen.png";
 const std::string Path_Font = "resource/Sansation.ttf";
+const std::string Path_MenuScreen = "resource/Textures/Menu.jpg";
 
 class Application{
 

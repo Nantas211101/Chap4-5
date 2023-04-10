@@ -7,6 +7,7 @@ namespace Textures{
         Raptor,
         Desert,
         TitleScreen,
+        Menu,
     };
 }
 

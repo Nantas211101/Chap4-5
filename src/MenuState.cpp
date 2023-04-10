@@ -5,7 +5,7 @@ MenuState::MenuState(StateStack &stack, Context context):
     mBackgroundSprite(),
     mOptions(),
     mOptionIndex(0){
-        sf::Texture &texture = context.textures->get(Textures::TitleScreen);
+        sf::Texture &texture = context.textures->get(Textures::Menu);
         sf::Font &font = context.fonts->get(Fonts::Main);
         mBackgroundSprite.setTexture(texture);
 

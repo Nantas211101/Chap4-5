@@ -5,7 +5,7 @@
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application():
-    mWindow(sf::VideoMode(640, 480), "Game States World", sf::Style::Close),
+    mWindow(sf::VideoMode(1440, 1000), "Game States World", sf::Style::Close),
     mTextures(),
     mFonts(),
     mPlayer(),
@@ -19,6 +19,7 @@ Application::Application():
         // Loading resource
         mFonts.load(Fonts::Main, Path_Font);
         mTextures.load(Textures::TitleScreen, Path_TitleScreen);
+        mTextures.load(Textures::Menu, Path_MenuScreen);
 
         // Set Font, position, and size for the text fps (this quite similar with the Game.hpp)
         mStayText.setFont(mFonts.get(Fonts::Main));
@@ -33,6 +34,7 @@ Application::Application():
 void Application::registerStates(){
     mStateStack.registerState<TitleState>(States::Title);
     mStateStack.registerState<MenuState>(States::Menu);
+    mStateStack.registerState<LoadingState>(States::Loading);
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
 }
