@@ -8,7 +8,7 @@
 const std::string Paused_text = "World Stopbu";
 const std::string Instruction_text = "(Press Backspace to return to the menu)\n(Press Escape to return to the game)";
 
-class PauseState : State{
+class PauseState : public State{
     public:
         PauseState(StateStack &stack, Context context);
 

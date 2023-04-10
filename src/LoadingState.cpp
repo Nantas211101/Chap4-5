@@ -8,7 +8,7 @@ LoadingState::LoadingState(StateStack &stack, Context context):
 
         // Init the loadingtext
         mLoadingText.setFont(font);
-        mLoadingText.sexString(Loading_text);
+        mLoadingText.setString(Loading_text);
         setCenterOrigin(mLoadingText);
         mLoadingText.setPosition(viewSize.x / 2.f, viewSize.y / 2.f + yShiftText);
 
@@ -23,7 +23,7 @@ LoadingState::LoadingState(StateStack &stack, Context context):
         mProgressBar.setPosition(10, mLoadingText.getPosition().y + yShiftBar);
 
         setComplete(0.f); // set 0%
-        mLoadingTask.execute() // start the loading 
+        mLoadingTask.execute(); // start the loading 
 }
 
 void LoadingState::draw(){

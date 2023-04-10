@@ -1,9 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include "../include/Game.h"
+#include "../include/Application.hpp"
 
 int main(){
     try{
-        Game game;
+        Application game;
         game.run();
     }
     catch (std::exception& e){

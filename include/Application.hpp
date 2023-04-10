@@ -13,7 +13,7 @@
 #include "GameState.hpp"
 #include "PauseState.hpp"
 
-const std::string Path_TitleScreen = "resource/Textures/TitleScreen";
+const std::string Path_TitleScreen = "resource/Textures/TitleScreen.png";
 const std::string Path_Font = "resource/Sansation.ttf";
 
 class Application{
