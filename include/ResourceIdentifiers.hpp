@@ -14,6 +14,7 @@ namespace Textures{
 namespace Fonts{
     enum ID{
         Main,
+        Label,
     };
 }
 
