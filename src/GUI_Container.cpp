@@ -1,18 +1,26 @@
 #include "../include/GUI_Container.hpp"
 
-GUI::Container::Container():
+
+namespace GUI{
+
+Container::Container():
     mChildren(),
     mSeletedChild(-1){
 
 }
 
-void GUI::Container::pack(Component::Ptr component){
+void Container::pack(Component::Ptr component){
     mChildren.push_back(component);
     if(!hasSelection() && component->isSelectable())
         select(mChildren.size() - 1);
 }
 
-void GUI::Container::handleEvent(const sf::Event &event){
+// Container is not a selectable object
+auto Container::isSelectable() -> bool const{
+    return false;
+}
+
+void Container::handleEvent(const sf::Event &event){
     if(hasSelection() && mChildren[mSeletedChild] -> isActive()){
         mChildren[mSeletedChild]->handleEvent(event);
     }
@@ -32,16 +40,17 @@ void GUI::Container::handleEvent(const sf::Event &event){
     }
 }
 
-// Container is not a selectable object
-auto GUI::Container::isSelectable() -> bool const{
-    return false;
+void Container::draw(sf::RenderTarget &targets, sf::RenderStates states) const{
+    states.transform *= getTransform();
+    for(const Component::Ptr &child : mChildren)
+        target.draw(*child, states);
 }
 
-auto GUI::Container::hasSelection() -> bool const{
+auto Container::hasSelection() -> bool const{
     return mSeletedChild >= 0;
 }
 
-void GUI::Container::select(std::size_t index){
+void Container::select(std::size_t index){
     if(mChildren[index]->isSelectable()){
         if(hasSelection())
             mChildren[mSeletedChild]->deselect();
@@ -50,7 +59,7 @@ void GUI::Container::select(std::size_t index){
     }
 }
 
-void GUI::Container::selectNext(){
+void Container::selectNext(){
     if(!hasSelection())
         return;
     // searching for the next component that may be selectable
@@ -65,7 +74,7 @@ void GUI::Container::selectNext(){
 }
 
 // quite the same selectNext();
-void GUI::Container::selectPrev(){
+void Container::selectPrev(){
     if(!hasSelection())
         return;
     int prev = mSeletedChild;
@@ -74,4 +83,6 @@ void GUI::Container::selectPrev(){
         prev = (prev + mChildren.size()) % mChildren.size();
     }while(!mChildren[prev]->isSelectable());
     select(prev);
+}
+
 }

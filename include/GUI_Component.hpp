@@ -3,6 +3,7 @@
 #include <memory>
 
 namespace GUI{ // put in the namespace to prevent the conflix of the component
+
 class Component :   public sf::Drawable, 
                     public sf::Transformable, 
                     private sf::NonCopyable{
@@ -26,4 +27,5 @@ class Component :   public sf::Drawable,
         bool mIsSelected;
         bool mIsActive;
 };
+
 }

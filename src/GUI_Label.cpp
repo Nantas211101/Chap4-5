@@ -1,7 +1,9 @@
 #include "../include/GUI_Label.hpp"
 
-GUI::Label::Label(const std::string &text, const FontHolder &fonts):
-    mText(text, fonts.get(Fonts::Label), 16){
+namespace GUI{
+
+Label::Label(const std::string &text, const FontHolder &fonts):
+    mText(text, fonts.get(Fonts::Main), 16){
 
 }
 
@@ -19,3 +21,4 @@ void GUI::Label::setText(const std::string &text){
     mText.setString(text);
 }
 
+}
