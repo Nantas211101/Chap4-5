@@ -4,16 +4,35 @@ namespace GUI{
 
 Button::Button(const FontHolder &fonts, const TextureHolder &textures):
     mCallback(),
-    {
+    mNormalTexture(textures.get(Textures::ButtonNormal)),
+    mSelectedTexture(textures.get(Textures::ButtonSelected)),
+    mPressedTexture(textures.get(Textures::ButtonPressed)),
+    mSprite(),
+    mText("", fonts.get(Fonts::Main), 16),
+    mIsToggle(false){
         mSprite.setTexture(mNormalTexture);
-        mText.setPosition(sf::Vector2f(mNormalTexture.get() / 2u));
+        sf::FloatRect bounds = mSprite.getLocalBounds();
+        mText.setPosition(bounds.width / 2.f, bounds.height / 2.f);
 }
 
-bool GUI::Button::isSelectable() const{
+void Button::setCallback(Callback callback){
+    mCallback = std::move(callback);
+}
+
+void Button::setText(const std::string &text){
+    mText.setString(text);
+    setCenterOrigin(mText);
+}
+
+void Button::setToggle(bool flag){
+    mIsToggle = flag;
+}
+
+bool Button::isSelectable() const{
     return true;
 }
 
-void GUI::Button::select(){
+void Button::select(){
     Component::select();
     mSprite.setTexture(mSelectedTexture);
 }
@@ -25,22 +44,39 @@ void GUI::Button::deselect(){
 
 void GUI::Button::activate(){
     Component::activate();
+    
+    // If we are toggle then we should show that the button is pressed and thus "toggled".
     if(mIsToggle)
         mSprite.setTexture(mPressedTexture);
+
     if(mCallback)
         mCallback();
+    
+    // If we are not a toggle then deactivate the button since we are just momentarily activated.
     if(!mIsToggle)
         deactivate();
 }
 
-void GUI::Button::deactivate(){
+void Button::deactivate(){
     Component::deactivate();
+
     if(mIsToggle){
+        // reset the textures of the msprite after deactivate to make sure it at the right Texture
         if(isSelected())
             mSprite.setTexture(mSelectedTexture);
         else 
             mSprite.setTexture(mNormalTexture);
     }
+}
+
+void Button::handleEvent(sf::Event &event){
+
+}
+
+void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
+    states.transform *= getTransform();
+    target.draw(mSprite, states);
+    target.draw(mText, states);
 }
 
 }

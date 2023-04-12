@@ -6,7 +6,7 @@ Component::Component(){
 }
 
 bool Component::isSelected() const{
-    return mIsSeleted;
+    return mIsSelected;
 }
 
 void Component::select(){

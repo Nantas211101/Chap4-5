@@ -3,6 +3,7 @@
 #include "GUI_Component.hpp"
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
+#include "TextureManipulate.hpp"
 
 #include <vector>
 #include <string>

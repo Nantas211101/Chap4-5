@@ -16,7 +16,7 @@ void Container::pack(Component::Ptr component){
 }
 
 // Container is not a selectable object
-auto Container::isSelectable() -> bool const{
+bool Container::isSelectable() const{
     return false;
 }
 
@@ -40,7 +40,7 @@ void Container::handleEvent(const sf::Event &event){
     }
 }
 
-void Container::draw(sf::RenderTarget &targets, sf::RenderStates states) const{
+void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     for(const Component::Ptr &child : mChildren)
         target.draw(*child, states);

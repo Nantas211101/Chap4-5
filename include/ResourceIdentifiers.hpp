@@ -8,6 +8,9 @@ namespace Textures{
         Desert,
         TitleScreen,
         Menu,
+        ButtonNormal,
+        ButtonSelected,
+        ButtonPressed,
     };
 }
 
