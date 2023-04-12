@@ -20,6 +20,9 @@ Application::Application():
         mFonts.load(Fonts::Main, Path_Font);
         mTextures.load(Textures::TitleScreen, Path_TitleScreen);
         mTextures.load(Textures::Menu, Path_MenuScreen);
+        mTextures.load(Textures::ButtonNormal, Path_ButtonNormal);
+        mTextures.load(Textures::ButtonSelected, Path_ButtonSelected);
+        mTextures.load(Textures::ButtonPressed, Path_ButtonPressed);
 
         // Set Font, position, and size for the text fps (this quite similar with the Game.hpp)
         mStayText.setFont(mFonts.get(Fonts::Main));
@@ -34,9 +37,9 @@ Application::Application():
 void Application::registerStates(){
     mStateStack.registerState<TitleState>(States::Title);
     mStateStack.registerState<MenuState>(States::Menu);
-    mStateStack.registerState<LoadingState>(States::Loading);
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
+    mStateStack.registerState<SettingsState>(States::Settings);
 }
 
 void Application::processInput(){

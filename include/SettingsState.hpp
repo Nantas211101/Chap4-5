@@ -13,7 +13,12 @@ class SettingsState : public State{
     public:
         SettingsState(StateStack &stack, Context context);    
 
+        virtual void draw();
+        virtual bool update(sf::Time elapsedTime);
+        virtual bool handleEvent(const sf::Event &event);
     private:
+        void updateLabels();
+        // aditional function
         void addButtonLabel(Player::Action action, float y, const std::string &text, Context context);
 
     private:
