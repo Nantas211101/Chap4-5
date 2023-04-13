@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "State.hpp"
 #include "ResourceIdentifiers.hpp"
+#include "TextureManipulate.hpp"
 
 class TitleState : public State{
     public:

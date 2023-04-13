@@ -2,12 +2,8 @@
 
 MenuState::MenuState(StateStack &stack, Context context):
     State(stack, context),
-    mGUIContainer(),
-    mBackgroundSprite(),
-    mOptions(),
-    mOptionIndex(0){
+    mGUIContainer(){
         sf::Texture &texture = context.textures->get(Textures::Menu);
-        // sf::Font &font = context.fonts->get(Fonts::Main);
         mBackgroundSprite.setTexture(texture);
         
         // set Button play
@@ -15,6 +11,7 @@ MenuState::MenuState(StateStack &stack, Context context):
             *context.fonts, *context.textures);
         playButton->setPosition(100, 250);
         playButton->setText("Play");
+        // playButton->setScale(playButton->getScale());
         playButton->setCallback([this] (){
             requestStackPop();
             requestStackPush(States::Game);
@@ -23,7 +20,7 @@ MenuState::MenuState(StateStack &stack, Context context):
         // Set Button setting
         auto settingsButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
-        settingsButton->setPosition(100, 300);
+        settingsButton->setPosition(100, 400);
         settingsButton->setText("Setting");
         settingsButton->setCallback([this] (){
             requestStackPush(States::Settings);
@@ -32,9 +29,9 @@ MenuState::MenuState(StateStack &stack, Context context):
         // set Button exit
         auto exitButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
-        settingsButton->setPosition(100, 300);
-        settingsButton->setText("Exit");
-        settingsButton->setCallback([this] (){
+        exitButton->setPosition(100, 550);
+        exitButton->setText("Exit");
+        exitButton->setCallback([this] (){
             requestStackPop();
         });
 

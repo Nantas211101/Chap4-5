@@ -2,7 +2,12 @@
 
 namespace GUI{
 
-Component::Component(){
+Component::Component():
+    mIsSelected(false),
+    mIsActive(false){
+}
+
+Component::~Component(){
 }
 
 bool Component::isSelected() const{
@@ -27,6 +32,10 @@ void Component::activate(){
 
 void Component::deactivate(){
     mIsActive = false;
+}
+
+void Component::handleEvent(const sf::Event &event){
+    return;
 }
 
 }

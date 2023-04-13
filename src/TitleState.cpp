@@ -10,15 +10,12 @@ TitleState::TitleState(StateStack &stack, Context context):
     mBackgroundSprite.setTexture(context.textures->get(Textures::TitleScreen));
     mText.setFont(context.fonts->get(Fonts::Main));
     mText.setString("Press any key to begin");
-    // Set center origin
-    sf::FloatRect bounds = mText.getLocalBounds();
-    mText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    //
+    setCenterOrigin(mText);
     mText.setPosition(context.window->getView().getSize() / 2.f);
 }
 
 bool TitleState::handleEvent(const sf::Event &event){
-    if(event.type ==sf::Event::KeyPressed){
+    if(event.type ==sf::Event::KeyReleased){
         requestStackPop(); // pop the title screen
         requestStackPush(States::Menu); // push the menuState screen
     }

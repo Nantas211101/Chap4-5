@@ -21,7 +21,7 @@ class Component :   public sf::Drawable,
         virtual bool isActive() const;
         virtual void activate();
         virtual void deactivate();
-        virtual void handleEvent(const sf::Event &event) = 0;
+        virtual void handleEvent(const sf::Event& event);
 
     private:
         bool mIsSelected;

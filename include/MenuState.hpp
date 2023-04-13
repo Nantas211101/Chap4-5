@@ -20,8 +20,5 @@ class MenuState : public State{
     
     private:
         sf::Sprite mBackgroundSprite;
-
-        std::vector<sf::Text> mOptions;
-        std::size_t mOptionIndex;
         GUI::Container mGUIContainer;
 };

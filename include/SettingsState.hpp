@@ -1,14 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "State.hpp"
-#include "StateStack.hpp"
+#include "Player.hpp"
 #include "GUI_Container.hpp"
 #include "GUI_Button.hpp"
 #include "GUI_Label.hpp"
 #include "ResourceIdentifiers.hpp"
-#include "Player.hpp"
-
+#include "StringConvert.hpp"
 #include <memory>
+
 class SettingsState : public State{
     public:
         SettingsState(StateStack &stack, Context context);    

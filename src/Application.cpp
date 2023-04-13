@@ -37,9 +37,9 @@ Application::Application():
 void Application::registerStates(){
     mStateStack.registerState<TitleState>(States::Title);
     mStateStack.registerState<MenuState>(States::Menu);
+    mStateStack.registerState<SettingsState>(States::Settings);
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
-    mStateStack.registerState<SettingsState>(States::Settings);
 }
 
 void Application::processInput(){
@@ -48,7 +48,7 @@ void Application::processInput(){
     while(mWindow.pollEvent(event)){
         mStateStack.handleEvent(event);
 
-        if(mStateStack.isEmpty())
+        if(mStateStack.isEmpty() || event.type == sf::Event::Closed)
             mWindow.close();
     }
 }
