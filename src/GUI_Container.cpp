@@ -38,7 +38,12 @@ void Container::handleEvent(const sf::Event &event){
                 mChildren[mSeletedChild]->activate();
         }
     }
+    else if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+        if(hasSelection())
+                mChildren[mSeletedChild]->activate();
+    }
 }
+
 
 void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();

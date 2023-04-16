@@ -15,11 +15,10 @@ TitleState::TitleState(StateStack &stack, Context context):
 }
 
 bool TitleState::handleEvent(const sf::Event &event){
-    if(event.type ==sf::Event::KeyReleased){
+    if(event.type == sf::Event::KeyReleased || sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         requestStackPop(); // pop the title screen
         requestStackPush(States::Menu); // push the menuState screen
     }
-
     return true;
 }
 
