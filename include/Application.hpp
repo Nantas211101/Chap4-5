@@ -14,6 +14,12 @@
 #include "PauseState.hpp"
 #include "SettingsState.hpp"
 #include "Stack.hpp"
+#include "Queue.hpp"
+#include "StaticArray.hpp"
+#include "DynamicArray.hpp"
+#include "SLL.hpp"
+#include "DLL.hpp"
+#include "CLL.hpp"
 
 const std::string Path_TitleScreen = "resource/Textures/TitleScreen.png";
 const std::string Path_Font = "resource/Sansation.ttf";

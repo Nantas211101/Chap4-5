@@ -42,6 +42,12 @@ void Application::registerStates(){
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
     mStateStack.registerState<Stack>(States::Stack);
+    mStateStack.registerState<Queue>(States::Queue);
+    mStateStack.registerState<StaticArray>(States::StaticArray);
+    mStateStack.registerState<DynamicArray>(States::DynamicArray);
+    mStateStack.registerState<SLL>(States::SLL);
+    mStateStack.registerState<DLL>(States::DLL);
+    mStateStack.registerState<CLL>(States::CLL);
 }
 
 void Application::processInput(){

@@ -9,18 +9,36 @@ MenuState::MenuState(StateStack &stack, Context context):
         // set Button play
         auto playButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
-        playButton->setPosition(100, 250);
+        playButton->setPosition(OFFSET_X, OFFSET_Y);
         playButton->setText("Play");
-        // playButton->setScale(playButton->getScale());
         playButton->setCallback([this] (){
             requestStackPop();
             requestStackPush(States::Game);
         });
 
+        // set Button Stack
+        // auto stackButton = std::make_shared<GUI::Button>(
+        //     *context.fonts, *context.textures);
+        // stackButton->setPosition(100, 300);
+        // stackButton->setText("Stack");
+        // stackButton->setCallback([this] (){
+        //     requestStackPop();
+        //     requestStackPush(States::Stack);
+        // });
+        int cnt = 0;
+        setStateButton(context, 0, ++cnt, "Stack", States::Stack);
+        setStateButton(context, 0, ++cnt, "Queue", States::Queue);
+        setStateButton(context, 0, ++cnt, "StaticArray", States::StaticArray);
+        setStateButton(context, 0, ++cnt, "DynamicArray", States::DynamicArray);
+        setStateButton(context, 0, ++cnt, "SinglyLL", States::SLL);
+        setStateButton(context, 0, ++cnt, "DoublyLL", States::DLL);
+        setStateButton(context, 0, ++cnt, "CircularLL", States::CLL);
+
+
         // Set Button setting
         auto settingsButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
-        settingsButton->setPosition(100, 400);
+        settingsButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
         settingsButton->setText("Setting");
         settingsButton->setCallback([this] (){
             requestStackPush(States::Settings);
@@ -29,26 +47,30 @@ MenuState::MenuState(StateStack &stack, Context context):
         // set Button exit
         auto exitButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
-        exitButton->setPosition(100, 550);
+        exitButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
         exitButton->setText("Exit");
         exitButton->setCallback([this] (){
             requestStackPop();
         });
 
-        // set Button Stack
-        auto stackButton = std::make_shared<GUI::Button>(
-            *context.fonts, *context.textures);
-        stackButton->setPosition(100, 300);
-        stackButton->setText("Stack");
-        stackButton->setCallback([this] (){
-            requestStackPop();
-            requestStackPush(States::Stack);
-        });
-
         mGUIContainer.pack(playButton);
         mGUIContainer.pack(settingsButton);
         mGUIContainer.pack(exitButton);  
-        mGUIContainer.pack(stackButton);
+        // mGUIContainer.pack(stackButton);
+}
+
+// Additional function
+void MenuState::setStateButton(Context context, int x_times, int y_times, const std::string &text, States::ID id){
+    auto stateButton = std::make_shared<GUI::Button>(
+        *context.fonts, *context.textures);
+    stateButton->setPosition(OFFSET_X + x_add * x_times, OFFSET_Y + y_add * y_times);
+    stateButton->setText(text);
+    stateButton->setCallback([this] (){
+        requestStackPop();
+        requestStackPush(id);
+    })
+
+    mGUIContainer.pack(stateButton);
 }
 
 void MenuState::draw(){

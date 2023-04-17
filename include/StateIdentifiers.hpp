@@ -10,5 +10,11 @@ namespace States{
         Pause,
         Settings,
         Stack,
+        Queue,
+        SLL,
+        DLL,
+        CLL,
+        StaticArray,
+        DynamicArray,
     };
 }
