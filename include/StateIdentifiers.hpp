@@ -9,5 +9,6 @@ namespace States{
         Loading,
         Pause,
         Settings,
+        Stack,
     };
 }

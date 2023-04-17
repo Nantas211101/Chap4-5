@@ -35,9 +35,20 @@ MenuState::MenuState(StateStack &stack, Context context):
             requestStackPop();
         });
 
+        // set Button Stack
+        auto stackButton = std::make_shared<GUI::Button>(
+            *context.fonts, *context.textures);
+        stackButton->setPosition(100, 300);
+        stackButton->setText("Stack");
+        stackButton->setCallback([this] (){
+            requestStackPop();
+            requestStackPush(States::Stack);
+        });
+
         mGUIContainer.pack(playButton);
         mGUIContainer.pack(settingsButton);
         mGUIContainer.pack(exitButton);  
+        mGUIContainer.pack(stackButton);
 }
 
 void MenuState::draw(){

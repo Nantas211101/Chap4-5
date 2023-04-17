@@ -20,6 +20,7 @@ Application::Application():
         mFonts.load(Fonts::Main, Path_Font);
         mTextures.load(Textures::TitleScreen, Path_TitleScreen);
         mTextures.load(Textures::Menu, Path_MenuScreen);
+        mTextures.load(Textures::WhiteBackground, Path_WhiteBackground);
         mTextures.load(Textures::ButtonNormal, Path_ButtonNormal);
         mTextures.load(Textures::ButtonSelected, Path_ButtonSelected);
         mTextures.load(Textures::ButtonPressed, Path_ButtonPressed);
@@ -40,6 +41,7 @@ void Application::registerStates(){
     mStateStack.registerState<SettingsState>(States::Settings);
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
+    mStateStack.registerState<Stack>(States::Stack);
 }
 
 void Application::processInput(){
