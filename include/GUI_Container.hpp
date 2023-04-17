@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GUI_Component.hpp"
+#include <iostream>
 
 #include <memory>
 #include <vector>
@@ -17,7 +18,7 @@ class Container : public Component{
         void pack(Component::Ptr component);
         virtual bool isSelectable() const;
         virtual void handleEvent(const sf::Event &event);
-        virtual void handleRealTimeInput();
+        virtual bool handleRealTimeInput(const sf::RenderWindow &window);
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

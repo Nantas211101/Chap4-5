@@ -22,6 +22,7 @@ class Component :   public sf::Drawable,
         virtual void activate();
         virtual void deactivate();
         virtual void handleEvent(const sf::Event& event);
+        virtual bool handleRealTimeInput(const sf::RenderWindow &window);
 
     private:
         bool mIsSelected;

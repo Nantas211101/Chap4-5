@@ -73,10 +73,29 @@ void Button::handleEvent(sf::Event &event){
 
 }
 
+bool Button::handleRealTimeInput(const sf::RenderWindow &window){
+    sf::FloatRect bounds = takeLocalBounds();
+    auto pos = sf::Mouse::getPosition(window);
+    // return bounds.contains(sf::Vector2f(pos));
+    // std::cout << pos.x << " " << pos.y << "\n";
+    return contain(pos, bounds);
+}
+
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);
     target.draw(mText, states);
+}
+
+auto Button::takeLocalBounds() -> sf::FloatRect{
+    return mSprite.getLocalBounds();
+}
+
+bool Button::contain(sf::Vector2i mouse_pos, sf::FloatRect bounds){
+    sf::Vector2f cur_pos = getPosition();
+    bounds.left = cur_pos.x;
+    bounds.top = cur_pos.y;
+    return bounds.contains(sf::Vector2f(mouse_pos));
 }
 
 }

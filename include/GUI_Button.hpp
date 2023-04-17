@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <assert.h>
 #include "GUI_Component.hpp"
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
@@ -34,10 +36,12 @@ class Button : public Component{
         virtual void deactivate();
 
         virtual void handleEvent(sf::Event &event);
-        // virtual void handleRealTimeInput();
+        bool handleRealTimeInput(const sf::RenderWindow &window);
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+        auto takeLocalBounds() -> sf::FloatRect;
+        bool contain(sf::Vector2i pos, sf::FloatRect rec);
 
     private:
         Callback                mCallback;

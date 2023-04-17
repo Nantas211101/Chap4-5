@@ -55,6 +55,13 @@ bool MenuState::update(sf::Time){
 }
 
 bool MenuState::handleEvent(const sf::Event &event){
-    mGUIContainer.handleEvent(event);
+    // mGUIContainer.handleEvent(event);
+    handleRealTimeInput();
+    return false;
+}
+
+bool MenuState::handleRealTimeInput(){
+    sf::RenderWindow &window = *getContext().window;
+    mGUIContainer.handleRealTimeInput(window);
     return false;
 }

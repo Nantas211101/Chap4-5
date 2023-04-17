@@ -4,7 +4,7 @@ compile:
 	 cd ./obj && g++ -c ../src/*.cpp -I "D:\SFML-2.5.1\include"
 #	cd ./obj && g++ -c ../src/MenuState.cpp -I "D:\SFML-2.5.1\include"
 #	cd ./obj && g++ -c ../src/Application.cpp -I "D:\SFML-2.5.1\include"
-#	cd ./obj && g++ -c ../src/GUI_Container.cpp -I "D:\SFML-2.5.1\include"
+#	cd ./obj && g++ -c ../src/GUI_Button.cpp -I "D:\SFML-2.5.1\include"
 #	cd ./obj && g++ -c ../src/TitleState.cpp -I "D:\SFML-2.5.1\include"
 # application
 # StateStack

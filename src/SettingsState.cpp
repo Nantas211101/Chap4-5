@@ -52,9 +52,11 @@ bool SettingsState::handleEvent(const sf::Event &event){
 
     if(isKeyBingding)
         updateLabels();
-    else 
-        mGUIContainer.handleEvent(event);
-
+    else {
+        // mGUIContainer.handleEvent(event);
+        sf::RenderWindow &window = *getContext().window;
+        mGUIContainer.handleRealTimeInput(window);
+    }
     return false; // Settingsstate quite the same as pause state
 }
 

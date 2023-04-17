@@ -12,8 +12,8 @@ Container::Container():
 
 void Container::pack(Component::Ptr component){
     mChildren.push_back(component);
-    if(!hasSelection() && component->isSelectable())
-        select(mChildren.size() - 1);
+    // if(!hasSelection() && component->isSelectable())
+        // select(mChildren.size() - 1);
 }
 
 // Container is not a selectable object
@@ -23,44 +23,55 @@ bool Container::isSelectable() const{
 
 void Container::handleEvent(const sf::Event &event){
     
-    if(event.type == sf::Event::GainedFocus){
-        isFocus = true;
-    };
+    // if(event.type == sf::Event::GainedFocus){
+    //     isFocus = true;
+    // };
 
-    if(event.type == sf::Event::LostFocus){
-        isFocus = false;
-    };
+    // if(event.type == sf::Event::LostFocus){
+    //     isFocus = false;
+    // };
     
-    // stop if no focus
-    if(!isFocus)
-        return;
+    // // stop if no focus
+    // if(!isFocus)
+    //     return;
     
-    if(hasSelection() && mChildren[mSeletedChild] -> isActive()){
-        mChildren[mSeletedChild]->handleEvent(event);
-    }
-    else if(event.type == sf::Event::KeyReleased){
-        if(event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up
-        || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left){
-            selectPrev();
-        }
-        else if(event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down
-            ||  event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right){
-            selectNext();
-        }
-        else if(event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space){
-            if(hasSelection())
-                mChildren[mSeletedChild]->activate();
-        }
-    }
-    else handleRealTimeInput();
+    // if(hasSelection() && mChildren[mSeletedChild] -> isActive()){
+    //     mChildren[mSeletedChild]->handleEvent(event);
+    // }
+    // else if(event.type == sf::Event::KeyReleased){
+    //     if(event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up
+    //     || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left){
+    //         selectPrev();
+    //     }
+    //     else if(event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down
+    //         ||  event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right){
+    //         selectNext();
+    //     }
+    //     else if(event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space){
+    //         if(hasSelection())
+    //             mChildren[mSeletedChild]->activate();
+    //     }
+    // }
+    // handleRealTimeInput();
 }
 
-void Container::handleRealTimeInput(){
+bool Container::handleRealTimeInput(const sf::RenderWindow &window){
+    // if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+    //     if(hasSelection())
+    //         mChildren[mSeletedChild]->activate();
+    // }
+    for(int index = 0; index < mChildren.size(); ++index)
+        if(mChildren[index]->handleRealTimeInput(window)){
+            select(index);
+        }
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if(hasSelection())
             mChildren[mSeletedChild]->activate();
     }
+    return false;
 }
+
+
 
 void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
