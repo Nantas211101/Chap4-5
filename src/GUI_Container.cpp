@@ -5,7 +5,8 @@ namespace GUI{
 
 Container::Container():
     mChildren(),
-    mSeletedChild(-1){
+    mSeletedChild(-1),
+    isFocus(true){
 
 }
 
@@ -21,6 +22,19 @@ bool Container::isSelectable() const{
 }
 
 void Container::handleEvent(const sf::Event &event){
+    
+    if(event.type == sf::Event::GainedFocus){
+        isFocus = true;
+    };
+
+    if(event.type == sf::Event::LostFocus){
+        isFocus = false;
+    };
+    
+    // stop if no focus
+    if(!isFocus)
+        return;
+    
     if(hasSelection() && mChildren[mSeletedChild] -> isActive()){
         mChildren[mSeletedChild]->handleEvent(event);
     }
@@ -38,12 +52,15 @@ void Container::handleEvent(const sf::Event &event){
                 mChildren[mSeletedChild]->activate();
         }
     }
-    else if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-        if(hasSelection())
-                mChildren[mSeletedChild]->activate();
-    }
+    else handleRealTimeInput();
 }
 
+void Container::handleRealTimeInput(){
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+        if(hasSelection())
+            mChildren[mSeletedChild]->activate();
+    }
+}
 
 void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();

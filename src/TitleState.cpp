@@ -5,6 +5,7 @@ TitleState::TitleState(StateStack &stack, Context context):
     mBackgroundSprite(),
     mText(),
     isShowText(true),
+    isFocus(true),
     mTextTimeEffected(sf::Time::Zero){
         // context.textures is a pointer so->
     mBackgroundSprite.setTexture(context.textures->get(Textures::TitleScreen));
@@ -15,14 +16,37 @@ TitleState::TitleState(StateStack &stack, Context context):
 }
 
 bool TitleState::handleEvent(const sf::Event &event){
-    if(event.type == sf::Event::KeyReleased || sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+
+    if(event.type == sf::Event::LostFocus){
+        isFocus = false;
+    };
+    
+    if(event.type == sf::Event::GainedFocus){
+        isFocus = true;
+    };
+    
+    // is not focus => dont care about event or realtimeinput
+    if(!isFocus)
+        return false;
+
+    if(event.type == sf::Event::KeyReleased && isFocus){
         requestStackPop(); // pop the title screen
         requestStackPush(States::Menu); // push the menuState screen
     }
+    else handleRealTimeInput();
     return true;
 }
 
+void TitleState::handleRealTimeInput(){
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && isFocus){
+        requestStackPop();
+        requestStackPush(States::Menu);
+    }
+}
+
 bool TitleState::update(sf::Time elapsedTime){
+    if(!isFocus)
+        return false;
     mTextTimeEffected += elapsedTime;
     if(mTextTimeEffected >= sf::seconds(0.5f)){
         isShowText = !isShowText; // reverse the state of the text

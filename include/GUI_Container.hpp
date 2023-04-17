@@ -17,6 +17,7 @@ class Container : public Component{
         void pack(Component::Ptr component);
         virtual bool isSelectable() const;
         virtual void handleEvent(const sf::Event &event);
+        virtual void handleRealTimeInput();
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
@@ -28,6 +29,7 @@ class Container : public Component{
 
     private:
         std::vector<Component::Ptr> mChildren;
+        bool isFocus;
         int mSeletedChild;
 };
 

@@ -34,6 +34,7 @@ class Button : public Component{
         virtual void deactivate();
 
         virtual void handleEvent(sf::Event &event);
+        // virtual void handleRealTimeInput();
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

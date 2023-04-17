@@ -11,10 +11,12 @@ class TitleState : public State{
         virtual void draw();
         virtual bool update(sf::Time dt);
         virtual bool handleEvent(const sf::Event &event);
+        virtual void handleRealTimeInput();
 
     private:
         sf::Sprite mBackgroundSprite;
         sf::Text mText;
         bool isShowText;
+        bool isFocus;
         sf::Time mTextTimeEffected;
 };
