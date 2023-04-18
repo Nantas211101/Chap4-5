@@ -65,10 +65,15 @@ void MenuState::setStateButton(Context context, int x_times, int y_times, const 
         *context.fonts, *context.textures);
     stateButton->setPosition(OFFSET_X + x_add * x_times, OFFSET_Y + y_add * y_times);
     stateButton->setText(text);
-    stateButton->setCallback([this] (){
+    auto tmp = ([this, id] (){
         requestStackPop();
         requestStackPush(id);
-    })
+    });
+    stateButton->setCallback(tmp);
+    // stateButton->setCallback([this] (States::ID id){
+    //     requestStackPop();
+    //     requestStackPush(id);
+    // })
 
     mGUIContainer.pack(stateButton);
 }

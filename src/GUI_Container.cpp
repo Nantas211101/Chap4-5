@@ -60,10 +60,18 @@ bool Container::handleRealTimeInput(const sf::RenderWindow &window){
     //     if(hasSelection())
     //         mChildren[mSeletedChild]->activate();
     // }
+    // Checking for selecting
     for(int index = 0; index < mChildren.size(); ++index)
         if(mChildren[index]->handleRealTimeInput(window)){
             select(index);
         }
+
+    // checking if the mouse is out of the bounds of button
+    if(hasSelection() && !mChildren[mSeletedChild]->handleRealTimeInput(window)){
+        mChildren[mSeletedChild]->deselect();
+        mSeletedChild = -1;
+    }
+    // Checking for clicking
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if(hasSelection())
             mChildren[mSeletedChild]->activate();
