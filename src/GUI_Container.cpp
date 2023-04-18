@@ -5,8 +5,9 @@ namespace GUI{
 
 Container::Container():
     mChildren(),
+    isFocus(true),
     mSeletedChild(-1),
-    isFocus(true){
+    mActiveChild(-1){
 
 }
 
@@ -14,6 +15,10 @@ void Container::pack(Component::Ptr component){
     mChildren.push_back(component);
     // if(!hasSelection() && component->isSelectable())
         // select(mChildren.size() - 1);
+}
+
+void Container::depackend(){
+    mChildren.erase(mChildren.end() - 1);
 }
 
 // Container is not a selectable object
@@ -35,9 +40,9 @@ void Container::handleEvent(const sf::Event &event){
     // if(!isFocus)
     //     return;
     
-    // if(hasSelection() && mChildren[mSeletedChild] -> isActive()){
-    //     mChildren[mSeletedChild]->handleEvent(event);
-    // }
+    if(hasActivate()){
+        mChildren[mActiveChild]->handleEvent(event);
+    };
     // else if(event.type == sf::Event::KeyReleased){
     //     if(event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up
     //     || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left){
@@ -56,10 +61,6 @@ void Container::handleEvent(const sf::Event &event){
 }
 
 bool Container::handleRealTimeInput(const sf::RenderWindow &window){
-    // if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-    //     if(hasSelection())
-    //         mChildren[mSeletedChild]->activate();
-    // }
     // Checking for selecting
     for(int index = 0; index < mChildren.size(); ++index)
         if(mChildren[index]->handleRealTimeInput(window)){
@@ -73,8 +74,10 @@ bool Container::handleRealTimeInput(const sf::RenderWindow &window){
     }
     // Checking for clicking
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-        if(hasSelection())
+        if(hasSelection()){
             mChildren[mSeletedChild]->activate();
+            mActiveChild = mSeletedChild;
+        }
     }
     return false;
 }
@@ -89,6 +92,10 @@ void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
 
 auto Container::hasSelection() -> bool const{
     return mSeletedChild >= 0;
+}
+
+auto Container::hasActivate() -> bool const{
+    return mActiveChild >= 0;
 }
 
 void Container::select(std::size_t index){

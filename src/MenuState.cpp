@@ -11,6 +11,7 @@ MenuState::MenuState(StateStack &stack, Context context):
             *context.fonts, *context.textures);
         playButton->setPosition(OFFSET_X, OFFSET_Y);
         playButton->setText("Play");
+        playButton->setToggle(true);
         playButton->setCallback([this] (){
             requestStackPop();
             requestStackPush(States::Game);
@@ -40,6 +41,7 @@ MenuState::MenuState(StateStack &stack, Context context):
             *context.fonts, *context.textures);
         settingsButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
         settingsButton->setText("Setting");
+        settingsButton->setToggle(true);
         settingsButton->setCallback([this] (){
             requestStackPush(States::Settings);
         });
@@ -49,6 +51,7 @@ MenuState::MenuState(StateStack &stack, Context context):
             *context.fonts, *context.textures);
         exitButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
         exitButton->setText("Exit");
+        exitButton->setToggle(true);
         exitButton->setCallback([this] (){
             requestStackPop();
         });
@@ -69,6 +72,7 @@ void MenuState::setStateButton(Context context, int x_times, int y_times, const 
         requestStackPop();
         requestStackPush(id);
     });
+    stateButton->setToggle(true);
     stateButton->setCallback(tmp);
     mGUIContainer.pack(stateButton);
 }
@@ -88,7 +92,7 @@ bool MenuState::update(sf::Time){
 }
 
 bool MenuState::handleEvent(const sf::Event &event){
-    // mGUIContainer.handleEvent(event);
+    mGUIContainer.handleEvent(event);
     handleRealTimeInput();
     return false;
 }

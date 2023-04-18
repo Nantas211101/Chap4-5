@@ -7,6 +7,12 @@
 #include "GUI_Button.hpp"
 
 #include <memory>
+
+const int start_x = 100;
+const int start_y = 100;
+const int add_x = 200;
+const int add_y = 50;
+
 class Stack: public State{
     public:
         Stack(StateStack &stack, Context context);
@@ -22,4 +28,6 @@ class Stack: public State{
     private:
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
+        bool isChoose;
+        
 };

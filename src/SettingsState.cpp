@@ -81,5 +81,5 @@ void SettingsState::addButtonLabel(Player::Action action, float y, const std::st
     mBindingLabels[action]->setPosition(300.f, y + 15.f);
 
     mGUIContainer.pack(mBindingButtons[action]);
-    mGUIContainer.pack(mBindingButtons[action]);
+    mGUIContainer.pack(mBindingLabels[action]);
 }
