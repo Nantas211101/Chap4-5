@@ -17,6 +17,9 @@ class Stack: public State{
         virtual bool handleRealTimeInput();
     
     private:
+        void setStateButton(Context context, int x_times, int y_times, const std::string &text, std::function<void()> action);
+
+    private:
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
 };

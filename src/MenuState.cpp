@@ -70,11 +70,6 @@ void MenuState::setStateButton(Context context, int x_times, int y_times, const 
         requestStackPush(id);
     });
     stateButton->setCallback(tmp);
-    // stateButton->setCallback([this] (States::ID id){
-    //     requestStackPop();
-    //     requestStackPush(id);
-    // })
-
     mGUIContainer.pack(stateButton);
 }
 

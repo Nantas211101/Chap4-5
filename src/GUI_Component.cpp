@@ -39,6 +39,7 @@ void Component::handleEvent(const sf::Event &event){
 }
 
 bool Component::handleRealTimeInput(const sf::RenderWindow &window){
+    return false;
 }
 
 }

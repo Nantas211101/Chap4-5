@@ -12,8 +12,13 @@ Stack::Stack(StateStack &stack, Context context):
             *context.fonts, *context.textures);
         insertButton->setPosition(100, 100);
         insertButton->setText("Insert");
-        insertButton->setCallback([this] (){
-            //nothing here now
+        insertButton->setCallback([this, context] (){
+            auto action = ([this] (){
+                //nohing here now
+            });
+            setStateButton(context, 300, 50, "to First", action);
+            setStateButton(context, 300, 100, "to Last", action);
+            setStateButton(context, 300, 150, "to Middle", action);
         });
 
         // set Delete button
@@ -48,7 +53,7 @@ void Stack::draw(){
     window.draw(mGUIContainer);
 }
 
-bool Stack::update(sf::Time){
+bool Stack::update(sf::Time dt){
     //right now there is nothing in here
     return true;
 }
@@ -63,4 +68,14 @@ bool Stack::handleRealTimeInput(){
     sf::RenderWindow &window = *getContext().window;
     mGUIContainer.handleRealTimeInput(window);
     return false;
+}
+
+void Stack::setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action){
+    auto stateButton = std::make_shared<GUI::Button>(
+        *context.fonts, *context.textures);
+    stateButton->setPosition(posx, posy);
+    stateButton->setText(text);
+    auto tmp = action;
+    stateButton->setCallback(tmp);
+    mGUIContainer.pack(stateButton);
 }
