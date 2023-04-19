@@ -5,8 +5,11 @@
 #include "ResourceHolder.hpp"
 #include "GUI_Container.hpp"
 #include "GUI_Button.hpp"
+#include "GUI_Label.hpp"
+#include "GUI_InputButton.hpp"
 
 #include <memory>
+
 class CLL: public State{
     public:
         CLL(StateStack &stack, Context context);
@@ -15,6 +18,11 @@ class CLL: public State{
         virtual bool update(sf::Time dt);
         virtual bool handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput();
+    
+    private:
+        void setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
+        void setLabel(Context context, int posx, int posy, const std::string &text);
+        void setInputButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
     
     private:
         sf::Sprite mBackgroundSprite;

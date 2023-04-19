@@ -3,6 +3,7 @@
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "GUI_Component.hpp"
+#include "TextureManipulate.hpp"
 
 #include <string>
 #include <memory>
@@ -18,7 +19,8 @@ class Label: public Component{
         
         virtual bool isSelectable() const;
         void setText(const std::string &text);
-        virtual void handleEvent(sf::Event &event);
+        virtual void handleEvent(const sf::Event &event);
+        virtual bool handleRealTimeInput(const sf::RenderWindow &window);
 
     private:
         void draw(sf::RenderTarget &target, sf::RenderStates states) const;

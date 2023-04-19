@@ -69,8 +69,7 @@ void Button::deactivate(){
     }
 }
 
-void Button::handleEvent(sf::Event &event){
-
+void Button::handleEvent(const sf::Event &event){
 }
 
 bool Button::handleRealTimeInput(const sf::RenderWindow &window){

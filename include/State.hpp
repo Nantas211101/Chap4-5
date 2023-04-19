@@ -4,7 +4,10 @@
 #include "ResourceIdentifiers.hpp"
 #include "StateIdentifiers.hpp"
 #include "ResourceHolder.hpp"
-
+const int start_x = 100;
+const int start_y = 100;
+const int add_x = 200;
+const int add_y = 50;
 class StateStack;  
 class Player;
 class State{

@@ -43,6 +43,22 @@ void Container::handleEvent(const sf::Event &event){
     if(hasActivate()){
         mChildren[mActiveChild]->handleEvent(event);
     };
+    if(event.type == sf::Event::MouseButtonPressed)
+        if(event.mouseButton.button == sf::Mouse::Left){
+            if(hasSelection()){
+                mChildren[mSeletedChild]->deselect();
+                if(hasActivate())
+                    mChildren[mActiveChild]->deactivate();
+                mChildren[mSeletedChild]->activate();
+                mActiveChild = mSeletedChild;
+                mSeletedChild = -1;
+            }
+            else {
+                if(hasActivate())
+                    mChildren[mActiveChild]->deactivate();
+                mActiveChild = -1;
+            }
+        }
     // else if(event.type == sf::Event::KeyReleased){
     //     if(event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up
     //     || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left){
@@ -63,7 +79,7 @@ void Container::handleEvent(const sf::Event &event){
 bool Container::handleRealTimeInput(const sf::RenderWindow &window){
     // Checking for selecting
     for(int index = 0; index < mChildren.size(); ++index)
-        if(mChildren[index]->handleRealTimeInput(window)){
+        if(mActiveChild != index && mChildren[index]->handleRealTimeInput(window)){
             select(index);
         }
 
@@ -73,16 +89,27 @@ bool Container::handleRealTimeInput(const sf::RenderWindow &window){
         mSeletedChild = -1;
     }
     // Checking for clicking
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-        if(hasSelection()){
-            mChildren[mSeletedChild]->activate();
-            mActiveChild = mSeletedChild;
-        }
-    }
+    // if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+    //     if(hasSelection()){
+    //         mChildren[mSeletedChild]->deselect();
+    //         if(hasActivate())
+    //             mChildren[mActiveChild]->deactivate();
+    //         mChildren[mSeletedChild]->activate();
+    //         mActiveChild = mSeletedChild;
+    //         mSeletedChild = -1;
+    //     }
+    //     else {
+    //         if(hasActivate())
+    //             mChildren[mActiveChild]->deactivate();
+    //         mActiveChild = -1;
+    //     }
+    // }
     return false;
 }
 
-
+bool Container::isOutOfSize(int size){
+    return mChildren.size() > size;
+}
 
 void Container::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();

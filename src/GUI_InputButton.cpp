@@ -59,7 +59,7 @@ void InputButton::activate(){
 
 void InputButton::deactivate(){
     Component::deactivate();
-
+    mText.setString("");
     if(mIsToggle){
         // reset the textures of the msprite after deactivate to make sure it at the right Texture
         if(isSelected())
@@ -69,11 +69,19 @@ void InputButton::deactivate(){
     }
 }
 
-void InputButton::handleEvent(sf::Event &event){
-
+void InputButton::handleEvent(const sf::Event &event){
+    std::string tmpText = mText.getString(); 
+    if(event.key.code == sf::Keyboard::BackSpace && !tmpText.empty()){
+        tmpText.pop_back();
+    }
+    else if(event.type == sf::Event::TextEntered){
+            tmpText.push_back(event.text.unicode);
+    } 
+    mText.setString(tmpText);
+    setCenterOrigin(mText);
 }
 
-bool InputButton::handleRealTimeInput(const sf::RenderWindow &window){
+bool InputButton::handleRealTimeInput(const sf::RenderWindow &window){\
     sf::FloatRect bounds = takeLocalBounds();
     auto pos = sf::Mouse::getPosition(window);
     return contain(pos, bounds);

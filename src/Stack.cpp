@@ -3,8 +3,7 @@
 Stack::Stack(StateStack &stack, Context context):
     State(stack, context),
     mBackgroundSprite(),
-    mGUIContainer(),
-    isChoose(false){
+    mGUIContainer(){
         sf::Texture &texture = context.textures->get(Textures::WhiteBackground);
         mBackgroundSprite.setTexture(texture);
 
@@ -22,18 +21,14 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            if(isChoose){
+            while(mGUIContainer.isOutOfSize(6))
                 mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                isChoose = false;
-            }
+
             int cntx = 0;
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Random", action);
 
-            isChoose = true;
         });
 
         // set Insert button
@@ -48,18 +43,14 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            if(isChoose){
+            while(mGUIContainer.isOutOfSize(6))
                 mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                isChoose = false;
-            }
+
             int cntx = 0;
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to First", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Last", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Middle", action);
 
-            isChoose = true;
         });
 
         // set Delete button
@@ -67,25 +58,21 @@ Stack::Stack(StateStack &stack, Context context):
         auto deleteButton = std::make_shared<GUI::Button>(
             *context.fonts, *context.textures);
         deleteButton->setPosition(start_x, start_y + cnty * add_y);
-        deleteButton->setText("delete");
+        deleteButton->setText("Delete");
         deleteButton->setToggle(true);
         deleteButton->setCallback([this, context, cnty] (){
             auto action = ([this](){
                 // nothing here now
             });
 
-            if(isChoose){
+            while(mGUIContainer.isOutOfSize(6))
                 mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                isChoose = false;
-            }
+
             int cntx = 0;
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at First", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Last", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Middle", action);
 
-            isChoose = true;
         });
 
         // set Update Button
@@ -100,18 +87,19 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            if(isChoose){
+            while(mGUIContainer.isOutOfSize(6))
                 mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                isChoose = false;
-            }
+
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+
+            setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "At position");
+
+            setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "With value");
+
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Updating", action);
 
-            isChoose = true;
         });
 
         // Set Search Button
@@ -126,18 +114,19 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            if(isChoose){
+            while(mGUIContainer.isOutOfSize(6))
                 mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                mGUIContainer.depackend();
-                isChoose = false;
-            }
+
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+            
+            setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Position");
+            
+            setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Value");
+            
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Searching", action);
 
-            isChoose = true;
         });
 
         // set Back Button
@@ -187,6 +176,25 @@ bool Stack::handleRealTimeInput(){
 
 void Stack::setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action){
     auto stateButton = std::make_shared<GUI::Button>(
+        *context.fonts, *context.textures);
+    stateButton->setPosition(posx, posy);
+    stateButton->setText(text);
+    stateButton->setToggle(true);
+    auto tmp = action;
+    stateButton->setCallback(tmp);
+    mGUIContainer.pack(stateButton);
+}
+
+void Stack::setLabel(Context context, int posx, int posy, const std::string &text){
+    auto Label = std::make_shared<GUI::Label>(
+        "", *context.fonts);
+    Label->setPosition(posx, posy);
+    Label->setText(text);
+    mGUIContainer.pack(Label); 
+}
+
+void Stack::setInputButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action){
+    auto stateButton = std::make_shared<GUI::InputButton>(
         *context.fonts, *context.textures);
     stateButton->setPosition(posx, posy);
     stateButton->setText(text);

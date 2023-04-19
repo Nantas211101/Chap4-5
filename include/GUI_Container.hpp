@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "GUI_Component.hpp"
 #include "GUI_Button.hpp"
+#include "GUI_InputButton.hpp"
 
 #include <iostream>
 #include <assert.h>
@@ -21,6 +23,7 @@ class Container : public Component{
         virtual bool isSelectable() const;
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
+        bool isOutOfSize(int size);
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

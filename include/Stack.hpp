@@ -5,13 +5,10 @@
 #include "ResourceHolder.hpp"
 #include "GUI_Container.hpp"
 #include "GUI_Button.hpp"
+#include "GUI_Label.hpp"
+#include "GUI_InputButton.hpp"
 
 #include <memory>
-
-const int start_x = 100;
-const int start_y = 100;
-const int add_x = 200;
-const int add_y = 50;
 
 class Stack: public State{
     public:
@@ -23,11 +20,12 @@ class Stack: public State{
         virtual bool handleRealTimeInput();
     
     private:
-        void setStateButton(Context context, int x_times, int y_times, const std::string &text, std::function<void()> action);
+        void setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
+        void setLabel(Context context, int posx, int posy, const std::string &text);
+        void setInputButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
 
     private:
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
-        bool isChoose;
         
 };

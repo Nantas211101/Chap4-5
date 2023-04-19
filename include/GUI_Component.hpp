@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <assert.h>
+#include <iostream>
 
 namespace GUI{ // put in the namespace to prevent the conflix of the component
 
@@ -21,8 +23,8 @@ class Component :   public sf::Drawable,
         virtual bool isActive() const;
         virtual void activate();
         virtual void deactivate();
-        virtual void handleEvent(const sf::Event& event);
-        virtual bool handleRealTimeInput(const sf::RenderWindow &window);
+        virtual void handleEvent(const sf::Event& event) = 0;
+        virtual bool handleRealTimeInput(const sf::RenderWindow &window) = 0;
 
     private:
         bool mIsSelected;

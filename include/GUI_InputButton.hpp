@@ -6,6 +6,7 @@
 #include "ResourceIdentifiers.hpp"
 #include "TextureManipulate.hpp"
 
+#include <assert.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -34,8 +35,8 @@ class InputButton : public Component{
         virtual void activate();
         virtual void deactivate();
 
-        virtual void handleEvent(sf::Event &event);
-        bool handleRealTimeInput(const sf::RenderWindow &window);
+        virtual void handleEvent(const sf::Event &event);
+        virtual bool handleRealTimeInput(const sf::RenderWindow &window);
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
