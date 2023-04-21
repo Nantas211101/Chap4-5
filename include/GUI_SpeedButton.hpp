@@ -17,7 +17,7 @@ namespace GUI{
 
 class SpeedButton : public Component{
     public:
-        typedef std::shared_ptr<Button> Ptr;
+        typedef std::shared_ptr<SpeedButton> Ptr;
         typedef std::function<void()> Callback;
 
     public:
@@ -38,6 +38,7 @@ class SpeedButton : public Component{
 
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
+        virtual bool isSpeedButton();
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
@@ -50,7 +51,7 @@ class SpeedButton : public Component{
         const sf::Texture&      mSelectedTexture;
         const sf::Texture&      mPressedTexture;
         sf::Sprite              mSprite;
-        sf::Sprite              mSpeedSprite;
+        // sf::Sprite              mSpeedSprite;
         sf::Text                mText;
         bool                    mIsToggle;
         int                     cntActive;

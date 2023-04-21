@@ -45,7 +45,7 @@ void Container::handleEvent(const sf::Event &event){
     };
     if(event.type == sf::Event::MouseButtonPressed)
         if(event.mouseButton.button == sf::Mouse::Left){
-            if(hasSelection()){
+            if(hasSelection() && !mChildren[mSeletedChild]->isSpeedButton()){
                 mChildren[mSeletedChild]->deselect();
                 if(hasActivate())
                     mChildren[mActiveChild]->deactivate();
@@ -59,6 +59,16 @@ void Container::handleEvent(const sf::Event &event){
                 mActiveChild = -1;
             }
         }
+    if(event.type == sf::Event::MouseButtonReleased){
+        if(event.mouseButton.button == sf::Mouse::Left){
+            if(hasSelection() && mChildren[mSeletedChild]->isSpeedButton()){
+                mChildren[mSeletedChild]->deselect();
+                mChildren[mSeletedChild]->activate();
+                mChildren[mSeletedChild]->deactivate();
+                mChildren[mSeletedChild]->select();
+            }
+        }
+    }
     // else if(event.type == sf::Event::KeyReleased){
     //     if(event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up
     //     || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left){

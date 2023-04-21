@@ -81,10 +81,14 @@ void InputButton::handleEvent(const sf::Event &event){
     setCenterOrigin(mText);
 }
 
-bool InputButton::handleRealTimeInput(const sf::RenderWindow &window){\
+bool InputButton::handleRealTimeInput(const sf::RenderWindow &window){
     sf::FloatRect bounds = takeLocalBounds();
     auto pos = sf::Mouse::getPosition(window);
     return contain(pos, bounds);
+}
+
+bool InputButton::isSpeedButton(){
+    return false;
 }
 
 void InputButton::draw(sf::RenderTarget &target, sf::RenderStates states) const{

@@ -21,7 +21,7 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
+            while(mGUIContainer.isOutOfSize(7))
                 mGUIContainer.depackend();
 
             int cntx = 0;
@@ -43,7 +43,7 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
+            while(mGUIContainer.isOutOfSize(7))
                 mGUIContainer.depackend();
 
             int cntx = 0;
@@ -65,7 +65,7 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
+            while(mGUIContainer.isOutOfSize(7))
                 mGUIContainer.depackend();
 
             int cntx = 0;
@@ -87,7 +87,7 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
+            while(mGUIContainer.isOutOfSize(7))
                 mGUIContainer.depackend();
 
             int cntx = 0;
@@ -114,7 +114,7 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
+            while(mGUIContainer.isOutOfSize(7))
                 mGUIContainer.depackend();
 
             int cntx = 0;
@@ -128,6 +128,21 @@ Stack::Stack(StateStack &stack, Context context):
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Searching", action);
 
         });
+        
+        // Set Speed Button
+        auto speedButton = std::make_shared<GUI::SpeedButton>(
+            *context.fonts, *context.textures);
+        speedButton->setPosition(11 * start_x, start_y);
+        speedButton->setText("x1 speed");
+        speedButton->setToggle(true);
+        speedButton->setCallback([this] (){
+            // auto action = ([this](){
+            //     // nothing
+            // });
+
+
+        });
+
 
         // set Back Button
         ++cnty;
@@ -147,6 +162,7 @@ Stack::Stack(StateStack &stack, Context context):
         mGUIContainer.pack(updateButton);
         mGUIContainer.pack(searchButton);
         mGUIContainer.pack(backButton);
+        mGUIContainer.pack(speedButton);
 }
 
 void Stack::draw(){

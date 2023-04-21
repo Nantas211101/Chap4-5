@@ -37,6 +37,7 @@ class InputButton : public Component{
 
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
+        virtual bool isSpeedButton();
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

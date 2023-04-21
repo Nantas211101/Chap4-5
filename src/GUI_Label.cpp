@@ -19,6 +19,10 @@ bool Label::handleRealTimeInput(const sf::RenderWindow &window){
     return false;
 }
 
+bool Label::isSpeedButton(){
+    return false;
+}
+
 void Label::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mText, states);

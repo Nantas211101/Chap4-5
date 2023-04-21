@@ -7,6 +7,7 @@
 #include "GUI_Button.hpp"
 #include "GUI_Label.hpp"
 #include "GUI_InputButton.hpp"
+#include "GUI_SpeedButton.hpp"
 
 #include <memory>
 

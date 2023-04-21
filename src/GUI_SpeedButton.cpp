@@ -55,16 +55,19 @@ void SpeedButton::activate(){
             mSprite.setTexture(mPressedTexture);
         switch (cntActive)
         {
-            case cntActive == 0:
-                mSpeedSprite.setTexture(hinh1); // hinh x1 speed
+            case 0:
+                setText("x1 speed");
+                // mSpeedSprite.setTexture(hinh1); // hinh x1 speed
                 break;
             
-            case cntActive == 1:
-                mSpeedSprite.setTexture(hinh2); // hinh x2 speed
+            case 1:
+                setText("x2 speed");
+                // mSpeedSprite.setTexture(hinh2); // hinh x2 speed
                 break;
 
-            case cntActive == 2:
-                mSpeedSprite.setTexture(hinh3); // hinh x3 speed;
+            case 2:
+                setText("x3 speed");
+                // mSpeedSprite.setTexture(hinh3); // hinh x3 speed;
                 break;
 
             default:
@@ -82,7 +85,7 @@ void SpeedButton::activate(){
 void SpeedButton::deactivate(){
     Component::deactivate();
 
-    if(mIsToggle && !cntActive){
+    if(mIsToggle && cntActive == 0){
         // reset the textures of the msprite after deactivate to make sure it at the right Texture
         if(isSelected())
             mSprite.setTexture(mSelectedTexture);
@@ -100,10 +103,14 @@ bool SpeedButton::handleRealTimeInput(const sf::RenderWindow &window){
     return contain(pos, bounds);
 }
 
+bool SpeedButton::isSpeedButton(){
+    return true;
+}
+
 void SpeedButton::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);
-    target.draw(mSpeedSprite, states);
+    // target.draw(mSpeedSprite, states);
     target.draw(mText, states);
 }
 

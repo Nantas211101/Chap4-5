@@ -42,4 +42,8 @@ bool Component::handleRealTimeInput(const sf::RenderWindow &window){
     return false;
 }
 
+bool Component::isSpeedButton(){
+    return false;
+}
+
 }

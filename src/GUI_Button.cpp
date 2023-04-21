@@ -78,6 +78,10 @@ bool Button::handleRealTimeInput(const sf::RenderWindow &window){
     return contain(pos, bounds);
 }
 
+bool Button::isSpeedButton(){
+    return false;
+}
+
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);
