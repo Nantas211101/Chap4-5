@@ -77,7 +77,7 @@ void SettingsState::addButtonLabel(Player::Action action, float y, const std::st
     mBindingButtons[action]->setText(text);
     mBindingButtons[action]->setToggle(true);
 
-    mBindingLabels[action] = std::make_shared<GUI::Label>("", *context.fonts);
+    mBindingLabels[action] = std::make_shared<GUI::Label>("", *context.fonts, textSize);
     mBindingLabels[action]->setPosition(300.f, y + 15.f);
 
     mGUIContainer.pack(mBindingButtons[action]);

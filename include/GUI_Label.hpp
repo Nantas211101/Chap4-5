@@ -15,7 +15,7 @@ class Label: public Component{
         typedef std::shared_ptr<Label> Ptr;
 
     public:
-        Label(const std::string &text, const FontHolder &fonts);
+        Label(const std::string &text, const FontHolder &fonts, int sizeoftext);
         
         virtual bool isSelectable() const;
         void setText(const std::string &text);

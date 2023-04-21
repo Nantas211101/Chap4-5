@@ -20,6 +20,7 @@ class Container : public Component{
         
         void pack(Component::Ptr component);
         void depackend();
+        void depackend(int n);
         virtual bool isSelectable() const;
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);

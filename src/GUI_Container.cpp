@@ -21,6 +21,10 @@ void Container::depackend(){
     mChildren.erase(mChildren.end() - 1);
 }
 
+void Container::depackend(int n){
+    mChildren.erase(mChildren.end() - n - 1);
+}
+
 // Container is not a selectable object
 bool Container::isSelectable() const{
     return false;
@@ -89,7 +93,7 @@ void Container::handleEvent(const sf::Event &event){
 bool Container::handleRealTimeInput(const sf::RenderWindow &window){
     // Checking for selecting
     for(int index = 0; index < mChildren.size(); ++index)
-        if(mActiveChild != index && mChildren[index]->handleRealTimeInput(window) && mChildren[index]->isSpeedUp()){
+        if(mActiveChild != index && mChildren[index]->handleRealTimeInput(window)){
             select(index);
         }
 

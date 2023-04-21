@@ -7,8 +7,10 @@
 #include "GUI_Button.hpp"
 #include "GUI_Label.hpp"
 #include "GUI_InputButton.hpp"
+#include "GUI_SpeedButton.hpp"
 
 #include <memory>
+
 
 class StaticArray: public State{
     public:
@@ -21,8 +23,10 @@ class StaticArray: public State{
     
     private:
         void setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
-        void setLabel(Context context, int posx, int posy, const std::string &text);
+        void setLabel(Context context, int posx, int posy, const std::string &text, int sizeoftext);
         void setInputButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
+        void resetButton(int size);
+        void printedError(Context context, const std::string &text);
     
     private:
         sf::Sprite mBackgroundSprite;

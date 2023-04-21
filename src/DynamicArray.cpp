@@ -1,4 +1,5 @@
 #include "../include/DynamicArray.hpp"
+const std::string Name = "DynamicArray";
 
 DynamicArray::DynamicArray(StateStack &stack, Context context):
     State(stack, context),
@@ -6,7 +7,7 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
     mGUIContainer(){
         sf::Texture &texture = context.textures->get(Textures::WhiteBackground);
         mBackgroundSprite.setTexture(texture);
-
+        
         int cnty = -1;
 
         // set Init button
@@ -21,11 +22,31 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
 
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", action);
+
+            auto ManuallyAction = ([this, context, cnty](){
+
+                resetButton(NumInitButton + 1);
+
+
+                auto tmp = ([](){
+
+                });
+
+                // Number of nodes
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Number", textSize);
+                //
+
+                // Value of a node 
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Value", textSize);
+
+            });
+
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", ManuallyAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Random", action);
 
@@ -43,13 +64,43 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
+
+            auto MiddleAction = ([this, context, cnty] (){
+                
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){
+
+                });
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "At position", textSize);
+
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "With value", textSize);  
+                
+
+            });
+
+            auto ValueAction = ([this, context, cnty] (){
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){});
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Value", textSize);  
+            });
+
+            auto ErrorAction = ([this, context](){
+                resetButton(NumInitButton + 3);
+                printedError(context, errorMessage + Name);
+            });
 
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to First", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Last", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Middle", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Last", ValueAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Middle", ErrorAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to First", ErrorAction);
 
         });
 
@@ -65,13 +116,35 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
+
+            auto MiddleAction = ([this, context, cnty] (){
+                
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){
+
+                });
+
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "At position", textSize);
+
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "With value", textSize);  
+                
+
+            });
+
+            auto ErrorAction = ([this, context](){
+                resetButton(NumInitButton + 3);
+                printedError(context, errorMessage + Name);
+            });
 
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at First", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Middle", ErrorAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at First", ErrorAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Last", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Middle", action);
 
         });
 
@@ -87,16 +160,15 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
 
             int cntx = 0;
 
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "At position");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "At position", textSize);
 
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "With value");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "With value", textSize);
 
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Updating", action);
 
@@ -114,20 +186,34 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(6))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
 
             int cntx = 0;
             
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Position");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Position", textSize);
             
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Value");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Value", textSize);
             
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Searching", action);
 
         });
+        
+        // Set Speed Button
+        auto speedButton = std::make_shared<GUI::SpeedButton>(
+            *context.fonts, *context.textures);
+        speedButton->setPosition(11 * start_x, start_y);
+        speedButton->setText("x1 speed");
+        speedButton->setToggle(true);
+        speedButton->setCallback([this] (){
+            // auto action = ([this](){
+            //     // nothing
+            // });
+
+
+        });
+
 
         // set Back Button
         ++cnty;
@@ -147,6 +233,7 @@ DynamicArray::DynamicArray(StateStack &stack, Context context):
         mGUIContainer.pack(updateButton);
         mGUIContainer.pack(searchButton);
         mGUIContainer.pack(backButton);
+        mGUIContainer.pack(speedButton);
 }
 
 void DynamicArray::draw(){
@@ -185,9 +272,9 @@ void DynamicArray::setStateButton(Context context, int posx, int posy, const std
     mGUIContainer.pack(stateButton);
 }
 
-void DynamicArray::setLabel(Context context, int posx, int posy, const std::string &text){
+void DynamicArray::setLabel(Context context, int posx, int posy, const std::string &text, int sizeoftext){
     auto Label = std::make_shared<GUI::Label>(
-        "", *context.fonts);
+        "", *context.fonts, sizeoftext);
     Label->setPosition(posx, posy);
     Label->setText(text);
     mGUIContainer.pack(Label); 
@@ -202,4 +289,14 @@ void DynamicArray::setInputButton(Context context, int posx, int posy, const std
     auto tmp = action;
     stateButton->setCallback(tmp);
     mGUIContainer.pack(stateButton);
+}
+
+void DynamicArray::resetButton(int size){
+    while(mGUIContainer.isOutOfSize(size))
+        mGUIContainer.depackend();
+}
+
+void DynamicArray::printedError(Context context, const std::string &text){
+    sf::Vector2f pos = context.window->getView().getCenter();
+    setLabel(context, pos.x, pos.y + add_y, text, textSize * 2);
 }

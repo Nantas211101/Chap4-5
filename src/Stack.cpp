@@ -1,4 +1,5 @@
 #include "../include/Stack.hpp"
+const std::string Name = "Stack";
 
 Stack::Stack(StateStack &stack, Context context):
     State(stack, context),
@@ -6,7 +7,7 @@ Stack::Stack(StateStack &stack, Context context):
     mGUIContainer(){
         sf::Texture &texture = context.textures->get(Textures::WhiteBackground);
         mBackgroundSprite.setTexture(texture);
-
+        
         int cnty = -1;
 
         // set Init button
@@ -22,33 +23,30 @@ Stack::Stack(StateStack &stack, Context context):
             });
 
             resetButton(NumInitButton);
+
             int cntx = 0;
 
             auto ManuallyAction = ([this, context, cnty](){
 
                 resetButton(NumInitButton + 1);
 
-                cntx = 1;
 
-                auto InputNumber = ([this, context, cnty, cntx](){
+                auto tmp = ([](){
 
-                    // Value of a node 
-                    setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", action);
-                    setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y + add_y / 2, "Value");
-
-                })
+                });
 
                 // Number of nodes
-                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", InputNumber);
-                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y + add_y / 2, "Number");
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Number", textSize);
                 //
 
-                
+                // Value of a node 
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Value", textSize);
 
+            });
 
-            })
-
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", ManuallyAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Random", action);
 
@@ -66,13 +64,43 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(7))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
+
+            auto MiddleAction = ([this, context, cnty] (){
+                
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){
+
+                });
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "At position", textSize);
+
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "With value", textSize);  
+                
+
+            });
+
+            auto ValueAction = ([this, context, cnty] (){
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){});
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "Value", textSize);  
+            });
+
+            auto ErrorAction = ([this, context](){
+                resetButton(NumInitButton + 3);
+                printedError(context, errorMessage + Name);
+            });
 
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to First", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Last", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Middle", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Last", ValueAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to Middle", ErrorAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "to First", ErrorAction);
 
         });
 
@@ -88,13 +116,35 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(7))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
+
+            auto MiddleAction = ([this, context, cnty] (){
+                
+                resetButton(NumInitButton + 1);
+
+                auto tmp = ([](){
+
+                });
+
+
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "At position", textSize);
+
+                setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", tmp);
+                setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y - add_y / 2, "With value", textSize);  
+                
+
+            });
+
+            auto ErrorAction = ([this, context](){
+                resetButton(NumInitButton + 3);
+                printedError(context, errorMessage + Name);
+            });
 
             int cntx = 0;
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at First", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Middle", ErrorAction);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at First", ErrorAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Last", action);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "at Middle", action);
 
         });
 
@@ -110,16 +160,15 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(7))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
 
             int cntx = 0;
 
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "At position");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "At position", textSize);
 
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "With value");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "With value", textSize);
 
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Updating", action);
 
@@ -137,16 +186,15 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(7))
-                mGUIContainer.depackend();
+            resetButton(NumInitButton);
 
             int cntx = 0;
             
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Position");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Position", textSize);
             
             setInputButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "", action);
-            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Value");
+            setLabel(context, start_x + (cntx) * add_x + add_x / 2, start_y + cnty * add_y - add_y / 2, "By Value", textSize);
             
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Searching", action);
 
@@ -224,9 +272,9 @@ void Stack::setStateButton(Context context, int posx, int posy, const std::strin
     mGUIContainer.pack(stateButton);
 }
 
-void Stack::setLabel(Context context, int posx, int posy, const std::string &text){
+void Stack::setLabel(Context context, int posx, int posy, const std::string &text, int sizeoftext){
     auto Label = std::make_shared<GUI::Label>(
-        "", *context.fonts);
+        "", *context.fonts, sizeoftext);
     Label->setPosition(posx, posy);
     Label->setText(text);
     mGUIContainer.pack(Label); 
@@ -248,6 +296,7 @@ void Stack::resetButton(int size){
         mGUIContainer.depackend();
 }
 
-void Stack::printedError(const std::string &text){
-
+void Stack::printedError(Context context, const std::string &text){
+    sf::Vector2f pos = context.window->getView().getCenter();
+    setLabel(context, pos.x, pos.y + add_y, text, textSize * 2);
 }
