@@ -23,6 +23,10 @@ bool Label::isSpeedButton(){
     return false;
 }
 
+bool Label::isSpeedUp(){
+    return false;
+}
+
 void Label::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mText, states);

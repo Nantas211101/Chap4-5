@@ -91,6 +91,10 @@ bool InputButton::isSpeedButton(){
     return false;
 }
 
+bool InputButton::isSpeedUp(){
+    return false;
+}
+
 void InputButton::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);

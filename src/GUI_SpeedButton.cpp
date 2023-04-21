@@ -107,6 +107,10 @@ bool SpeedButton::isSpeedButton(){
     return true;
 }
 
+bool SpeedButton::isSpeedUp(){
+    return cntActive > 0;
+}
+
 void SpeedButton::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);

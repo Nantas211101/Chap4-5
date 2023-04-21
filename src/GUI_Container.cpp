@@ -89,7 +89,7 @@ void Container::handleEvent(const sf::Event &event){
 bool Container::handleRealTimeInput(const sf::RenderWindow &window){
     // Checking for selecting
     for(int index = 0; index < mChildren.size(); ++index)
-        if(mActiveChild != index && mChildren[index]->handleRealTimeInput(window)){
+        if(mActiveChild != index && mChildren[index]->handleRealTimeInput(window) && mChildren[index]->isSpeedUp()){
             select(index);
         }
 

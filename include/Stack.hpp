@@ -11,6 +11,8 @@
 
 #include <memory>
 
+const int NumInitButton = 7;
+
 class Stack: public State{
     public:
         Stack(StateStack &stack, Context context);
@@ -24,6 +26,8 @@ class Stack: public State{
         void setStateButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
         void setLabel(Context context, int posx, int posy, const std::string &text);
         void setInputButton(Context context, int posx, int posy, const std::string &text, std::function<void()> action);
+        void resetButton(int size);
+        void printedError(const std::string &text);
 
     private:
         sf::Sprite mBackgroundSprite;

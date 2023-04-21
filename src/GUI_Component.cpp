@@ -46,4 +46,8 @@ bool Component::isSpeedButton(){
     return false;
 }
 
+bool Component::isSpeedUp(){
+    return false;
+}
+
 }

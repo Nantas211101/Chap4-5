@@ -26,6 +26,7 @@ class Component :   public sf::Drawable,
         virtual void handleEvent(const sf::Event& event) = 0;
         virtual bool handleRealTimeInput(const sf::RenderWindow &window) = 0;
         virtual bool isSpeedButton();
+        virtual bool isSpeedUp();
 
     private:
         bool mIsSelected;

@@ -82,6 +82,10 @@ bool Button::isSpeedButton(){
     return false;
 }
 
+bool Button::isSpeedUp(){
+    return false;
+}
+
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);

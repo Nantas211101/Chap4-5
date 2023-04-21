@@ -21,10 +21,33 @@ Stack::Stack(StateStack &stack, Context context):
                 // nothing here now
             });
 
-            while(mGUIContainer.isOutOfSize(7))
-                mGUIContainer.depackend();
-
+            resetButton(NumInitButton);
             int cntx = 0;
+
+            auto ManuallyAction = ([this, context, cnty](){
+
+                resetButton(NumInitButton + 1);
+
+                cntx = 1;
+
+                auto InputNumber = ([this, context, cnty, cntx](){
+
+                    // Value of a node 
+                    setInputButton(context, start_x + 3 * add_x, start_y + (cnty + 1) * add_y, "", action);
+                    setLabel(context, start_x + 3 * add_x + add_x / 2, start_y + (cnty + 1) * add_y + add_y / 2, "Value");
+
+                })
+
+                // Number of nodes
+                setInputButton(context, start_x + 2 * add_x, start_y + (cnty + 1) * add_y, "", InputNumber);
+                setLabel(context, start_x + 2 * add_x + add_x / 2, start_y + (cnty + 1) * add_y + add_y / 2, "Number");
+                //
+
+                
+
+
+            })
+
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", action);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Random", action);
@@ -218,4 +241,13 @@ void Stack::setInputButton(Context context, int posx, int posy, const std::strin
     auto tmp = action;
     stateButton->setCallback(tmp);
     mGUIContainer.pack(stateButton);
+}
+
+void Stack::resetButton(int size){
+    while(mGUIContainer.isOutOfSize(size))
+        mGUIContainer.depackend();
+}
+
+void Stack::printedError(const std::string &text){
+
 }

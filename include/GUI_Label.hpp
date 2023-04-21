@@ -22,6 +22,7 @@ class Label: public Component{
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
         virtual bool isSpeedButton();
+        virtual bool isSpeedUp();
 
     private:
         void draw(sf::RenderTarget &target, sf::RenderStates states) const;
