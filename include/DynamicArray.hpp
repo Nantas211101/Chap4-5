@@ -8,6 +8,7 @@
 #include "GUI_Label.hpp"
 #include "GUI_InputButton.hpp"
 #include "GUI_SpeedButton.hpp"
+#include "GUI_FileManipulate.hpp"
 
 #include <memory>
 
@@ -30,4 +31,5 @@ class DynamicArray: public State{
     private:
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
+        GUI::FileManipulate FileHolder;
 };

@@ -46,8 +46,12 @@ SLL::SLL(StateStack &stack, Context context):
 
             });
 
+            auto FileAction = ([this](){
+                FileHolder.externalFileManipulate();
+            });
+
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", ManuallyAction);
-            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", action);
+            setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", FileAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Random", action);
 
         });
