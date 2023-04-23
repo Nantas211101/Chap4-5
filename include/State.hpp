@@ -8,7 +8,7 @@ const int start_x = 100;
 const int start_y = 100;
 const int add_x = 200;
 const int add_y = 50;
-const int textSize = 16;
+const int textSize = 20;
 const int NumInitButton = 7;
 const std::string errorMessage = "You can not do this action in ";
 class StateStack;  
