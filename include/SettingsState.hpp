@@ -8,6 +8,7 @@
 #include "ResourceIdentifiers.hpp"
 #include "StringConvert.hpp"
 #include <memory>
+#include <array>
 
 class SettingsState : public State{
     public:

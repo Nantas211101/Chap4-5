@@ -8,9 +8,9 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+file(GLOB SRCS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
-
-add_executable(Game ./src/Game.cpp ./src/main.cpp)
+add_executable(Game ${SRCS})
 target_include_directories(Game PRIVATE ./include)
 target_link_libraries(Game PRIVATE sfml-graphics sfml-window sfml-system)
 target_compile_features(Game PRIVATE cxx_std_17)

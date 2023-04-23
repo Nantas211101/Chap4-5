@@ -4,12 +4,12 @@ const std::string Name = "Stack";
 Stack::Stack(StateStack &stack, Context context):
     State(stack, context),
     mBackgroundSprite(),
-    mGUIContainer(){
+    mGUIContainer(),
+    mDisplayer(5, textSize, 50, 200){
         sf::Texture &texture = context.textures->get(Textures::WhiteBackground);
         mBackgroundSprite.setTexture(texture);
         
         int cnty = -1;
-
         // set Init button
         ++cnty;
         auto initButton = std::make_shared<GUI::Button>(
@@ -246,6 +246,7 @@ void Stack::draw(){
     
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
+    // mDisplayer.draw(window);
 }
 
 bool Stack::update(sf::Time dt){
