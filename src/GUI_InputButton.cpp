@@ -28,6 +28,10 @@ void InputButton::setToggle(bool flag){
     mIsToggle = flag;
 }
 
+std::string InputButton::takeSaveText(){
+    return saveText;
+}
+
 bool InputButton::isSelectable() const{
     return true;
 }
@@ -77,6 +81,11 @@ void InputButton::handleEvent(const sf::Event &event){
     else if(event.type == sf::Event::TextEntered){
             tmpText.push_back(event.text.unicode);
     } 
+
+    if(event.type == sf::Event::KeyPressed)
+        if(event.key.code == sf::Keyboard::Return){
+            saveText = tmpText;
+        }   
     mText.setString(tmpText);
     setCenterOrigin(mText);
 }

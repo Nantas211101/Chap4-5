@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace GUI{
 
@@ -25,6 +26,8 @@ class Container : public Component{
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
         bool isOutOfSize(int size);
+        int takeSize();
+
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

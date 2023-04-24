@@ -25,6 +25,7 @@ class InputButton : public Component{
         void setCallback(Callback callback);
         void setText(const std::string &text);
         void setToggle(bool flag);
+        virtual std::string takeSaveText();
 
         // selection
         virtual bool isSelectable() const;
@@ -53,6 +54,7 @@ class InputButton : public Component{
         sf::Sprite              mSprite;
         sf::Text                mText;
         bool                    mIsToggle;
+        std::string             saveText;
 };
 
 }

@@ -35,4 +35,6 @@ class Stack: public State{
         GUI::Container mGUIContainer;
         GUI::FileManipulate FileHolder;
         DisplayCode mDisplayer;
+        std::vector<int> InputPosition;
+        std::vector<std::string> tmp;
 };

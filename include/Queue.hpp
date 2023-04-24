@@ -9,6 +9,7 @@
 #include "GUI_InputButton.hpp"
 #include "GUI_SpeedButton.hpp"
 #include "GUI_FileManipulate.hpp"
+#include "DisplayCode.hpp"
 
 #include <memory>
 
@@ -32,4 +33,5 @@ class Queue: public State{
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
         GUI::FileManipulate FileHolder;
+        DisplayCode mDisplayer;
 };

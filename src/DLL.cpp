@@ -4,7 +4,8 @@ const std::string Name = "Doubly Link List";
 DLL::DLL(StateStack &stack, Context context):
     State(stack, context),
     mBackgroundSprite(),
-    mGUIContainer(){
+    mGUIContainer(),
+    mDisplayer(*context.window, 5, textSize, add_x * 2, add_y, context.fonts->get(Fonts::Main)){
         sf::Texture &texture = context.textures->get(Textures::WhiteBackground);
         mBackgroundSprite.setTexture(texture);
         
@@ -246,6 +247,7 @@ void DLL::draw(){
     
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
+    mDisplayer.draw(window);
 }
 
 bool DLL::update(sf::Time){
