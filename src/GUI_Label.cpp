@@ -27,6 +27,10 @@ bool Label::isSpeedUp(){
     return false;
 }
 
+std::string Label::takeSaveText(){
+    return "";
+}
+
 void Label::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mText, states);

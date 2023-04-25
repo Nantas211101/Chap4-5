@@ -15,6 +15,10 @@ void Container::depackend() { mChildren.erase(mChildren.end() - 1); }
 
 void Container::depackend(int n) { mChildren.erase(mChildren.end() - n - 1); }
 
+auto Container::takeOutString(int pos) -> std::string{
+    return mChildren[pos]->takeSaveText();
+}
+
 // Container is not a selectable object
 bool Container::isSelectable() const { return false; }
 
@@ -112,6 +116,10 @@ bool Container::handleRealTimeInput(const sf::RenderWindow& window) {
     //     }
     // }
     return false;
+}
+
+std::string Container::takeSaveText(){
+    return "";
 }
 
 bool Container::isOutOfSize(int size) { return mChildren.size() > size; }

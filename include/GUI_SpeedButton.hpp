@@ -40,6 +40,7 @@ class SpeedButton : public Component{
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
         virtual bool isSpeedButton();
         virtual bool isSpeedUp();
+        virtual std::string takeSaveText();
 
     private:
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

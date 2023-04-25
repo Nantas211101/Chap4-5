@@ -111,6 +111,10 @@ bool SpeedButton::isSpeedUp(){
     return cntActive > 0;
 }
 
+std::string SpeedButton::takeSaveText(){
+    return "";
+}
+
 void SpeedButton::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);

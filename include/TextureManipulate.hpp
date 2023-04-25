@@ -3,3 +3,4 @@
 
 void setCenterOrigin(sf::Text &text);
 void setCenterOrigin(sf::Sprite &sprite);
+void setCenterOrigin(sf::CircleShape &shape);

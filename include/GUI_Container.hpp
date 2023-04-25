@@ -18,13 +18,14 @@ class Container : public Component{
 
     public:
         Container();
-        
         void pack(Component::Ptr component);
         void depackend();
         void depackend(int n);
+        auto takeOutString(int pos) -> std::string;
         virtual bool isSelectable() const;
         virtual void handleEvent(const sf::Event &event);
         virtual bool handleRealTimeInput(const sf::RenderWindow &window);
+        virtual std::string takeSaveText();
         bool isOutOfSize(int size);
         int takeSize();
 

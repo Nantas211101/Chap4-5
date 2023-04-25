@@ -86,6 +86,10 @@ bool Button::isSpeedUp(){
     return false;
 }
 
+std::string Button::takeSaveText(){
+    return "";
+}
+
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     states.transform *= getTransform();
     target.draw(mSprite, states);

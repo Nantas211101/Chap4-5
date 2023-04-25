@@ -6,7 +6,9 @@ Stack::Stack(StateStack& stack, Context context)
       mBackgroundSprite(),
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)) {
+                 context.fonts->get(Fonts::Main)),
+      arrow({start_x, start_y + add_y * 10},
+            {start_x + add_x, start_y + add_y * 10}) {
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -279,6 +281,7 @@ void Stack::draw() {
 
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
+    arrow.draw(window);
     mDisplayer.draw(window);
 }
 
@@ -289,7 +292,10 @@ bool Stack::update(sf::Time dt) {
 
 bool Stack::handleEvent(const sf::Event& event) {
     mGUIContainer.handleEvent(event);
-    
+    tmp.clear();
+    for (int pos : InputPosition) {
+        tmp.push_back(mGUIContainer.takeOutString(pos));
+    }
     handleRealTimeInput();
     return false;
 }

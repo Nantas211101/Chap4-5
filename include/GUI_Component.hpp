@@ -16,6 +16,7 @@ class Component :   public sf::Drawable,
         Component();
         virtual ~Component();
         
+        virtual std::string takeSaveText() = 0;
         virtual bool isSelectable() const = 0;
         bool isSelected() const;
         virtual void select();
