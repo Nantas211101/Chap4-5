@@ -10,7 +10,9 @@
 #include "GUI_SpeedButton.hpp"
 #include "GUI_FileManipulate.hpp"
 #include "DisplayCode.hpp"
+#include "StackNode.hpp"
 #include "ArrowData.hpp"
+#include "SceneNode.hpp"
 
 #include <memory>
 
@@ -38,5 +40,5 @@ class Stack: public State{
         DisplayCode mDisplayer;
         std::vector<int> InputPosition;
         std::vector<std::string> tmp;
-        ArrowData arrow;
+        SceneNode mScenegraph;
 };

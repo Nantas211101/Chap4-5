@@ -1,6 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 
+#include <SFML/Graphics.hpp>
+#include <iostream>
 void setCenterOrigin(sf::Text &text);
 void setCenterOrigin(sf::Sprite &sprite);
-void setCenterOrigin(sf::CircleShape &shape);
+void setCenterOrigin(sf::CircleShape &shape, bool isCircle = false);
+void setCenterOrigin(sf::RectangleShape &shape);
+void setLeftCenterOrigin(sf::RectangleShape &shape);
