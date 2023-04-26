@@ -12,6 +12,7 @@ class ArrowData : public SceneNode {
     void setStart(sf::Vector2f pos);
     void setEnd(sf::Vector2f pos);
     void setNextNode(NodeData* mNext);
+    void setDrawFlag(bool flag);
     void update();
     virtual void drawCurrent(sf::RenderTarget& target,
                              sf::RenderStates states) const;
@@ -22,6 +23,7 @@ class ArrowData : public SceneNode {
     sf::RectangleShape mBody;
     sf::CircleShape mHead;
     bool isNotDraw;
+    bool drawFlag;
     bool isStart;
     bool isEnd;
     NodeData* mNextNode;

@@ -17,6 +17,7 @@ class StackNode : public SceneNode {
         void setRadiusNode(float radius);
         void setNextNode(NodeData *mNext);
         void setEnd(sf::Vector2f pos);
+        void setIsDrawArrow(bool flag);
 
     private:
         NodeData *mDataNode;

@@ -7,6 +7,7 @@ ArrowData::ArrowData()
       mBody(),
       mHead(Thickness, 3),
       isNotDraw(false),
+      drawFlag(true),
       isStart(false),
       isEnd(false),
       mNextNode(nullptr) {
@@ -35,6 +36,8 @@ void ArrowData::setNextNode(NodeData* mNext) {
     setEnd({nextPos.x - nextRadius, nextPos.y});
 }
 
+void ArrowData::setDrawFlag(bool flag) { drawFlag = flag; }
+
 void ArrowData::update() {
     isNotDraw = (isStart && isEnd);
     if (!isNotDraw)
@@ -45,13 +48,14 @@ void ArrowData::update() {
     mBody.setPosition(mStart);
 
     setCenterOrigin(mHead);
-    mHead.setPosition(mEnd.x + 1.f / 3.f * Thickness,
-                      mEnd.y);
+    mHead.setPosition(mEnd.x + 1.f / 3.f * Thickness, mEnd.y);
     mHead.setRotation(90);
 }
 
 void ArrowData::drawCurrent(sf::RenderTarget& target,
-                            sf::RenderStates states) const{
+                            sf::RenderStates states) const {
+    if (!drawFlag)
+        return;
     target.draw(mBody, states);
     target.draw(mHead, states);
 }

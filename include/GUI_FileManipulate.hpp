@@ -1,4 +1,6 @@
 #pragma once
+#include "Constants.hpp"
+
 #include <windows.h>
 #include <commdlg.h>
 #include <shlobj.h>
@@ -10,15 +12,16 @@
 
 namespace GUI{
 
-class FileManipulate{
+class FileManipulate : private Constants{
 
     public:
         FileManipulate();
 
         void externalFileManipulate();
+        bool takeInformation(int &n, std::vector<int> &arraySave);
 
     private:
-        std::vector<std::string> textSave;
+        std::string textSave;
 
 };
 

@@ -22,3 +22,7 @@ void StackNode::setRadiusNode(float radius) { mDataNode->setRadius(radius); }
 void StackNode::setNextNode(NodeData* mNext) { mArrow->setNextNode(mNext); }
 
 void StackNode::setEnd(sf::Vector2f pos) { mArrow->setEnd({pos.x, pos.y}); }
+
+void StackNode::setIsDrawArrow(bool flag){
+    mArrow->setDrawFlag(flag);
+}

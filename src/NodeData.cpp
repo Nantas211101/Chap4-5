@@ -5,9 +5,9 @@ NodeData::NodeData(int n, const FontHolder& fonts, int sizeOfText,
     : mShape(), mDisplayText(toString(n), fonts.get(Fonts::Main), sizeOfText) {
     mShape.setRadius(sizeOfShape / 2);
     mShape.setFillColor(sf::Color::Blue);
+    setCenterOrigin(mShape);
     // mShape.setOutlineColor(sf::Color::Red);
     // mShape.setOutlineThickness(5.f);
-    setCenterOrigin(mShape);
 
     mDisplayText.setFillColor(sf::Color::White);
     setCenterOrigin(mDisplayText);
@@ -28,7 +28,7 @@ void NodeData::setPosition(sf::Vector2f pos) {
     mShape.setPosition(pos);
 
     setCenterOrigin(mDisplayText);
-    mDisplayText.setPosition(pos);
+    mDisplayText.setPosition({pos.x, pos.y - 10.f});
 }
 
 void NodeData::setPosition(float x, float y) { setPosition({x, y}); }
