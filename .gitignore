@@ -3,3 +3,4 @@ resource
 obj
 release
 build
+.clang-format
