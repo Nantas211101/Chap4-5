@@ -7,7 +7,7 @@ Stack::Stack(StateStack& stack, Context context)
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
                  context.fonts->get(Fonts::Main)),
-      mScenegraph() {
+      mScenegraph(){
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -54,12 +54,14 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto FileAction = ([this, context]() {
-            FileHolder.externalFileManipulate();
+            FileHolder.select();
            
-            if (!FileHolder.takeInformation(n, array)) {
-                printedError(context, infoError1, 1);
-                printedError(context, infoError2, 2);
-            }
+            // if (!FileHolder.checkText()) {
+            //     printedError(context, infoError1, 1);
+            //     printedError(context, infoError2, 2);
+            // }
+            // // else 
+            //     // FileHo
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,

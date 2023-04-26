@@ -49,7 +49,7 @@ CLL::CLL(StateStack &stack, Context context):
             });
 
             auto FileAction = ([this](){
-                FileHolder.externalFileManipulate();
+                FileHolder.select();
             });
             
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", ManuallyAction);

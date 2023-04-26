@@ -4,7 +4,7 @@
 #include "DisplayCode.hpp"
 #include "GUI_Button.hpp"
 #include "GUI_Container.hpp"
-#include "GUI_FileManipulate.hpp"
+#include "GUI_FileSelector.hpp"
 #include "GUI_InputButton.hpp"
 #include "GUI_Label.hpp"
 #include "GUI_SpeedButton.hpp"
@@ -39,11 +39,11 @@ class Stack : public State, private Constants {
   private:
     sf::Sprite mBackgroundSprite;
     GUI::Container mGUIContainer;
-    GUI::FileManipulate FileHolder;
+    GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
     std::vector<std::string> tmp;
     SceneNode mScenegraph;
-    int n;
-    std::vector<int> array;
+    // int n;
+    // std::vector<int> array;
 };

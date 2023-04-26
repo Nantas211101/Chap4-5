@@ -8,7 +8,7 @@
 #include "GUI_Label.hpp"
 #include "GUI_InputButton.hpp"
 #include "GUI_SpeedButton.hpp"
-#include "GUI_FileManipulate.hpp"
+#include "GUI_FileSelector.hpp"
 #include "DisplayCode.hpp"
 
 #include <memory>
@@ -32,7 +32,7 @@ class SLL: public State{
     private:
         sf::Sprite mBackgroundSprite;
         GUI::Container mGUIContainer;
-        GUI::FileManipulate FileHolder;
+        GUI::FileSelector FileHolder;
         DisplayCode mDisplayer;
         std::vector<int> InputPosition;
         std::vector<std::string> tmp;
