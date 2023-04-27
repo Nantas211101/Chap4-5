@@ -9,7 +9,7 @@ Stack::Stack(StateStack& stack, Context context)
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
                  context.fonts->get(Fonts::Main)),
-      mScenegraph(){
+      mScenegraph() {
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -284,14 +284,16 @@ Stack::Stack(StateStack& stack, Context context)
     testNode1->setPosNode({start_x, start_y + add_y * 10});
     testNode1->setEnd({start_x + add_x, start_y + add_y * 10});
 
-    std::unique_ptr<StackNode> testNode2(
-        new StackNode(*context.fonts, *context.textures));
+    StackNode* tmp = new StackNode(*context.fonts, *context.textures);
+    std::unique_ptr<StackNode> testNode2(tmp);
     testNode2->setPosNode({start_x + add_x, start_y + add_y * 10});
     testNode2->setEnd({start_x + 2 * add_x, start_y + add_y * 10});
     testNode2->setIsDrawArrow(false);
 
     mScenegraph.attachChild(std::move(testNode1));
     mScenegraph.attachChild(std::move(testNode2));
+    mScenegraph.detachChild(*tmp);
+
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);

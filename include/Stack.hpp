@@ -44,4 +44,5 @@ class Stack : public State, private Constants {
     std::vector<int> InputPosition;
     SceneNode mScenegraph;
     std::vector<int> data;
+    std::vector<StackNode*> ptrSaver; 
 };
