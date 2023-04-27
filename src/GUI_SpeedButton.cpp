@@ -1,4 +1,4 @@
-#include "../include/GUI_SpeedButton.hpp"
+#include "GUI_SpeedButton.hpp"
 
 namespace GUI{
 

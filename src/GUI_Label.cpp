@@ -1,4 +1,4 @@
-#include "../include/GUI_Label.hpp"
+#include "GUI_Label.hpp"
 
 namespace GUI{
 

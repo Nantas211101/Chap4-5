@@ -1,4 +1,4 @@
-#include "../include/TitleState.hpp"
+#include "TitleState.hpp"
 
 TitleState::TitleState(StateStack &stack, Context context):
     State(stack, context),

@@ -42,8 +42,6 @@ class Stack : public State, private Constants {
     GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
-    std::vector<std::string> tmp;
     SceneNode mScenegraph;
-    // int n;
-    // std::vector<int> array;
+    std::vector<int> data;
 };

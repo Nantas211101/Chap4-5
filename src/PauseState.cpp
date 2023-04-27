@@ -1,4 +1,4 @@
-#include "../include/PauseState.hpp"
+#include "PauseState.hpp"
 
 PauseState::PauseState(StateStack &stack, Context context):
     State(stack, context),

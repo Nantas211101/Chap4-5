@@ -1,4 +1,4 @@
-#include "../include/NodeData.hpp"
+#include "NodeData.hpp"
 
 NodeData::NodeData(int n, const FontHolder& fonts, int sizeOfText,
                    int sizeOfShape)

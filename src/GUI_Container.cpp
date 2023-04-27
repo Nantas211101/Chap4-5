@@ -1,4 +1,4 @@
-#include "../include/GUI_Container.hpp"
+#include "GUI_Container.hpp"
 
 namespace GUI {
 

@@ -1,4 +1,4 @@
-#include "../include/TextureManipulate.hpp"
+#include "TextureManipulate.hpp"
 
 void setCenterOrigin(sf::Text &text){
     sf::FloatRect bounds = text.getLocalBounds();

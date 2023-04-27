@@ -1,4 +1,4 @@
-#include "../include/DisplayCode.hpp"
+#include "DisplayCode.hpp"
 
 DisplayCode::DisplayCode(sf::RenderWindow &window, int n, int size, int x, int y, sf::Font &font):
     mNumberOfLine(n),

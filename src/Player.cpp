@@ -1,4 +1,4 @@
-#include "../include/Player.hpp"
+#include "Player.hpp"
 
 Player::Player(){
     mKeyBinding[sf::Keyboard::Left] = MoveLeft;

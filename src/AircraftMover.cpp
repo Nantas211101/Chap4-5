@@ -1,4 +1,4 @@
-#include "../include/AircraftMover.hpp"
+#include "AircraftMover.hpp"
 
 AircraftMover::AircraftMover(float vx, float vy):
     velocity(vx, vy){

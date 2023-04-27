@@ -1,4 +1,4 @@
-#include "../include/SettingsState.hpp"
+#include "SettingsState.hpp"
 
 SettingsState::SettingsState(StateStack &stack, Context context):
     State(stack, context),

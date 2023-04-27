@@ -1,4 +1,6 @@
-#include "../include/Stack.hpp"
+#include "Stack.hpp"
+#include "FileReader.hpp"
+
 const std::string Name = "Stack";
 
 Stack::Stack(StateStack& stack, Context context)
@@ -54,14 +56,16 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto FileAction = ([this, context]() {
-            FileHolder.select();
-           
-            // if (!FileHolder.checkText()) {
-            //     printedError(context, infoError1, 1);
-            //     printedError(context, infoError2, 2);
-            // }
-            // // else 
-            //     // FileHo
+            auto file_name = FileHolder.select();
+            if (file_name.has_value()) {
+                try {
+                    this->data = readIntegerFile(file_name.value());
+                } catch (std::exception& e) {
+                    // in lo
+                    printedError(context, e.what());
+                    data.clear();
+                }
+            }
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -316,10 +320,10 @@ bool Stack::update(sf::Time dt) {
 
 bool Stack::handleEvent(const sf::Event& event) {
     mGUIContainer.handleEvent(event);
-    tmp.clear();
-    for (int pos : InputPosition) {
-        tmp.push_back(mGUIContainer.takeOutString(pos));
-    }
+    // tmp.clear();
+    // for (int pos : InputPosition) {
+    //     tmp.push_back(mGUIContainer.takeOutString(pos));
+    // }
     handleRealTimeInput();
     return false;
 }

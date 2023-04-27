@@ -1,4 +1,4 @@
-#include "../include/MenuState.hpp"
+#include "MenuState.hpp"
 
 MenuState::MenuState(StateStack &stack, Context context):
     State(stack, context),

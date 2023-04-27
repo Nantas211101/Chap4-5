@@ -1,4 +1,4 @@
-#include "../include/Application.hpp"
+#include "Application.hpp"
 
 
 // Application quite similar to the Game.cpp

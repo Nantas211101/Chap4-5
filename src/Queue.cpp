@@ -1,4 +1,5 @@
-#include "../include/Queue.hpp"
+#include "Queue.hpp"
+#include "FileReader.hpp"
 const std::string Name = "Queue";
 
 Queue::Queue(StateStack &stack, Context context):
@@ -47,9 +48,18 @@ Queue::Queue(StateStack &stack, Context context):
 
             });
 
-            auto FileAction = ([this](){
-                FileHolder.select();
-            });
+            auto FileAction = ([this, context]() {
+            auto file_name = FileHolder.select();
+            if (file_name.has_value()) {
+                try {
+                    this->data = readIntegerFile(file_name.value());
+                } catch (std::exception& e) {
+                    // in lo
+                    printedError(context, e.what());
+                    data.clear();
+                }
+            }
+        });
 
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "Manually", ManuallyAction);
             setStateButton(context, start_x + (++cntx) * add_x, start_y + cnty * add_y, "File", FileAction);

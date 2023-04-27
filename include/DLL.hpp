@@ -38,5 +38,5 @@ class DLL : public State {
     GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
-    std::vector<std::string> tmp;
+    std::vector<int> data;
 };

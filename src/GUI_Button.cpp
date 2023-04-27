@@ -1,4 +1,4 @@
-#include "../include/GUI_Button.hpp"
+#include "GUI_Button.hpp"
 
 namespace GUI{
 

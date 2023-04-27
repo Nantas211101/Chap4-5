@@ -1,4 +1,4 @@
-#include "../include/StackNode.hpp"
+#include "StackNode.hpp"
 
 StackNode::StackNode(const FontHolder& fonts, const TextureHolder& texture)
     : mDataNode(new NodeData(10, fonts)), mArrow(new ArrowData()) {

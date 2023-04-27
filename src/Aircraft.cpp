@@ -1,4 +1,4 @@
-#include "../include/Aircraft.hpp"
+#include "Aircraft.hpp"
 
 auto toTextureID(Aircraft::Type type) -> Textures::ID
 {

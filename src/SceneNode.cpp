@@ -1,4 +1,4 @@
-#include "../include/SceneNode.hpp"
+#include "SceneNode.hpp"
 
 SceneNode::SceneNode() : mParent(nullptr)
 {

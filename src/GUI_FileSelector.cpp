@@ -1,4 +1,4 @@
-#include "../include/GUI_FileSelector.hpp"
+#include "GUI_FileSelector.hpp"
 HWND hwnd;
 TCHAR szFileName[MAX_PATH];
 

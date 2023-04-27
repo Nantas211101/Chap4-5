@@ -1,4 +1,4 @@
-#include "../include/StateStack.hpp"
+#include "StateStack.hpp"
 
 StateStack::StateStack(State::Context context):
     mStack(),

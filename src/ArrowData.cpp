@@ -1,4 +1,4 @@
-#include "../include/ArrowData.hpp"
+#include "ArrowData.hpp"
 const float Thickness = 20.f;
 
 ArrowData::ArrowData()
