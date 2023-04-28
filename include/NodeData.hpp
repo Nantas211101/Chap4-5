@@ -2,7 +2,6 @@
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
-#include "StringConvert.hpp"
 #include "TextureManipulate.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -10,7 +9,7 @@
 
 class NodeData : public SceneNode {
   public:
-    NodeData(int n, const FontHolder& fonts, int sizeOfText = 40,
+    NodeData(std::string n, const FontHolder& fonts, int sizeOfText = 40,
              int sizeOfShape = 60);
 
     virtual void drawCurrent(sf::RenderTarget& target,
@@ -20,6 +19,8 @@ class NodeData : public SceneNode {
     void setPosition(sf::Vector2f pos);
     void setPosition(float x, float y);
     void setRadius(float r);
+    void setValue(std::string value);
+    auto getValue() -> std::string;
 
   private:
     sf::CircleShape mShape;

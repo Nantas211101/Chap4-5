@@ -44,6 +44,7 @@ Stack::Stack(StateStack& stack, Context context)
             setLabel(context, start_x + 2 * add_x + add_x / 2,
                      start_y + (cnty + 1) * add_y - add_y / 2, "Number",
                      textSize);
+
             //
 
             // Value of a node
@@ -114,15 +115,22 @@ Stack::Stack(StateStack& stack, Context context)
 
         auto ValueAction = ([this, context, cnty]() {
             resetButton(NumInitButton + 1);
+            InputPosition.clear();
+            data.clear();
 
             auto tmp = ([]() {});
-
             setInputButton(context, start_x + 2 * add_x,
                            start_y + (cnty + 1) * add_y, "", tmp);
             InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
             setLabel(context, start_x + 2 * add_x + add_x / 2,
                      start_y + (cnty + 1) * add_y - add_y / 2, "Value",
                      textSize);
+
+            auto activeAction = ([this, context] { pushNode(context); });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
         });
 
         auto ErrorAction = ([this, context]() {
@@ -132,7 +140,7 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to Last", ValueAction);
+                       start_y + cnty * add_y, "Push", ValueAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -147,7 +155,10 @@ Stack::Stack(StateStack& stack, Context context)
     deleteButton->setText("Delete");
     deleteButton->setToggle(true);
     deleteButton->setCallback([this, context, cnty]() {
-        auto action = ([this]() {
+        auto action = ([this, context]() {
+            resetButton(NumInitButton + 3);
+            if (!nodeSaver.detachNode(mSceneGraph, nodeSaver.takeNumOfNode()))
+                printedError(context, Constants::outOfSizeError);
             // nothing here now
         });
 
@@ -186,7 +197,7 @@ Stack::Stack(StateStack& stack, Context context)
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "at First", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at Last", action);
+                       start_y + cnty * add_y, "Pop", action);
     });
 
     // set Update Button
@@ -295,7 +306,6 @@ Stack::Stack(StateStack& stack, Context context)
     // mSceneGraph.detachChild(*tmp);
 
     nodeSaver.init(mSceneGraph, 2, context);
-    nodeSaver.setPos(mSceneGraph);
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);
@@ -318,16 +328,16 @@ void Stack::draw() {
 }
 
 bool Stack::update(sf::Time dt) {
+    nodeSaver.updatePos(mSceneGraph, dt);
     // right now there is nothing in here
     return true;
 }
 
 bool Stack::handleEvent(const sf::Event& event) {
     mGUIContainer.handleEvent(event);
-    // tmp.clear();
-    // for (int pos : InputPosition) {
-    //     tmp.push_back(mGUIContainer.takeOutString(pos));
-    // }
+    // take the data from input button
+    for (int i = 0; i < data.size(); ++i)
+        data[i] = mGUIContainer.takeOutString(InputPosition[i]);
     handleRealTimeInput();
     return false;
 }
@@ -382,4 +392,12 @@ void Stack::printedError(Context context, const std::string& text,
                          int padding) {
     sf::Vector2f pos = context.window->getView().getCenter();
     setLabel(context, pos.x, pos.y + (padding)*add_y, text, textSize * 2);
+}
+
+void Stack::pushNode(Context context) {
+    for (int i = 0; i < data.size(); ++i) {
+        int numNode = nodeSaver.takeNumOfNode();
+        if (!nodeSaver.attachNode(mSceneGraph, numNode + 1, data[i], context))
+            printedError(context, Constants::outOfSizeError);
+    }
 }

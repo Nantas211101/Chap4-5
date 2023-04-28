@@ -18,6 +18,7 @@ struct Constants {
 
     static constexpr int posPadding_y = 10;
 
+    const std::string outOfSizeError = "Number of node should in [0, 7]";
     std::string infoError1 = "Only integer are accepted, number of node should in [0, 7]";
     std::string infoError2 = "Value of node should in [0, 100]";
 };

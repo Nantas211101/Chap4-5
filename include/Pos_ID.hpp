@@ -10,7 +10,7 @@ class Pos_ID{
 
         bool init(int n);        
         bool attachID(int id);
-        bool detachID(int id);
+        auto detachID(int id) -> int;
 
         int takeID(int pos);
         int findID(int id);

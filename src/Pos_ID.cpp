@@ -32,10 +32,10 @@ bool Pos_ID::attachID(int id){
     return true;
 }
 
-bool Pos_ID::detachID(int id){
+auto Pos_ID::detachID(int id) -> int{ // detach will return the position where ID = id
     // Checking whether empty or id is out of reach
     if(size_n == 0 || id > size_n)
-        return false;
+        return -1;
 
     // Finding the id;
     int tmp = -1;
@@ -54,7 +54,7 @@ bool Pos_ID::detachID(int id){
         if(ID[i] > id)
             --ID[i];
         
-    return true;
+    return tmp;
 }
 
 int Pos_ID::takeID(int pos){

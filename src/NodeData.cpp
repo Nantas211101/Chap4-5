@@ -1,8 +1,8 @@
 #include "NodeData.hpp"
 
-NodeData::NodeData(int n, const FontHolder& fonts, int sizeOfText,
+NodeData::NodeData(std::string n, const FontHolder& fonts, int sizeOfText,
                    int sizeOfShape)
-    : mShape(), mDisplayText(toString(n), fonts.get(Fonts::Main), sizeOfText) {
+    : mShape(), mDisplayText(n, fonts.get(Fonts::Main), sizeOfText) {
     mShape.setRadius(sizeOfShape / 2);
     mShape.setFillColor(sf::Color::Blue);
     setCenterOrigin(mShape);
@@ -34,3 +34,7 @@ void NodeData::setPosition(sf::Vector2f pos) {
 void NodeData::setPosition(float x, float y) { setPosition({x, y}); }
 
 void NodeData::setRadius(float r) { mShape.setRadius(r); }
+
+void NodeData::setValue(std::string value) { mDisplayText.setString(value); }
+
+auto NodeData::getValue() -> std::string { return mDisplayText.getString(); }

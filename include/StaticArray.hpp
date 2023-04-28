@@ -38,5 +38,5 @@ class StaticArray : public State {
     GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
-    std::vector<int> data;
+    std::vector<std::string> data;
 };

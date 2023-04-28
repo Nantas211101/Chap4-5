@@ -11,6 +11,7 @@
 #include "State.hpp"
 #include <SFML/Graphics.hpp>
 
+#include <string>
 #include <memory>
 
 class CLL : public State {
@@ -38,5 +39,5 @@ class CLL : public State {
     GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
-    std::vector<int> data;
+    std::vector<std::string> data;
 };

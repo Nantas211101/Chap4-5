@@ -18,7 +18,7 @@
 
 #include <memory>
 
-class Stack : public State, private Constants {
+class Stack : public State, Constants{
   public:
     Stack(StateStack& stack, Context context);
 
@@ -36,6 +36,7 @@ class Stack : public State, private Constants {
                         const std::string& text, std::function<void()> action);
     void resetButton(int size);
     void printedError(Context context, const std::string& text, int padding = 1);
+    void pushNode(Context context);
 
   private:
     sf::Sprite mBackgroundSprite;
@@ -44,6 +45,6 @@ class Stack : public State, private Constants {
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
     SceneNode mSceneGraph;
-    std::vector<int> data;
+    std::vector<std::string> data;
     NodeManipulate<StackNode> nodeSaver;
 };

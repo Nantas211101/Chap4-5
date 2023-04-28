@@ -1,7 +1,7 @@
 #include "StackNode.hpp"
 
 StackNode::StackNode(const FontHolder& fonts, const TextureHolder& texture)
-    : mDataNode(new NodeData(10, fonts)), mArrow(new ArrowData()) {
+    : mDataNode(new NodeData("10", fonts)), mArrow(new ArrowData()) {
     std::unique_ptr<NodeData> dataNodePtr(mDataNode);
     std::unique_ptr<ArrowData> nextNodePtr(mArrow);
 
@@ -23,6 +23,8 @@ void StackNode::setNextNode(NodeData* mNext) { mArrow->setNextNode(mNext); }
 
 void StackNode::setEnd(sf::Vector2f pos) { mArrow->setEnd({pos.x, pos.y}); }
 
-void StackNode::setIsDrawArrow(bool flag){
-    mArrow->setDrawFlag(flag);
-}
+void StackNode::setIsDrawArrow(bool flag) { mArrow->setDrawFlag(flag); }
+
+void StackNode::setValue(std::string value) { mDataNode->setValue(value); }
+
+auto StackNode::getValue() -> std::string { return mDataNode->getValue(); }

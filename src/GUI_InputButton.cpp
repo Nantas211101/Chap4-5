@@ -85,7 +85,6 @@ void InputButton::handleEvent(const sf::Event &event){
     if(event.type == sf::Event::KeyPressed)
         if(event.key.code == sf::Keyboard::Return){
             saveText = tmpText;
-            std::cout << saveText << "\n";
         }   
     mText.setString(tmpText);
     setCenterOrigin(mText);
