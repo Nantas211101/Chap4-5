@@ -13,6 +13,7 @@
 #include "SceneNode.hpp"
 #include "StackNode.hpp"
 #include "State.hpp"
+#include "NodeManipulate.hpp"
 #include <SFML/Graphics.hpp>
 
 #include <memory>
@@ -42,7 +43,7 @@ class Stack : public State, private Constants {
     GUI::FileSelector FileHolder;
     DisplayCode mDisplayer;
     std::vector<int> InputPosition;
-    SceneNode mScenegraph;
+    SceneNode mSceneGraph;
     std::vector<int> data;
-    std::vector<StackNode*> ptrSaver; 
+    NodeManipulate<StackNode> nodeSaver;
 };

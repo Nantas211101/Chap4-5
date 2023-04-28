@@ -9,7 +9,7 @@ Stack::Stack(StateStack& stack, Context context)
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
                  context.fonts->get(Fonts::Main)),
-      mScenegraph() {
+      mSceneGraph() {
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -279,21 +279,23 @@ Stack::Stack(StateStack& stack, Context context)
     // mArrow.setStart({start_x, start_y + add_y * 10});
     // mArrow.setEnd({start_x + add_x, start_y + add_y * 10});
 
-    std::unique_ptr<StackNode> testNode1(
-        new StackNode(*context.fonts, *context.textures));
-    testNode1->setPosNode({start_x, start_y + add_y * 10});
-    testNode1->setEnd({start_x + add_x, start_y + add_y * 10});
+    // std::unique_ptr<StackNode> testNode1(
+    //     new StackNode(*context.fonts, *context.textures));
+    // testNode1->setPosNode({start_x, start_y + add_y * 10});
+    // testNode1->setEnd({start_x + add_x, start_y + add_y * 10});
 
-    StackNode* tmp = new StackNode(*context.fonts, *context.textures);
-    std::unique_ptr<StackNode> testNode2(tmp);
-    testNode2->setPosNode({start_x + add_x, start_y + add_y * 10});
-    testNode2->setEnd({start_x + 2 * add_x, start_y + add_y * 10});
-    testNode2->setIsDrawArrow(false);
+    // StackNode* tmp = new StackNode(*context.fonts, *context.textures);
+    // std::unique_ptr<StackNode> testNode2(tmp);
+    // testNode2->setPosNode({start_x + add_x, start_y + add_y * 10});
+    // testNode2->setEnd({start_x + 2 * add_x, start_y + add_y * 10});
+    // testNode2->setIsDrawArrow(false);
 
-    mScenegraph.attachChild(std::move(testNode1));
-    mScenegraph.attachChild(std::move(testNode2));
-    mScenegraph.detachChild(*tmp);
+    // mSceneGraph.attachChild(std::move(testNode1));
+    // mSceneGraph.attachChild(std::move(testNode2));
+    // mSceneGraph.detachChild(*tmp);
 
+    nodeSaver.init(mSceneGraph, 2, context);
+    nodeSaver.setPos(mSceneGraph);
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);
@@ -311,7 +313,7 @@ void Stack::draw() {
 
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
-    window.draw(mScenegraph);
+    window.draw(mSceneGraph);
     mDisplayer.draw(window);
 }
 

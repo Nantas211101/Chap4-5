@@ -58,9 +58,8 @@ bool Pos_ID::detachID(int id){
 }
 
 int Pos_ID::takeID(int pos){
-    if(pos < 1 || pos > size_n)
+    if(pos < 0 || pos >= size_n)
         return -1;
-    --pos;
     return ID[pos];
 }
 

@@ -1,14 +1,20 @@
 #pragma once
+#include "Pos_ID.hpp"
+#include "SceneNode.hpp"
+#include "State.hpp"
 
 #include <vector>
-#include <memory>
 
-template<typename TypeNode>
-class NodeManipulate{
-    
-    public:
-        void init(int n);
+template <typename TypeNode> class NodeManipulate {
 
-    private:
-        std::vector<TypeNode*> ptrSaver;
-}
+  public:
+    void init(SceneNode& mSceneGraph, int n, State::Context context);
+    void reset(SceneNode& mSceneGraph);
+    void setPos(SceneNode& mSceneGraph);
+
+  private:
+    std::vector<TypeNode*> ptrSaver;
+    Pos_ID IDHolder;
+};
+
+#include "../template/NodeManipulate.inl"

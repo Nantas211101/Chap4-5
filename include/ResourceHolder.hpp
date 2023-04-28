@@ -20,4 +20,4 @@ class ResourceHolder {
     std::map<Identifier, std::unique_ptr<Resource>> mResourceMap;
 };
 
-#include "../Template/ResourceHolder.inl"
+#include "../template/ResourceHolder.inl"
