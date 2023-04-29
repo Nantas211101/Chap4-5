@@ -4,8 +4,9 @@
 #include <memory>
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, int n,
+void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, std::vector<std::string> arr,
                                     State::Context context) {
+    int n = arr.size();
     OldIDHolder.init(n);
     NewIDHolder.init(n);
     ptrSaver.clear();
@@ -13,6 +14,7 @@ void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, int n,
         TypeNode* tmp = new TypeNode(*context.fonts, *context.textures);
         std::unique_ptr<TypeNode> mNode(tmp);
         mSceneGraph.attachChild(std::move(mNode));
+        tmp->setValue(arr[i]);
         ptrSaver.push_back(std::move(tmp));
     }
 }

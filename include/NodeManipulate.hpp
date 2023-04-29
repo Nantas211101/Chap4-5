@@ -11,7 +11,7 @@
 template <typename TypeNode> class NodeManipulate {
 
   public:
-    void init(SceneNode& mSceneGraph, int n, State::Context context);
+    void init(SceneNode& mSceneGraph, std::vector<std::string> arr, State::Context context);
     void reset(SceneNode& mSceneGraph);
     void updatePos(SceneNode& mSceneGraph, sf::Time dt);
     bool attachNode(SceneNode& mSceneGraph, int id, std::string value,

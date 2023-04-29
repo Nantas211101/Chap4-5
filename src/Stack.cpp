@@ -1,6 +1,7 @@
 #include "Stack.hpp"
 #include "FileReader.hpp"
 
+
 const std::string Name = "Stack";
 
 Stack::Stack(StateStack& stack, Context context)
@@ -9,7 +10,7 @@ Stack::Stack(StateStack& stack, Context context)
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
                  context.fonts->get(Fonts::Main)),
-      mSceneGraph() {
+      mSceneGraph(){
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -60,7 +61,9 @@ Stack::Stack(StateStack& stack, Context context)
             auto file_name = FileHolder.select();
             if (file_name.has_value()) {
                 try {
+                    data.clear();
                     this->data = readIntegerFile(file_name.value());
+                    nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
                     // in lo
                     printedError(context, e.what());
@@ -191,9 +194,7 @@ Stack::Stack(StateStack& stack, Context context)
             printedError(context, errorMessage + Name);
         });
 
-        auto ClearAction = ([this](){
-            nodeSaver.reset(mSceneGraph);
-        });
+        auto ClearAction = ([this]() { nodeSaver.reset(mSceneGraph); });
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -291,25 +292,8 @@ Stack::Stack(StateStack& stack, Context context)
         requestStackPop();
         requestStackPush(States::Menu);
     });
-    // mArrow.setStart({start_x, start_y + add_y * 10});
-    // mArrow.setEnd({start_x + add_x, start_y + add_y * 10});
 
-    // std::unique_ptr<StackNode> testNode1(
-    //     new StackNode(*context.fonts, *context.textures));
-    // testNode1->setPosNode({start_x, start_y + add_y * 10});
-    // testNode1->setEnd({start_x + add_x, start_y + add_y * 10});
-
-    // StackNode* tmp = new StackNode(*context.fonts, *context.textures);
-    // std::unique_ptr<StackNode> testNode2(tmp);
-    // testNode2->setPosNode({start_x + add_x, start_y + add_y * 10});
-    // testNode2->setEnd({start_x + 2 * add_x, start_y + add_y * 10});
-    // testNode2->setIsDrawArrow(false);
-
-    // mSceneGraph.attachChild(std::move(testNode1));
-    // mSceneGraph.attachChild(std::move(testNode2));
-    // mSceneGraph.detachChild(*tmp);
-
-    nodeSaver.init(mSceneGraph, 0, context);
+    nodeSaver.init(mSceneGraph, data, context);
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);
@@ -340,7 +324,7 @@ bool Stack::update(sf::Time dt) {
 bool Stack::handleEvent(const sf::Event& event) {
     mGUIContainer.handleEvent(event);
     // take the data from input button
-    for (int i = 0; i < data.size(); ++i)
+    for (int i = 0; i < std::min(data.size(), InputPosition.size()); ++i)
         data[i] = mGUIContainer.takeOutString(InputPosition[i]);
     handleRealTimeInput();
     return false;
