@@ -8,6 +8,7 @@ void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, int n,
                                     State::Context context) {
     OldIDHolder.init(n);
     NewIDHolder.init(n);
+    ptrSaver.clear();
     for (int i = 0; i < n; ++i) {
         TypeNode* tmp = new TypeNode(*context.fonts, *context.textures);
         std::unique_ptr<TypeNode> mNode(tmp);
@@ -82,4 +83,9 @@ bool NodeManipulate<TypeNode>::detachNode(SceneNode& mSceneGraph, int id) {
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::takeNumOfNode() -> int{
     return ptrSaver.size();
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph, std::string value, State::Context context){
+    return attachNode(mSceneGraph, takeNumOfNode() + 1, value, context);
 }

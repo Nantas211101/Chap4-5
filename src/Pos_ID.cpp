@@ -19,7 +19,7 @@ bool Pos_ID::init(int n){
 
 bool Pos_ID::attachID(int id){
     // Checking whether size_n is max or id is out of reach
-    if(size_n == Constants::MAXI::numOfNode || id > size_n + 1) 
+    if(size_n == Constants::MAXI::numOfNode || id > size_n + 1 || id < 1) 
         return false;
     
     // Increase the right ID +1
@@ -34,7 +34,7 @@ bool Pos_ID::attachID(int id){
 
 auto Pos_ID::detachID(int id) -> int{ // detach will return the position where ID = id
     // Checking whether empty or id is out of reach
-    if(size_n == 0 || id > size_n)
+    if(size_n == 0 || id > size_n || id < 1)
         return -1;
 
     // Finding the id;

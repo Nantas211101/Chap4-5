@@ -14,16 +14,20 @@ template <typename TypeNode> class NodeManipulate {
     void init(SceneNode& mSceneGraph, int n, State::Context context);
     void reset(SceneNode& mSceneGraph);
     void updatePos(SceneNode& mSceneGraph, sf::Time dt);
-    bool attachNode(SceneNode& mSceneGraph, int id, std::string value, State::Context context);
+    bool attachNode(SceneNode& mSceneGraph, int id, std::string value,
+                    State::Context context);
     bool detachNode(SceneNode& mSceneGraph, int id);
     auto takeNumOfNode() -> int;
+
+    bool pushBackNode(SceneNode& mSceneGraph, std::string value,
+                      State::Context context);
 
   private:
     std::vector<TypeNode*> ptrSaver;
     Pos_ID OldIDHolder;
     Pos_ID NewIDHolder;
     sf::Time timeSinceStartSetPos;
-    bool isStartSetPos = false;;
+    bool isStartSetPos = false;
 };
 
 #include "../template/NodeManipulate.inl"

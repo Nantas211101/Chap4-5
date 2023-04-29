@@ -191,13 +191,17 @@ Stack::Stack(StateStack& stack, Context context)
             printedError(context, errorMessage + Name);
         });
 
+        auto ClearAction = ([this](){
+            nodeSaver.reset(mSceneGraph);
+        });
+
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at Middle", ErrorAction);
+                       start_y + cnty * add_y, "Pop", action);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "at First", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", action);
+                       start_y + cnty * add_y, "Clear", ClearAction);
     });
 
     // set Update Button
@@ -305,7 +309,7 @@ Stack::Stack(StateStack& stack, Context context)
     // mSceneGraph.attachChild(std::move(testNode2));
     // mSceneGraph.detachChild(*tmp);
 
-    nodeSaver.init(mSceneGraph, 2, context);
+    nodeSaver.init(mSceneGraph, 0, context);
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);
@@ -395,9 +399,6 @@ void Stack::printedError(Context context, const std::string& text,
 }
 
 void Stack::pushNode(Context context) {
-    for (int i = 0; i < data.size(); ++i) {
-        int numNode = nodeSaver.takeNumOfNode();
-        if (!nodeSaver.attachNode(mSceneGraph, numNode + 1, data[i], context))
-            printedError(context, Constants::outOfSizeError);
-    }
+    if (!nodeSaver.pushBackNode(mSceneGraph, data[0], context))
+        printedError(context, Constants::outOfSizeError);
 }
