@@ -10,7 +10,8 @@ Stack::Stack(StateStack& stack, Context context)
       mGUIContainer(),
       mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
                  context.fonts->get(Fonts::Main)),
-      mSceneGraph(){
+      mSceneGraph(),
+      randomHolder(){
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -62,6 +63,7 @@ Stack::Stack(StateStack& stack, Context context)
             if (file_name.has_value()) {
                 try {
                     data.clear();
+                    nodeSaver.reset(mSceneGraph);
                     this->data = readIntegerFile(file_name.value());
                     nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
@@ -72,12 +74,18 @@ Stack::Stack(StateStack& stack, Context context)
             }
         });
 
+        auto RandomAction = ([this, context](){
+            nodeSaver.reset(mSceneGraph);
+            data = randomHolder.randListData();
+            nodeSaver.init(mSceneGraph, data, context);
+        });
+
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Manually", ManuallyAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "File", FileAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Random", action);
+                       start_y + cnty * add_y, "Random", RandomAction);
     });
 
     // set Insert button

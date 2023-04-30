@@ -14,8 +14,9 @@
 #include "StackNode.hpp"
 #include "State.hpp"
 #include "NodeManipulate.hpp"
-#include <SFML/Graphics.hpp>
+#include "Randomize.hpp"
 
+#include <SFML/Graphics.hpp>
 #include <memory>
 
 class Stack : public State, Constants{
@@ -47,4 +48,5 @@ class Stack : public State, Constants{
     SceneNode mSceneGraph;
     std::vector<std::string> data;
     NodeManipulate<StackNode> nodeSaver;
+    Randomize randomHolder;
 };
