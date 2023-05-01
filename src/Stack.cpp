@@ -27,6 +27,7 @@ Stack::Stack(StateStack& stack, Context context)
     initButton->setCallback([this, context, cnty]() {
         if (isSearching) // dang search thi ko lam gi khac
             return;
+
         auto action = ([this]() {
             // nothing here now
         });
@@ -66,6 +67,7 @@ Stack::Stack(StateStack& stack, Context context)
         auto FileAction = ([this, context]() {
             if (isSearching) // dang search thi ko lam gi khac
                 return;
+
             auto file_name = FileHolder.select();
             if (file_name.has_value()) {
                 try {
@@ -84,6 +86,7 @@ Stack::Stack(StateStack& stack, Context context)
         auto RandomAction = ([this, context]() {
             if (isSearching) // dang search thi ko lam gi khac
                 return;
+
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
             nodeSaver.init(mSceneGraph, data, context);
@@ -107,6 +110,7 @@ Stack::Stack(StateStack& stack, Context context)
     insertButton->setCallback([this, context, cnty]() {
         if (isSearching) // dang search thi ko lam gi khac
             return;
+
         auto action = ([this]() {
             // nothing here now
         });
@@ -163,6 +167,7 @@ Stack::Stack(StateStack& stack, Context context)
             if (isSearching) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 3);
+
             printedError(context, errorMessage + Name);
         });
 
@@ -185,6 +190,7 @@ Stack::Stack(StateStack& stack, Context context)
     deleteButton->setCallback([this, context, cnty]() {
         if (isSearching) // dang search thi ko lam gi khac
             return;
+
         auto action = ([this, context]() {
             if (isSearching) // dang search thi ko lam gi khac
                 return;
@@ -224,6 +230,7 @@ Stack::Stack(StateStack& stack, Context context)
             if (isSearching) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 3);
+
             printedError(context, errorMessage + Name);
         });
 
@@ -252,6 +259,7 @@ Stack::Stack(StateStack& stack, Context context)
     updateButton->setCallback([this, context, cnty]() {
         if (isSearching) // dang search thi ko lam gi khac
             return;
+
         auto action = ([this]() {
             // nothing here now
         });
@@ -286,6 +294,7 @@ Stack::Stack(StateStack& stack, Context context)
     searchButton->setCallback([this, context, cnty]() {
         if (isSearching) // dang search thi ko lam gi khac
             return;
+
         auto action = ([this]() {
 
         });
@@ -438,7 +447,8 @@ void Stack::setInputButton(Context context, int posx, int posy,
 void Stack::resetButton(int size, bool isResetInputButton) {
     while (mGUIContainer.isOutOfSize(size))
         mGUIContainer.depackend();
-    if(isResetInputButton)
+    nodeSaver.resetColor(mSceneGraph);
+    if (isResetInputButton)
         InputPosition.clear();
 }
 
