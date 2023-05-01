@@ -1,5 +1,6 @@
 #include "Stack.hpp"
 #include "FileReader.hpp"
+#include "StringConvert.hpp"
 
 const std::string Name = "Stack";
 
@@ -12,7 +13,7 @@ Stack::Stack(StateStack& stack, Context context)
       mSceneGraph(),
       randomHolder(),
       isSearching(false),
-      searchData("") {
+      usingData("") {
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -25,7 +26,7 @@ Stack::Stack(StateStack& stack, Context context)
     initButton->setText("Init");
     initButton->setToggle(true);
     initButton->setCallback([this, context, cnty]() {
-        if (isSearching) // dang search thi ko lam gi khac
+        if (nodeSaver.takeCurrentState() != 0) // dang search thi ko lam gi khac
             return;
 
         auto action = ([this]() {
@@ -37,7 +38,8 @@ Stack::Stack(StateStack& stack, Context context)
         int cntx = 0;
 
         auto ManuallyAction = ([this, context, cnty]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 1);
 
@@ -65,7 +67,8 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto FileAction = ([this, context]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
 
             auto file_name = FileHolder.select();
@@ -84,7 +87,8 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto RandomAction = ([this, context]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
 
             nodeSaver.reset(mSceneGraph);
@@ -108,7 +112,7 @@ Stack::Stack(StateStack& stack, Context context)
     insertButton->setText("Insert");
     insertButton->setToggle(true);
     insertButton->setCallback([this, context, cnty]() {
-        if (isSearching) // dang search thi ko lam gi khac
+        if (nodeSaver.takeCurrentState() != 0) // dang search thi ko lam gi khac
             return;
 
         auto action = ([this]() {
@@ -118,7 +122,8 @@ Stack::Stack(StateStack& stack, Context context)
         resetButton(NumInitButton);
 
         auto MiddleAction = ([this, context, cnty]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 1);
 
@@ -142,10 +147,10 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto ValueAction = ([this, context, cnty]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 1);
-            InputPosition.clear();
             data.clear();
 
             auto tmp = ([]() {});
@@ -164,7 +169,8 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto ErrorAction = ([this, context]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 3);
 
@@ -188,11 +194,12 @@ Stack::Stack(StateStack& stack, Context context)
     deleteButton->setText("Delete");
     deleteButton->setToggle(true);
     deleteButton->setCallback([this, context, cnty]() {
-        if (isSearching) // dang search thi ko lam gi khac
+        if (nodeSaver.takeCurrentState() != 0) // dang search thi ko lam gi khac
             return;
 
         auto action = ([this, context]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 3);
             if (!nodeSaver.detachNode(mSceneGraph, nodeSaver.takeNumOfNode()))
@@ -203,7 +210,8 @@ Stack::Stack(StateStack& stack, Context context)
         resetButton(NumInitButton);
 
         auto MiddleAction = ([this, context, cnty]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 1);
 
@@ -227,7 +235,8 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto ErrorAction = ([this, context]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             resetButton(NumInitButton + 3);
 
@@ -235,7 +244,8 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         auto ClearAction = ([this]() {
-            if (isSearching) // dang search thi ko lam gi khac
+            if (nodeSaver.takeCurrentState() !=
+                0) // dang search thi ko lam gi khac
                 return;
             nodeSaver.reset(mSceneGraph);
         });
@@ -257,7 +267,7 @@ Stack::Stack(StateStack& stack, Context context)
     updateButton->setText("Update");
     updateButton->setToggle(true);
     updateButton->setCallback([this, context, cnty]() {
-        if (isSearching) // dang search thi ko lam gi khac
+        if (nodeSaver.takeCurrentState() != 0) // dang search thi ko lam gi khac
             return;
 
         auto action = ([this]() {
@@ -292,36 +302,101 @@ Stack::Stack(StateStack& stack, Context context)
     searchButton->setText("Search");
     searchButton->setToggle(true);
     searchButton->setCallback([this, context, cnty]() {
-        if (isSearching) // dang search thi ko lam gi khac
+        if (nodeSaver.takeCurrentState() != 0) // dang search thi ko lam gi khac
             return;
 
         auto action = ([this]() {
 
         });
 
-        auto searchAction([this]() {
-            resetButton(NumInitButton + 5, false);
-            isSearching = true;
-            searchData = "";
-        });
-
         resetButton(NumInitButton);
 
         int cntx = 0;
 
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", action);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back(" ");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "By Position", textSize);
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", action);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back(" ");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "By Position
+        //          (Accessing)", textSize);
 
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", action);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back(" ");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "By Value", textSize);
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", action);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back(" ");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "By Value", textSize);
+
+        // setStateButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "Searching", searchAction);
+
+        auto accessAction = ([this, context, cnty]() {
+            if (nodeSaver.takeCurrentState() != 0)
+                return;
+            resetButton(NumInitButton + 2);
+            data.clear();
+
+            auto tmp = ([]() {});
+            setInputButton(context, start_x + 1 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 3 * add_x + add_x / 2,
+                     start_y + (cnty + 1) * add_y - add_y / 2, "Position",
+                     textSize);
+
+            auto activeAction = ([this, context] {
+                resetButton(NumInitButton + 5, false);
+                if (data[0] != "") {
+                    nodeSaver.setIsAccessing();
+                    usingData = "";
+                } else {
+                    printedError(context, "You did not input the position");
+                }
+            });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+        });
+
+        setStateButton(context, start_x + (++cntx) * add_x,
+                       start_y + cnty * add_y, "Accessing", accessAction);
+
+        // auto searchAction([this]() {
+        //     resetButton(NumInitButton + 5, false);
+        //     isSearching = true;
+        //     searchData = "";
+        // });
+
+        auto searchAction([this, context, cnty]() {
+            if (nodeSaver.takeCurrentState() != 0)
+                return;
+            resetButton(NumInitButton + 2);
+            data.clear();
+
+            auto tmp = ([]() {});
+            setInputButton(context, start_x + 2 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 3 * add_x + add_x / 2,
+                     start_y + (cnty + 1) * add_y - add_y / 2, "Value",
+                     textSize);
+
+            auto activeAction = ([this, context]() {
+                resetButton(NumInitButton + 5, false);
+                if (data[0] != "") {
+                    nodeSaver.setIsSearching();
+                    usingData = "";
+                } else {
+                    printedError(context, "You did not input the value");
+                }
+            });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+        });
 
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Searching", searchAction);
@@ -375,20 +450,17 @@ void Stack::draw() {
 
 bool Stack::update(sf::Time dt) {
     nodeSaver.updatePos(mSceneGraph, dt);
-    if (isSearching && data[1] != "") {
-        if (searchData == "")
-            searchData = data[1];
-        int state = nodeSaver.searchingNode(mSceneGraph, dt, searchData);
-        // -1 khong tim duoc
-        // 0  dang tim
-        // 1 da tim duoc
-        if (state == -1) {
-            isSearching = 0;
-            printedError(getContext(), "Can not find");
+    int curState = nodeSaver.takeCurrentState();
+    // -1: isAccess
+    // 1: isSearching
+    if (curState != 0) {
+
+        if (curState == 1) {
+            searchingNode(dt);
         }
-        if (state == 1) {
-            isSearching = 0;
-            printedError(getContext(), "We find it");
+
+        if (curState == -1) {
+            accessingNode(dt);
         }
     }
     // right now there is nothing in here
@@ -461,4 +533,42 @@ void Stack::printedError(Context context, const std::string& text,
 void Stack::pushNode(Context context) {
     if (!nodeSaver.pushBackNode(mSceneGraph, data[0], context))
         printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::searchingNode(sf::Time dt) {
+    if (usingData == "")
+        usingData = data[0];
+    int state = nodeSaver.searchingNode(
+        mSceneGraph, dt, usingData); // this is state of searching
+    // -1 khong tim duoc
+    // 0 dang tim
+    // 1 da tim duoc
+
+    if (state == -1) {
+        printedError(getContext(), "Can not find");
+    }
+
+    if (state == 1) {
+        printedError(getContext(), "We find it");
+    }
+}
+
+void Stack::accessingNode(sf::Time dt) {
+    if (usingData == "")
+        usingData = data[0];
+    int id = toNum(usingData);
+    int state = nodeSaver.accessingNode(mSceneGraph, dt,
+                                        id); // this is state of accessing
+    // -1 usingData out of range
+    // 0 dang access
+    // 1 da access xong
+
+    if (state == -1) {
+        printedError(getContext(), "Position out of data");
+    }
+
+    if (state == 1) {
+        std::string number = nodeSaver.takeValueOfNode(id);
+        printedError(getContext(), "We find it with value is: " + number);
+    }
 }

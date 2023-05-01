@@ -5,3 +5,12 @@ std::string toString(const T &value){
     ss << value;
     return ss.str();
 }
+
+template <typename T>
+int toNum(const T &value){
+    int res;
+    std::stringstream ss;
+    ss << value;
+    ss >> res;
+    return res;
+}

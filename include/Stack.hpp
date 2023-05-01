@@ -36,8 +36,11 @@ class Stack : public State, Constants{
     void setInputButton(Context context, int posx, int posy,
                         const std::string& text, std::function<void()> action);
     void resetButton(int size, bool isResetInputButton = true);
-    void printedError(Context context, const std::string& text, int padding = 1);
+    void printedError(Context context, const std::string& text, int padding = 0);
+    
     void pushNode(Context context);
+    void searchingNode(sf::Time dt);
+    void accessingNode(sf::Time dt);
 
   private:
     sf::Sprite mBackgroundSprite;
@@ -50,5 +53,5 @@ class Stack : public State, Constants{
     NodeManipulate<StackNode> nodeSaver;
     Randomize randomHolder;
     bool isSearching;
-    std::string searchData;
+    std::string usingData;
 };

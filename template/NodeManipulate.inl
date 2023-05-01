@@ -7,7 +7,8 @@ const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 const sf::Time TimePerUpdate = sf::seconds(1.f / 5.f);
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, std::vector<std::string> arr,
+void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph,
+                                    std::vector<std::string> arr,
                                     State::Context context) {
     int n = arr.size();
     OldIDHolder.init(n);
@@ -37,6 +38,14 @@ void NodeManipulate<TypeNode>::resetColor(SceneNode& mSceneGraph) {
     }
 }
 
+template <typename TypeNode> void NodeManipulate<TypeNode>::resetSelected() {
+    currentSelected = 0;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
+    currentState = 0;
+}
+
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
 
@@ -53,10 +62,9 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
         posy = start_y + add_y * Constants::posPadding_y;
         ptrSaver[i]->setEnd({posx, posy});
 
-        if (newID == ptrSaver.size()){
+        if (newID == ptrSaver.size()) {
             ptrSaver[i]->setIsDrawArrow(false);
-        }
-        else
+        } else
             ptrSaver[i]->setIsDrawArrow(true);
     }
 }
@@ -81,11 +89,11 @@ bool NodeManipulate<TypeNode>::attachNode(SceneNode& mSceneGraph, int id,
 
 template <typename TypeNode>
 bool NodeManipulate<TypeNode>::detachNode(SceneNode& mSceneGraph, int id) {
-    if(ptrSaver.empty())
+    if (ptrSaver.empty())
         return false;
-    
+
     int pos = NewIDHolder.detachID(id);
-    if(pos == -1)
+    if (pos == -1)
         return false;
 
     mSceneGraph.detachChild(*ptrSaver[pos]);
@@ -94,31 +102,41 @@ bool NodeManipulate<TypeNode>::detachNode(SceneNode& mSceneGraph, int id) {
 }
 
 template <typename TypeNode>
-auto NodeManipulate<TypeNode>::takeNumOfNode() -> int{
+auto NodeManipulate<TypeNode>::takeNumOfNode() -> int {
     return ptrSaver.size();
 }
 
 template <typename TypeNode>
-bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph, std::string value, State::Context context){
+auto NodeManipulate<TypeNode>::takeValueOfNode(int id) -> std::string {
+    int pos = NewIDHolder.findID(id);
+    return ptrSaver[pos]->getValue();
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph,
+                                            std::string value,
+                                            State::Context context) {
     return attachNode(mSceneGraph, takeNumOfNode() + 1, value, context);
 }
 
 template <typename TypeNode>
-int NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value){
-    if(currentSelected == 0){
+auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
+                                             sf::Time dt, std::string value)
+    -> int {
+    if (currentSelected == 0) {
         timeSinceLastUpdate = sf::Time::Zero;
         ++currentSelected;
-    }
-    else {
+    } else {
         timeSinceLastUpdate += dt;
-        if(timeSinceLastUpdate > TimePerUpdate){
+        if (timeSinceLastUpdate > TimePerUpdate) {
             ++currentSelected;
             timeSinceLastUpdate -= TimePerUpdate;
         }
     }
 
-    if(currentSelected > takeNumOfNode()){
-        currentSelected = 0;
+    if (currentSelected > takeNumOfNode()) {
+        resetSelected();
+        resetState();
         return -1; // khong tim duoc
     }
 
@@ -127,10 +145,57 @@ int NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph, sf::Time dt,
     ptrSaver[pos]->setSelected();
 
     std::string currentValue = ptrSaver[pos]->getValue();
-    if(currentValue == value){
-        currentSelected = 0;
+    if (currentValue == value) {
+        resetSelected();
+        resetState();
         return 1; // da tim duoc
     }
 
     return 0; // dang tim
+}
+
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
+                                             sf::Time dt, int id) -> int {
+    if (currentSelected == 0) {
+        timeSinceLastUpdate = sf::Time::Zero;
+        ++currentSelected;
+    } else {
+        timeSinceLastUpdate += dt;
+        if (timeSinceLastUpdate > TimePerUpdate) {
+            ++currentSelected;
+            timeSinceLastUpdate -= TimePerUpdate;
+        }
+    }
+
+    if (currentSelected > takeNumOfNode()) {
+        resetSelected();
+        resetState();
+        return -1; // so can tim out of range
+    }
+
+    int pos = NewIDHolder.findID(currentSelected);
+    resetColor(mSceneGraph);
+    ptrSaver[pos]->setSelected();
+
+    if (id == currentSelected) {
+        resetSelected();
+        resetState();
+        return 1; // da access xong
+    }
+
+    return 0; // dang access
+}
+
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::takeCurrentState() -> int {
+    return currentState;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsSearching() {
+    currentState = 1;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsAccessing() {
+    currentState = -1;
 }
