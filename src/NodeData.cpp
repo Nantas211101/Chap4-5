@@ -38,3 +38,7 @@ void NodeData::setRadius(float r) { mShape.setRadius(r); }
 void NodeData::setValue(std::string value) { mDisplayText.setString(value); }
 
 auto NodeData::getValue() -> std::string { return mDisplayText.getString(); }
+
+void NodeData::setColor(sf::Color color){
+    mShape.setFillColor(color);
+}

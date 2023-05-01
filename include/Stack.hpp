@@ -35,7 +35,7 @@ class Stack : public State, Constants{
                   int sizeoftext);
     void setInputButton(Context context, int posx, int posy,
                         const std::string& text, std::function<void()> action);
-    void resetButton(int size);
+    void resetButton(int size, bool isResetInputButton = true);
     void printedError(Context context, const std::string& text, int padding = 1);
     void pushNode(Context context);
 
@@ -49,4 +49,6 @@ class Stack : public State, Constants{
     std::vector<std::string> data;
     NodeManipulate<StackNode> nodeSaver;
     Randomize randomHolder;
+    bool isSearching;
+    std::string searchData;
 };

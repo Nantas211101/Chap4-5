@@ -25,6 +25,9 @@ class StackNode : public SceneNode {
     void setEnd(sf::Vector2f pos);
     void setIsDrawArrow(bool flag);
 
+    void setSelected();
+    void setDeselected();
+
   private:
     NodeData* mDataNode;
     ArrowData* mArrow;

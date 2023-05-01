@@ -3,6 +3,9 @@
 
 #include <memory>
 
+const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+const sf::Time TimePerUpdate = sf::seconds(1.f / 5.f);
+
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph, std::vector<std::string> arr,
                                     State::Context context) {
@@ -28,6 +31,13 @@ void NodeManipulate<TypeNode>::reset(SceneNode& mSceneGraph) {
 }
 
 template <typename TypeNode>
+void NodeManipulate<TypeNode>::resetColor(SceneNode& mSceneGraph) {
+    for (TypeNode* mNode : ptrSaver) {
+        mNode->setDeselected();
+    }
+}
+
+template <typename TypeNode>
 void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
 
     for (int i = 0; i < ptrSaver.size(); ++i) {
@@ -43,8 +53,9 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
         posy = start_y + add_y * Constants::posPadding_y;
         ptrSaver[i]->setEnd({posx, posy});
 
-        if (newID == ptrSaver.size())
+        if (newID == ptrSaver.size()){
             ptrSaver[i]->setIsDrawArrow(false);
+        }
         else
             ptrSaver[i]->setIsDrawArrow(true);
     }
@@ -90,4 +101,36 @@ auto NodeManipulate<TypeNode>::takeNumOfNode() -> int{
 template <typename TypeNode>
 bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph, std::string value, State::Context context){
     return attachNode(mSceneGraph, takeNumOfNode() + 1, value, context);
+}
+
+template <typename TypeNode>
+int NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value){
+    if(currentSelected == 0){
+        timeSinceLastUpdate = sf::Time::Zero;
+        ++currentSelected;
+    }
+    else {
+        timeSinceLastUpdate += dt;
+        if(timeSinceLastUpdate > TimePerUpdate){
+            ++currentSelected;
+            timeSinceLastUpdate -= TimePerUpdate;
+        }
+    }
+
+    if(currentSelected > takeNumOfNode()){
+        currentSelected = 0;
+        return -1; // khong tim duoc
+    }
+
+    int pos = NewIDHolder.findID(currentSelected);
+    resetColor(mSceneGraph);
+    ptrSaver[pos]->setSelected();
+
+    std::string currentValue = ptrSaver[pos]->getValue();
+    if(currentValue == value){
+        currentSelected = 0;
+        return 1; // da tim duoc
+    }
+
+    return 0; // dang tim
 }

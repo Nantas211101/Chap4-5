@@ -21,6 +21,7 @@ class NodeData : public SceneNode {
     void setRadius(float r);
     void setValue(std::string value);
     auto getValue() -> std::string;
+    void setColor(sf::Color color);
 
   private:
     sf::CircleShape mShape;
