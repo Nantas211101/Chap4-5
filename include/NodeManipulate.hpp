@@ -1,11 +1,11 @@
 #pragma once
+#include "NodesSaverIdentifiers.hpp"
 #include "Pos_ID.hpp"
 #include "SceneNode.hpp"
 #include "State.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <string>
-
 #include <vector>
 
 template <typename TypeNode> class NodeManipulate {
@@ -27,19 +27,31 @@ template <typename TypeNode> class NodeManipulate {
     auto takeNumOfNode() -> int;
     auto takeValueOfNode(int id) -> std::string;
 
+    // action
+   
     bool pushBackNode(SceneNode& mSceneGraph, std::string value,
                       State::Context context);
 
     auto searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value)
-        -> int;
+        -> ActionState::ID;
 
-    auto accessingNode(SceneNode& mSceneGraph, sf::Time dt, int id) -> int;
+    auto accessingNode(SceneNode& mSceneGraph, sf::Time dt, int id)
+        -> ActionState::ID;
 
-    auto takeCurrentState() -> int;
+    auto updatingNode(SceneNode& mSceneGraph, sf::Time dt, int id,
+                      std::string value) -> ActionState::ID;
+
+    //
+    
+    auto takeCurrentState() -> NodesState::ID;
 
     void setIsSearching();
     void setIsAccessing();
+    void setIsUpdating();
 
+  private:
+    void updateValueNode(int pos, std::string value);
+  
   private:
     std::vector<TypeNode*> ptrSaver;
     Pos_ID OldIDHolder;
@@ -47,12 +59,9 @@ template <typename TypeNode> class NodeManipulate {
     sf::Time timeSinceStartSetPos;
     sf::Time timeSinceLastUpdate;
     bool isStartSetPos = false;
-    int currentSelected = 0;
+    int currentSelected = 0; // This is ID
 
-    // -1 : isAccesing
-    // 0 : nothing
-    // 1 : isSearching
-    int currentState = 0;
+    NodesState::ID currentState = NodesState::nothing;
 };
 
 #include "../template/NodeManipulate.inl"

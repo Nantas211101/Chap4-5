@@ -41,6 +41,7 @@ class Stack : public State, Constants{
     void pushNode(Context context);
     void searchingNode(sf::Time dt);
     void accessingNode(sf::Time dt);
+    void updatingNode(sf::Time dt);
 
   private:
     sf::Sprite mBackgroundSprite;
@@ -53,5 +54,6 @@ class Stack : public State, Constants{
     NodeManipulate<StackNode> nodeSaver;
     Randomize randomHolder;
     bool isSearching;
-    std::string usingData;
+    std::string usingData1;
+    std::string usingData2;
 };

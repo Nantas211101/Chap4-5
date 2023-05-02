@@ -43,7 +43,7 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::resetSelected() {
 }
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
-    currentState = 0;
+    currentState = NodesState::nothing;
 }
 
 template <typename TypeNode>
@@ -67,6 +67,11 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
         } else
             ptrSaver[i]->setIsDrawArrow(true);
     }
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::updateValueNode(int pos, std::string value) {
+    ptrSaver[pos]->setValue(value);
 }
 
 template <typename TypeNode>
@@ -122,7 +127,7 @@ bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph,
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
                                              sf::Time dt, std::string value)
-    -> int {
+    -> ActionState::ID {
     if (currentSelected == 0) {
         timeSinceLastUpdate = sf::Time::Zero;
         ++currentSelected;
@@ -137,7 +142,7 @@ auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
     if (currentSelected > takeNumOfNode()) {
         resetSelected();
         resetState();
-        return -1; // khong tim duoc
+        return ActionState::DoneFalse; // khong tim duoc
     }
 
     int pos = NewIDHolder.findID(currentSelected);
@@ -148,15 +153,16 @@ auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
     if (currentValue == value) {
         resetSelected();
         resetState();
-        return 1; // da tim duoc
+        return ActionState::DoneTrue; // da tim duoc
     }
 
-    return 0; // dang tim
+    return ActionState::isDoing; // dang tim
 }
 
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
-                                             sf::Time dt, int id) -> int {
+                                             sf::Time dt, int id)
+    -> ActionState::ID {
     if (currentSelected == 0) {
         timeSinceLastUpdate = sf::Time::Zero;
         ++currentSelected;
@@ -171,7 +177,7 @@ auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
     if (currentSelected > takeNumOfNode()) {
         resetSelected();
         resetState();
-        return -1; // so can tim out of range
+        return ActionState::DoneFalse; // so can tim out of range
     }
 
     int pos = NewIDHolder.findID(currentSelected);
@@ -181,21 +187,66 @@ auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
     if (id == currentSelected) {
         resetSelected();
         resetState();
-        return 1; // da access xong
+        return ActionState::DoneTrue; // da access xong
     }
 
-    return 0; // dang access
+    return ActionState::isDoing; // dang access
+}
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::updatingNode(SceneNode& mSceneGraph, sf::Time dt,
+                                            int id, std::string value)
+    -> ActionState::ID {
+    if (currentSelected == 0) {
+        timeSinceLastUpdate = sf::Time::Zero;
+        ++currentSelected;
+    } else {
+        timeSinceLastUpdate += dt;
+        if (timeSinceLastUpdate > TimePerUpdate) {
+            ++currentSelected;
+            timeSinceLastUpdate -= TimePerUpdate;
+        }
+    }
+
+    /////// a little special to make the updating smoother
+
+    int pos = NewIDHolder.findID(currentSelected);
+    if (currentSelected <= id) {
+        resetColor(mSceneGraph);
+        ptrSaver[pos]->setSelected();
+    }
+
+    if (currentSelected > id) {
+        pos = NewIDHolder.findID(currentSelected - 1);
+        updateValueNode(pos, value);
+        resetSelected();
+        resetState();
+        return ActionState::DoneTrue; // update success
+    }
+
+    /////// for smoother
+
+    if (currentSelected > takeNumOfNode()) {
+        resetSelected();
+        resetState();
+        return ActionState::DoneFalse; // out of range
+    }
+
+    return ActionState::isDoing; // is updating
 }
 
 template <typename TypeNode>
-auto NodeManipulate<TypeNode>::takeCurrentState() -> int {
+auto NodeManipulate<TypeNode>::takeCurrentState() -> NodesState::ID {
     return currentState;
 }
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsSearching() {
-    currentState = 1;
+    currentState = NodesState::isSearching;
 }
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsAccessing() {
-    currentState = -1;
+    currentState = NodesState::isAccesing;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsUpdating() {
+    currentState = NodesState::isUpdating;
 }
