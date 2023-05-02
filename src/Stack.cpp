@@ -160,11 +160,8 @@ Stack::Stack(StateStack& stack, Context context)
 
             auto activeAction = ([this, context] {
                 resetButton(NumInitButton + 4, false);
-                if (data[0] != "") {
+                if (checkError(inputID::Val, 0))
                     pushNode(context);
-                } else {
-                    printedError(context, "You did not input the value");
-                }
             });
 
             setStateButton(context, start_x + 3 * add_x,
@@ -292,11 +289,7 @@ Stack::Stack(StateStack& stack, Context context)
 
         auto activeAction([this, context]() {
             resetButton(NumInitButton + 5, false);
-            if (data[0] == "") {
-                printedError(context, "You did not input the position");
-            } else if (data[1] == "") {
-                printedError(context, "You did not input the value");
-            } else {
+            if (checkError(inputID::Pos, 0) && checkError(inputID::Val, 1)) {
                 nodeSaver.setIsUpdating();
                 usingData1 = "";
                 usingData2 = "";
@@ -344,11 +337,9 @@ Stack::Stack(StateStack& stack, Context context)
 
             auto activeAction = ([this, context] {
                 resetButton(NumInitButton + 5, false);
-                if (data[0] != "") {
+                if (checkError(inputID::Pos, 0)) {
                     nodeSaver.setIsAccessing();
                     usingData1 = "";
-                } else {
-                    printedError(context, "You did not input the position");
                 }
             });
 
@@ -378,11 +369,9 @@ Stack::Stack(StateStack& stack, Context context)
 
             auto activeAction = ([this, context]() {
                 resetButton(NumInitButton + 5, false);
-                if (data[0] != "") {
+                if(checkError(inputID::Val, 0)){
                     nodeSaver.setIsSearching();
                     usingData1 = "";
-                } else {
-                    printedError(context, "You did not input the value");
                 }
             });
 
@@ -524,6 +513,45 @@ void Stack::printedError(Context context, const std::string& text,
                          int padding) {
     sf::Vector2f pos = context.window->getView().getCenter();
     setLabel(context, pos.x, pos.y + (padding)*add_y, text, textSize * 2);
+}
+
+bool Stack::checkError(inputID::ID kind, int p) {
+    if (kind == inputID::Pos) {
+
+        if (data[p] == "") {
+            printedError(getContext(), "You did not input the position");
+            return false;
+        }
+
+        if (!isContain(data[p], Constants::MINI::numOfNode,
+                       Constants::MAXI::numOfNode)) {
+            printedError(getContext(),
+                         "The position (number) should in [" +
+                             std::to_string(Constants::MINI::numOfNode) + ", " +
+                             std::to_string(Constants::MAXI::numOfNode) + "]");
+            return false;
+        }
+    }
+
+    if (kind == inputID::Val) {
+
+        if (data[p] == "") {
+            printedError(getContext(), "You did not input the value");
+            return false;
+        }
+
+        if (!isContain(data[p], Constants::MINI::valueOfNode,
+                       Constants::MAXI::valueOfNode)) {
+            printedError(
+                getContext(),
+                "The value should in [" +
+                    std::to_string(Constants::MINI::valueOfNode) + ", " +
+                    std::to_string(Constants::MAXI::valueOfNode) + "]");
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void Stack::pushNode(Context context) {

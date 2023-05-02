@@ -8,18 +8,18 @@
 #include "GUI_InputButton.hpp"
 #include "GUI_Label.hpp"
 #include "GUI_SpeedButton.hpp"
+#include "NodeManipulate.hpp"
+#include "Randomize.hpp"
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
 #include "StackNode.hpp"
 #include "State.hpp"
-#include "NodeManipulate.hpp"
-#include "Randomize.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-class Stack : public State, Constants{
+class Stack : public State, Constants {
   public:
     Stack(StateStack& stack, Context context);
 
@@ -36,8 +36,11 @@ class Stack : public State, Constants{
     void setInputButton(Context context, int posx, int posy,
                         const std::string& text, std::function<void()> action);
     void resetButton(int size, bool isResetInputButton = true);
-    void printedError(Context context, const std::string& text, int padding = 0);
-    
+    void printedError(Context context, const std::string& text,
+                      int padding = 0);
+
+    bool checkError(inputID::ID kind, int p);
+
     void pushNode(Context context);
     void searchingNode(sf::Time dt);
     void accessingNode(sf::Time dt);

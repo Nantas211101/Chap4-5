@@ -8,17 +8,22 @@ struct Constants {
 
     struct MAXI {
         static constexpr int numOfNode = 7;
-        static constexpr int valueOfNode = 100;
+        static constexpr int valueOfNode = 99;
     };
 
     struct MINI {
-        static constexpr int numOfNode = 0;
-        static constexpr int valueOfNode = 0;
+        static constexpr int numOfNode = 1;
+        static constexpr int valueOfNode = 1;
     };
 
     static constexpr int posPadding_y = 10;
 
     const std::string outOfSizeError = "Number of node should in [0, 7]";
-    std::string infoError1 = "Only integer are accepted, number of node should in [0, 7]";
-    std::string infoError2 = "Value of node should in [0, 100]";
+    std::string infoError1 =
+        "Only integer are accepted, number of node should in [0, 7]";
+    std::string infoError2 = "Value of node should in [1, 99]";
 };
+
+bool isContain(int n, int l, int r);
+
+bool isContain(std::string s, int l, int r);
