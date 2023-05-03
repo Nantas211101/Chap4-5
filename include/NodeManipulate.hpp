@@ -27,10 +27,13 @@ template <typename TypeNode> class NodeManipulate {
     auto takeNumOfNode() -> int;
     auto takeValueOfNode(int id) -> std::string;
 
-    // action
-   
+    ///////// action
+
     bool pushBackNode(SceneNode& mSceneGraph, std::string value,
                       State::Context context);
+
+    bool pushMiddleNode(SceneNode& mSceneGraph, std::string value, int id,
+                        State::Context context);
 
     auto searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value)
         -> ActionState::ID;
@@ -41,8 +44,8 @@ template <typename TypeNode> class NodeManipulate {
     auto updatingNode(SceneNode& mSceneGraph, sf::Time dt, int id,
                       std::string value) -> ActionState::ID;
 
-    //
-    
+    /////////
+
     auto takeCurrentState() -> NodesState::ID;
 
     void setIsSearching();
@@ -51,12 +54,12 @@ template <typename TypeNode> class NodeManipulate {
 
   private:
     void updateValueNode(int pos, std::string value);
-  
+
   private:
     std::vector<TypeNode*> ptrSaver;
     Pos_ID OldIDHolder;
     Pos_ID NewIDHolder;
-    sf::Time timeSinceStartSetPos;
+    sf::Time timeSinceStartSetPos;// still vo nghia
     sf::Time timeSinceLastUpdate;
     bool isStartSetPos = false;
     int currentSelected = 0; // This is ID

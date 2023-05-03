@@ -143,31 +143,66 @@ Stack::Stack(StateStack& stack, Context context)
                      textSize);
         });
 
-        auto ValueAction = ([this, context, cnty]() {
+        auto pushBackAction = ([this, context, cnty]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-            resetButton(NumInitButton + 1);
+            resetButton(NumInitButton + 3);
             data.clear();
 
             auto tmp = ([]() {});
-            setInputButton(context, start_x + 2 * add_x,
+            setInputButton(context, start_x + 1 * add_x,
                            start_y + (cnty + 1) * add_y, "", tmp);
             InputPosition.push_back(mGUIContainer.takeSize() - 1);
             data.push_back("");
-            setLabel(context, start_x + 2 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "Value",
+            setLabel(context, start_x + 1 * add_x + add_x / 2,
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Value",
                      textSize);
 
             auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 4, false);
+                resetButton(NumInitButton + 6, false);
                 if (checkError(inputID::Val, 0))
-                    pushNode(context);
+                    pushBackNode(context);
             });
 
             setStateButton(context, start_x + 3 * add_x,
                            start_y + (cnty + 1) * add_y, "Go", activeAction);
         });
 
+        auto pushMiddleAction = ([this, context, cnty]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 3);
+            data.clear();
+
+            auto tmp = ([]() {});
+            
+            setInputButton(context, start_x + 1 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 1 * add_x + add_x / 2,
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Position",
+                     textSize);
+
+            setInputButton(context, start_x + 2 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 2 * add_x + add_x / 2,
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Value",
+                     textSize);
+
+            auto activeAction = ([this, context] {
+                resetButton(NumInitButton + 8, false);
+                if (checkError(inputID::Pos, 0) && checkError(inputID::Val, 1))
+                    pushMiddleNode(context, toNum(data[0]));
+            });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+        });
+
+        
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
@@ -178,9 +213,9 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", ValueAction);
+                       start_y + cnty * add_y, "Push", pushBackAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to Middle", ErrorAction);
+                       start_y + cnty * add_y, "to Middle", pushMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to First", ErrorAction);
     });
@@ -554,7 +589,12 @@ bool Stack::checkError(inputID::ID kind, int p) {
     return true;
 }
 
-void Stack::pushNode(Context context) {
+void Stack::pushMiddleNode(Context context, int id){
+    if (!nodeSaver.pushMiddleNode(mSceneGraph, data[1], id, context))
+        printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::pushBackNode(Context context) {
     if (!nodeSaver.pushBackNode(mSceneGraph, data[0], context))
         printedError(context, Constants::outOfSizeError);
 }

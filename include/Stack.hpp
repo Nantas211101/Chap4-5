@@ -41,7 +41,8 @@ class Stack : public State, Constants {
 
     bool checkError(inputID::ID kind, int p);
 
-    void pushNode(Context context);
+    void pushMiddleNode(Context context, int id);
+    void pushBackNode(Context context);
     void searchingNode(sf::Time dt);
     void accessingNode(sf::Time dt);
     void updatingNode(sf::Time dt);

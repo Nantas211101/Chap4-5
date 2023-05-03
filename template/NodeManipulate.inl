@@ -125,6 +125,13 @@ bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph,
 }
 
 template <typename TypeNode>
+bool NodeManipulate<TypeNode>::pushMiddleNode(SceneNode& mSceneGraph,
+                                              std::string value, int id,
+                                              State::Context context) {
+    return attachNode(mSceneGraph, id, value, context);
+}
+
+template <typename TypeNode>
 auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
                                              sf::Time dt, std::string value)
     -> ActionState::ID {
@@ -209,14 +216,14 @@ auto NodeManipulate<TypeNode>::updatingNode(SceneNode& mSceneGraph, sf::Time dt,
 
     /////// a little special to make the updating smoother
 
-    int pos = NewIDHolder.findID(currentSelected);
-    if (currentSelected <= id) {
+    if (currentSelected <= id && currentSelected <= takeNumOfNode()) {
+        int pos = NewIDHolder.findID(currentSelected);
         resetColor(mSceneGraph);
         ptrSaver[pos]->setSelected();
     }
 
     if (currentSelected > id) {
-        pos = NewIDHolder.findID(currentSelected - 1);
+        int pos = NewIDHolder.findID(currentSelected - 1);
         updateValueNode(pos, value);
         resetSelected();
         resetState();
