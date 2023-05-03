@@ -44,6 +44,7 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::resetSelected() {
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
     currentState = NodesState::nothing;
+    currentActionType = NodesState::RunAtOnce;
 }
 
 template <typename TypeNode>
@@ -67,11 +68,6 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
         } else
             ptrSaver[i]->setIsDrawArrow(true);
     }
-}
-
-template <typename TypeNode>
-void NodeManipulate<TypeNode>::updateValueNode(int pos, std::string value) {
-    ptrSaver[pos]->setValue(value);
 }
 
 template <typename TypeNode>
@@ -118,10 +114,10 @@ auto NodeManipulate<TypeNode>::takeValueOfNode(int id) -> std::string {
 }
 
 template <typename TypeNode>
-bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph,
-                                            std::string value,
-                                            State::Context context) {
-    return attachNode(mSceneGraph, takeNumOfNode() + 1, value, context);
+bool NodeManipulate<TypeNode>::pushFrontNode(SceneNode& mSceneGraph,
+                                             std::string value,
+                                             State::Context context) {
+    return attachNode(mSceneGraph, 1, value, context);
 }
 
 template <typename TypeNode>
@@ -132,19 +128,34 @@ bool NodeManipulate<TypeNode>::pushMiddleNode(SceneNode& mSceneGraph,
 }
 
 template <typename TypeNode>
+bool NodeManipulate<TypeNode>::pushBackNode(SceneNode& mSceneGraph,
+                                            std::string value,
+                                            State::Context context) {
+    return attachNode(mSceneGraph, takeNumOfNode() + 1, value, context);
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::popFrontNode(SceneNode& mSceneGraph) {
+    return detachNode(mSceneGraph, 1);
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::popMiddleNode(SceneNode& mSceneGraph, int id) {
+    return detachNode(mSceneGraph, id);
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::popBackNode(SceneNode& mSceneGraph) {
+    return detachNode(mSceneGraph, takeNumOfNode());
+}
+
+template <typename TypeNode>
 auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
-                                             sf::Time dt, std::string value)
+                                             sf::Time dt, std::string value,
+                                             const sf::Event& event)
     -> ActionState::ID {
-    if (currentSelected == 0) {
-        timeSinceLastUpdate = sf::Time::Zero;
-        ++currentSelected;
-    } else {
-        timeSinceLastUpdate += dt;
-        if (timeSinceLastUpdate > TimePerUpdate) {
-            ++currentSelected;
-            timeSinceLastUpdate -= TimePerUpdate;
-        }
-    }
+
+    updateCurrentSelected(dt, event);
 
     if (currentSelected > takeNumOfNode()) {
         resetSelected();
@@ -168,18 +179,11 @@ auto NodeManipulate<TypeNode>::searchingNode(SceneNode& mSceneGraph,
 
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
-                                             sf::Time dt, int id)
+                                             sf::Time dt, int id,
+                                             const sf::Event& event)
     -> ActionState::ID {
-    if (currentSelected == 0) {
-        timeSinceLastUpdate = sf::Time::Zero;
-        ++currentSelected;
-    } else {
-        timeSinceLastUpdate += dt;
-        if (timeSinceLastUpdate > TimePerUpdate) {
-            ++currentSelected;
-            timeSinceLastUpdate -= TimePerUpdate;
-        }
-    }
+
+    updateCurrentSelected(dt, event);
 
     if (currentSelected > takeNumOfNode()) {
         resetSelected();
@@ -201,18 +205,11 @@ auto NodeManipulate<TypeNode>::accessingNode(SceneNode& mSceneGraph,
 }
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::updatingNode(SceneNode& mSceneGraph, sf::Time dt,
-                                            int id, std::string value)
+                                            int id, std::string value,
+                                            const sf::Event& event)
     -> ActionState::ID {
-    if (currentSelected == 0) {
-        timeSinceLastUpdate = sf::Time::Zero;
-        ++currentSelected;
-    } else {
-        timeSinceLastUpdate += dt;
-        if (timeSinceLastUpdate > TimePerUpdate) {
-            ++currentSelected;
-            timeSinceLastUpdate -= TimePerUpdate;
-        }
-    }
+
+    updateCurrentSelected(dt, event);
 
     /////// a little special to make the updating smoother
 
@@ -222,8 +219,8 @@ auto NodeManipulate<TypeNode>::updatingNode(SceneNode& mSceneGraph, sf::Time dt,
         ptrSaver[pos]->setSelected();
     }
 
-    if (currentSelected > id) {
-        int pos = NewIDHolder.findID(currentSelected - 1);
+    if (currentSelected > id || (currentSelected == id && currentActionType == NodesState::StepByStep)) {
+        int pos = NewIDHolder.findID(currentSelected - (currentActionType == NodesState::RunAtOnce));
         updateValueNode(pos, value);
         resetSelected();
         resetState();
@@ -246,6 +243,12 @@ auto NodeManipulate<TypeNode>::takeCurrentState() -> NodesState::ID {
     return currentState;
 }
 
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::takeCurrentActionType()
+    -> NodesState::ActionType {
+    return currentActionType;
+}
+
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsSearching() {
     currentState = NodesState::isSearching;
 }
@@ -256,4 +259,47 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::setIsAccessing() {
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsUpdating() {
     currentState = NodesState::isUpdating;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsStepByStep() {
+    currentActionType = NodesState::StepByStep;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsRunAtOnce() {
+    currentActionType = NodesState::RunAtOnce;
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::updateValueNode(int pos, std::string value) {
+    ptrSaver[pos]->setValue(value);
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::updateCurrentSelected(
+    sf::Time dt, const sf::Event& event) {
+    if (currentSelected == 0) {
+        timeSinceLastUpdate = sf::Time::Zero;
+        ++currentSelected;
+    } else {
+        bool acceptForChange = 0;
+        timeSinceLastUpdate += dt;
+        if (timeSinceLastUpdate > TimePerUpdate) {
+            acceptForChange = 1;
+            timeSinceLastUpdate -= TimePerUpdate;
+        }
+
+        if (acceptForChange) {
+            if (currentActionType == NodesState::StepByStep && event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Left &&
+                    currentSelected >= 2)
+                    --currentSelected;
+                if (event.key.code == sf::Keyboard::Right)
+                    ++currentSelected;
+            } 
+            
+            if(currentActionType == NodesState::RunAtOnce){
+                ++currentSelected;
+            }
+        }
+    }
 }

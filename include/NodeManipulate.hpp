@@ -29,42 +29,55 @@ template <typename TypeNode> class NodeManipulate {
 
     ///////// action
 
+    bool pushFrontNode(SceneNode& mSceneGraph, std::string value,
+                       State::Context context);
+    bool pushMiddleNode(SceneNode& mSceneGraph, std::string value, int id,
+                        State::Context context);
     bool pushBackNode(SceneNode& mSceneGraph, std::string value,
                       State::Context context);
 
-    bool pushMiddleNode(SceneNode& mSceneGraph, std::string value, int id,
-                        State::Context context);
+    bool popFrontNode(SceneNode& mSceneGraph);
+    bool popMiddleNode(SceneNode& mSceneGraph, int id);
+    bool popBackNode(SceneNode& mSceneGraph);
 
-    auto searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value)
-        -> ActionState::ID;
+    auto searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value,
+                       const sf::Event& event) -> ActionState::ID;
 
-    auto accessingNode(SceneNode& mSceneGraph, sf::Time dt, int id)
-        -> ActionState::ID;
+    auto accessingNode(SceneNode& mSceneGraph, sf::Time dt, int id,
+                       const sf::Event& event) -> ActionState::ID;
 
     auto updatingNode(SceneNode& mSceneGraph, sf::Time dt, int id,
-                      std::string value) -> ActionState::ID;
+                      std::string value, const sf::Event& event)
+        -> ActionState::ID;
 
     /////////
 
     auto takeCurrentState() -> NodesState::ID;
+    auto takeCurrentActionType() -> NodesState::ActionType;
 
     void setIsSearching();
     void setIsAccessing();
     void setIsUpdating();
 
+    void setIsStepByStep();
+    void setIsRunAtOnce();
+
   private:
     void updateValueNode(int pos, std::string value);
+    void updateCurrentSelected(sf::Time dt, const sf::Event& event);
 
   private:
     std::vector<TypeNode*> ptrSaver;
     Pos_ID OldIDHolder;
     Pos_ID NewIDHolder;
-    sf::Time timeSinceStartSetPos;// still vo nghia
+    sf::Time timeSinceStartSetPos; // still vo nghia
     sf::Time timeSinceLastUpdate;
     bool isStartSetPos = false;
     int currentSelected = 0; // This is ID
 
     NodesState::ID currentState = NodesState::nothing;
+
+    NodesState::ActionType currentActionType = NodesState::RunAtOnce;
 };
 
 #include "../template/NodeManipulate.inl"

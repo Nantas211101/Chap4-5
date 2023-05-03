@@ -14,7 +14,9 @@ Stack::Stack(StateStack& stack, Context context)
       mSceneGraph(),
       randomHolder(),
       isSearching(false),
-      usingData1("") {
+      usingData1(""),
+      usingData2(""),
+      timeSinceLastHandleEvent(sf::Time::Zero) {
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
@@ -119,30 +121,6 @@ Stack::Stack(StateStack& stack, Context context)
 
         resetButton(NumInitButton);
 
-        auto MiddleAction = ([this, context, cnty]() {
-            if (nodeSaver.takeCurrentState() != NodesState::nothing)
-                return;
-            resetButton(NumInitButton + 1);
-
-            auto tmp = ([]() {
-
-            });
-
-            setInputButton(context, start_x + 2 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 2 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "At position",
-                     textSize);
-
-            setInputButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 3 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "With value",
-                     textSize);
-        });
-
         auto pushBackAction = ([this, context, cnty]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
@@ -160,7 +138,7 @@ Stack::Stack(StateStack& stack, Context context)
 
             auto activeAction = ([this, context] {
                 resetButton(NumInitButton + 6, false);
-                if (checkError(inputID::Val, 0))
+                if (checkInputError(inputID::Val, 0))
                     pushBackNode(context);
             });
 
@@ -175,7 +153,7 @@ Stack::Stack(StateStack& stack, Context context)
             data.clear();
 
             auto tmp = ([]() {});
-            
+
             setInputButton(context, start_x + 1 * add_x,
                            start_y + (cnty + 1) * add_y, "", tmp);
             InputPosition.push_back(mGUIContainer.takeSize() - 1);
@@ -194,7 +172,8 @@ Stack::Stack(StateStack& stack, Context context)
 
             auto activeAction = ([this, context] {
                 resetButton(NumInitButton + 8, false);
-                if (checkError(inputID::Pos, 0) && checkError(inputID::Val, 1))
+                if (checkInputError(inputID::Pos, 0) &&
+                    checkInputError(inputID::Val, 1))
                     pushMiddleNode(context, toNum(data[0]));
             });
 
@@ -202,7 +181,31 @@ Stack::Stack(StateStack& stack, Context context)
                            start_y + (cnty + 1) * add_y, "Go", activeAction);
         });
 
-        
+        auto pushfrontAction = ([this, context, cnty]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 3);
+            data.clear();
+
+            auto tmp = ([]() {});
+            setInputButton(context, start_x + 1 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 1 * add_x + add_x / 2,
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Value",
+                     textSize);
+
+            auto activeAction = ([this, context] {
+                resetButton(NumInitButton + 6, false);
+                if (checkInputError(inputID::Val, 0))
+                    pushFrontNode(context);
+            });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+        });
+
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
@@ -217,7 +220,7 @@ Stack::Stack(StateStack& stack, Context context)
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to Middle", pushMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", ErrorAction);
+                       start_y + cnty * add_y, "to First", pushfrontAction);
     });
 
     // set Delete button
@@ -231,40 +234,7 @@ Stack::Stack(StateStack& stack, Context context)
         if (nodeSaver.takeCurrentState() != NodesState::nothing)
             return;
 
-        auto action = ([this, context]() {
-            if (nodeSaver.takeCurrentState() != NodesState::nothing)
-                return;
-            resetButton(NumInitButton + 3);
-            if (!nodeSaver.detachNode(mSceneGraph, nodeSaver.takeNumOfNode()))
-                printedError(context, Constants::outOfSizeError);
-            // nothing here now
-        });
-
         resetButton(NumInitButton);
-
-        auto MiddleAction = ([this, context, cnty]() {
-            if (nodeSaver.takeCurrentState() != NodesState::nothing)
-                return;
-            resetButton(NumInitButton + 1);
-
-            auto tmp = ([]() {
-
-            });
-
-            setInputButton(context, start_x + 2 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 2 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "At position",
-                     textSize);
-
-            setInputButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 3 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "With value",
-                     textSize);
-        });
 
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
@@ -272,6 +242,45 @@ Stack::Stack(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
 
             printedError(context, errorMessage + Name);
+        });
+
+        auto popBackAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 4);
+            popBackNode(context);
+        });
+
+        auto popMiddleAction = ([this, context, cnty]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 4);
+            data.clear();
+
+            auto tmp = ([]() {});
+            setInputButton(context, start_x + 2 * add_x,
+                           start_y + (cnty + 1) * add_y, "", tmp);
+            InputPosition.push_back(mGUIContainer.takeSize() - 1);
+            data.push_back("");
+            setLabel(context, start_x + 2 * add_x + add_x / 2,
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Value",
+                     textSize);
+
+            auto activeAction = ([this, context] {
+                resetButton(NumInitButton + 7, false);
+                if (checkInputError(inputID::Val, 0))
+                    popMiddleNode(context);
+            });
+
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+        });
+
+        auto popFrontAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 4);
+            popFrontNode(context);
         });
 
         auto ClearAction = ([this]() {
@@ -282,9 +291,11 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", action);
+                       start_y + cnty * add_y, "Pop", popBackAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", ErrorAction);
+                       start_y + cnty * add_y, "at Middle", popMiddleAction);
+        setStateButton(context, start_x + (++cntx) * add_x,
+                       start_y + cnty * add_y, "at First", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
@@ -322,16 +333,36 @@ Stack::Stack(StateStack& stack, Context context)
         setLabel(context, start_x + (cntx)*add_x + add_x / 2,
                  start_y + cnty * add_y - add_y / 2, "With value", textSize);
 
-        auto activeAction([this, context]() {
-            resetButton(NumInitButton + 5, false);
-            if (checkError(inputID::Pos, 0) && checkError(inputID::Val, 1)) {
+        // auto stepByStepActiveAction
+
+        auto runAtOneActiveAction([this, context]() {
+            resetButton(NumInitButton + 6, false);
+            if (checkInputError(inputID::Pos, 0) &&
+                checkInputError(inputID::Val, 1)) {
                 nodeSaver.setIsUpdating();
+                nodeSaver.setIsRunAtOnce();
                 usingData1 = "";
                 usingData2 = "";
             }
         });
+
+        auto stepByStepActiveAction([this, context]() {
+            resetButton(NumInitButton + 6, false);
+            if (checkInputError(inputID::Pos, 0) &&
+                checkInputError(inputID::Val, 1)) {
+                nodeSaver.setIsUpdating();
+                nodeSaver.setIsStepByStep();
+                usingData1 = "";
+                usingData2 = "";
+            }
+        });
+
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Go", activeAction);
+                       start_y + cnty * add_y, "Go (Step by Step)",
+                       stepByStepActiveAction);
+        setStateButton(context, start_x + (++cntx) * add_x,
+                       start_y + cnty * add_y, "Go (Run at once)",
+                       runAtOneActiveAction);
     });
 
     // Set Search Button
@@ -370,16 +401,28 @@ Stack::Stack(StateStack& stack, Context context)
                      start_y + (cnty + 1) * add_y - add_y / 2, "Position",
                      textSize);
 
-            auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 5, false);
-                if (checkError(inputID::Pos, 0)) {
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6, false);
+                if (checkInputError(inputID::Pos, 0)) {
                     nodeSaver.setIsAccessing();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                }
+            });
+
+            auto runAtOnceActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6, false);
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsAccessing();
+                    nodeSaver.setIsRunAtOnce();
                     usingData1 = "";
                 }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)", stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)", runAtOnceActiveAction);
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -402,16 +445,28 @@ Stack::Stack(StateStack& stack, Context context)
                      start_y + (cnty + 1) * add_y - add_y / 2, "Value",
                      textSize);
 
-            auto activeAction = ([this, context]() {
-                resetButton(NumInitButton + 5, false);
-                if(checkError(inputID::Val, 0)){
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6, false);
+                if (checkInputError(inputID::Val, 0)) {
                     nodeSaver.setIsSearching();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                }
+            });
+
+            auto runAtOnceActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6, false);
+                if (checkInputError(inputID::Val, 0)) {
+                    nodeSaver.setIsSearching();
+                    nodeSaver.setIsRunAtOnce();
                     usingData1 = "";
                 }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)", stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)", runAtOnceActiveAction);
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -467,21 +522,23 @@ void Stack::draw() {
 bool Stack::update(sf::Time dt) {
     nodeSaver.updatePos(mSceneGraph, dt);
     NodesState::ID curState = nodeSaver.takeCurrentState();
-    // -1: isAccess
-    // 1: isSearching
+    NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
+
     if (curState != NodesState::nothing) {
+        if (curActionType == NodesState::RunAtOnce) {
+            if (curState == NodesState::isSearching) {
+                searchingNode(dt);
+            }
 
-        if (curState == NodesState::isSearching) {
-            searchingNode(dt);
-        }
+            if (curState == NodesState::isAccesing) {
+                accessingNode(dt);
+            }
 
-        if (curState == NodesState::isAccesing) {
-            accessingNode(dt);
-        }
-
-        if (curState == NodesState::isUpdating) {
-            updatingNode(dt);
-        }
+            if (curState == NodesState::isUpdating) {
+                updatingNode(dt);
+            }
+        } else
+            timeSinceLastHandleEvent += dt;
     }
     // right now there is nothing in here
     return true;
@@ -489,10 +546,32 @@ bool Stack::update(sf::Time dt) {
 
 bool Stack::handleEvent(const sf::Event& event) {
     mGUIContainer.handleEvent(event);
+
     // take the data from input button
     for (int i = 0; i < std::min(data.size(), InputPosition.size()); ++i)
         data[i] = mGUIContainer.takeOutString(InputPosition[i]);
     handleRealTimeInput();
+    //
+
+    NodesState::ID curState = nodeSaver.takeCurrentState();
+    NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
+    if (curState != NodesState::nothing &&
+        curActionType == NodesState::StepByStep) {
+        sf::Time dt = timeSinceLastHandleEvent;
+
+        if (curState == NodesState::isSearching) {
+            searchingNode(dt, event);
+        }
+
+        if (curState == NodesState::isAccesing) {
+            accessingNode(dt, event);
+        }
+
+        if (curState == NodesState::isUpdating) {
+            updatingNode(dt, event);
+        }
+        timeSinceLastHandleEvent = sf::Time::Zero;
+    }
     return false;
 }
 
@@ -550,7 +629,7 @@ void Stack::printedError(Context context, const std::string& text,
     setLabel(context, pos.x, pos.y + (padding)*add_y, text, textSize * 2);
 }
 
-bool Stack::checkError(inputID::ID kind, int p) {
+bool Stack::checkInputError(inputID::ID kind, int p) {
     if (kind == inputID::Pos) {
 
         if (data[p] == "") {
@@ -589,7 +668,12 @@ bool Stack::checkError(inputID::ID kind, int p) {
     return true;
 }
 
-void Stack::pushMiddleNode(Context context, int id){
+void Stack::pushFrontNode(Context context) {
+    if (!nodeSaver.pushMiddleNode(mSceneGraph, data[0], 1, context))
+        printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::pushMiddleNode(Context context, int id) {
     if (!nodeSaver.pushMiddleNode(mSceneGraph, data[1], id, context))
         printedError(context, Constants::outOfSizeError);
 }
@@ -599,12 +683,28 @@ void Stack::pushBackNode(Context context) {
         printedError(context, Constants::outOfSizeError);
 }
 
-void Stack::searchingNode(sf::Time dt) {
+void Stack::popFrontNode(Context context) {
+    if (!nodeSaver.popFrontNode(mSceneGraph))
+        printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::popMiddleNode(Context context) {
+    if (!nodeSaver.popMiddleNode(mSceneGraph, toNum(data[0])))
+        printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::popBackNode(Context context) {
+    if (!nodeSaver.popBackNode(mSceneGraph))
+        printedError(context, Constants::outOfSizeError);
+}
+
+void Stack::searchingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "")
         usingData1 = data[0];
     std::string value = usingData1;
 
-    ActionState::ID state = nodeSaver.searchingNode(mSceneGraph, dt, value);
+    ActionState::ID state =
+        nodeSaver.searchingNode(mSceneGraph, dt, value, event);
 
     if (state == ActionState::DoneFalse) {
         printedError(getContext(), "Can not find");
@@ -615,12 +715,12 @@ void Stack::searchingNode(sf::Time dt) {
     }
 }
 
-void Stack::accessingNode(sf::Time dt) {
+void Stack::accessingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "")
         usingData1 = data[0];
     int id = toNum(usingData1);
 
-    ActionState::ID state = nodeSaver.accessingNode(mSceneGraph, dt, id);
+    ActionState::ID state = nodeSaver.accessingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
         printedError(getContext(), "Position out of data");
@@ -632,7 +732,7 @@ void Stack::accessingNode(sf::Time dt) {
     }
 }
 
-void Stack::updatingNode(sf::Time dt) {
+void Stack::updatingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "") {
         usingData1 = data[0];
         usingData2 = data[1];
@@ -640,7 +740,8 @@ void Stack::updatingNode(sf::Time dt) {
     int id = toNum(usingData1);
     std::string value = usingData2;
 
-    ActionState::ID state = nodeSaver.updatingNode(mSceneGraph, dt, id, value);
+    ActionState::ID state =
+        nodeSaver.updatingNode(mSceneGraph, dt, id, value, event);
 
     if (state == ActionState::DoneFalse) {
         printedError(getContext(), "Position out of data");

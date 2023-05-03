@@ -7,6 +7,11 @@ namespace NodesState{
         isAccesing,
         isUpdating,
     };
+
+    enum ActionType{
+        StepByStep,
+        RunAtOnce,
+    };
 }
 
 namespace ActionState{
