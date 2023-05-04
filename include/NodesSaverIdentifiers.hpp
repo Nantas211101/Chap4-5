@@ -6,6 +6,8 @@ namespace NodesState{
         isSearching,
         isAccesing,
         isUpdating,
+        isPushing,
+        isPoping,
     };
 
     enum ActionType{

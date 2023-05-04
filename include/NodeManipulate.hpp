@@ -40,6 +40,12 @@ template <typename TypeNode> class NodeManipulate {
     bool popMiddleNode(SceneNode& mSceneGraph, int id);
     bool popBackNode(SceneNode& mSceneGraph);
 
+    auto pushingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value, int id,
+                    State::Context context, const sf::Event& event) -> ActionState::ID;
+    
+    auto popingNode(SceneNode& mSceneGraph, sf::Time dt, int id,
+                    const sf::Event& event) -> ActionState::ID;
+
     auto searchingNode(SceneNode& mSceneGraph, sf::Time dt, std::string value,
                        const sf::Event& event) -> ActionState::ID;
 
@@ -58,6 +64,8 @@ template <typename TypeNode> class NodeManipulate {
     void setIsSearching();
     void setIsAccessing();
     void setIsUpdating();
+    void setIsPushing();
+    void setIsPoping();
 
     void setIsStepByStep();
     void setIsRunAtOnce();
@@ -78,7 +86,7 @@ template <typename TypeNode> class NodeManipulate {
     int currentSelected = 0; // This is ID
     int currentTimeID = 0;
     sf::Time TimePerUpdate = sf::seconds(1.f / 1.f);
-    
+
     NodesState::ID currentState = NodesState::nothing;
 
     NodesState::ActionType currentActionType = NodesState::RunAtOnce;

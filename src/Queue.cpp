@@ -44,7 +44,8 @@ Queue::Queue(StateStack& stack, Context context)
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
             resetButton(NumInitButton + 3);
-            printedError(context, "This feature have not include, please wait for next update patch");
+            printedError(context, "This feature have not include, please wait "
+                                  "for next update patch");
         });
 
         auto FileAction = ([this, context]() {
@@ -115,14 +116,38 @@ Queue::Queue(StateStack& stack, Context context)
                      start_y + (cnty + 2) * add_y + add_y / 2, "Value",
                      textSize);
 
-            auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 6, false);
-                if (checkInputError(inputID::Val, 0))
-                    pushBackNode(context);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 7, false);
+                data.push_back("");
+                data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                if (checkInputError(inputID::Val, 0) &&
+                    checkInputError(inputID::Pos, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                    usingData2 = "pos";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 7, false);
+                data.push_back("");
+                data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                if (checkInputError(inputID::Val, 0) &&
+                    checkInputError(inputID::Pos, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                    usingData2 = "pos";
+                }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
         auto pushMiddleAction = ([this, context, cnty]() {
@@ -149,15 +174,36 @@ Queue::Queue(StateStack& stack, Context context)
                      start_y + (cnty + 2) * add_y + add_y / 2, "Value",
                      textSize);
 
-            auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 8, false);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 9, false);
                 if (checkInputError(inputID::Pos, 0) &&
-                    checkInputError(inputID::Val, 1))
-                    pushMiddleNode(context, toNum(data[0]));
+                    checkInputError(inputID::Val, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                    usingData2 = "";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 9, false);
+                data.push_back("");
+                data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                if (checkInputError(inputID::Pos, 0) &&
+                    checkInputError(inputID::Val, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                    usingData2 = "";
+                }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
         auto pushfrontAction = ([this, context, cnty]() {
@@ -175,14 +221,38 @@ Queue::Queue(StateStack& stack, Context context)
                      start_y + (cnty + 2) * add_y + add_y / 2, "Value",
                      textSize);
 
-            auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 6, false);
-                if (checkInputError(inputID::Val, 0))
-                    pushFrontNode(context);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 7, false);
+                data.push_back("");
+                data[1] = std::to_string(1);
+                if (checkInputError(inputID::Val, 0) &&
+                    checkInputError(inputID::Pos, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                    usingData2 = "pos";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 7, false);
+                data.push_back("");
+                data[1] = std::to_string(1);
+                if (checkInputError(inputID::Val, 0) &&
+                    checkInputError(inputID::Pos, 1)) {
+                    nodeSaver.setIsPushing();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                    usingData2 = "pos";
+                }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
         auto ErrorAction = ([this, context]() {
@@ -223,11 +293,37 @@ Queue::Queue(StateStack& stack, Context context)
             printedError(context, errorMessage + Name);
         });
 
-        auto popBackAction = ([this, context]() {
+        auto popBackAction = ([this, context, cnty]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
             resetButton(NumInitButton + 4);
-            popBackNode(context);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6);
+                data.clear();
+                data.push_back(std::to_string(nodeSaver.takeNumOfNode()));
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6);
+                data.clear();
+                data.push_back(std::to_string(nodeSaver.takeNumOfNode()));
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                }
+            });
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
         auto popMiddleAction = ([this, context, cnty]() {
@@ -242,24 +338,66 @@ Queue::Queue(StateStack& stack, Context context)
             InputPosition.push_back(mGUIContainer.takeSize() - 1);
             data.push_back("");
             setLabel(context, start_x + 2 * add_x + add_x / 2,
-                     start_y + (cnty + 2) * add_y + add_y / 2, "Value",
+                     start_y + (cnty + 2) * add_y + add_y / 2, "Position",
                      textSize);
 
-            auto activeAction = ([this, context] {
-                resetButton(NumInitButton + 7, false);
-                if (checkInputError(inputID::Val, 0))
-                    popMiddleNode(context);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 8, false);
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 8, false);
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                }
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go", activeAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
-        auto popFrontAction = ([this, context]() {
+        auto popFrontAction = ([this, context, cnty]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
             resetButton(NumInitButton + 4);
-            popFrontNode(context);
+            auto stepByStepActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6);
+                data.clear();
+                data.push_back(std::to_string(1));
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsStepByStep();
+                    usingData1 = "";
+                }
+            });
+
+            auto runAtOneActiveAction = ([this, context] {
+                resetButton(NumInitButton + 6);
+                data.clear();
+                data.push_back(std::to_string(1));
+                if (checkInputError(inputID::Pos, 0)) {
+                    nodeSaver.setIsPoping();
+                    nodeSaver.setIsRunAtOnce();
+                    usingData1 = "";
+                }
+            });
+            setStateButton(context, start_x + 3 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
+            setStateButton(context, start_x + 4 * add_x,
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOneActiveAction);
         });
 
         auto ClearAction = ([this]() {
@@ -399,9 +537,11 @@ Queue::Queue(StateStack& stack, Context context)
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go (Step by Step)", stepByStepActiveAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
             setStateButton(context, start_x + 4 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go (Run at once)", runAtOnceActiveAction);
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOnceActiveAction);
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -443,9 +583,11 @@ Queue::Queue(StateStack& stack, Context context)
             });
 
             setStateButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go (Step by Step)", stepByStepActiveAction);
+                           start_y + (cnty + 1) * add_y, "Go (Step by Step)",
+                           stepByStepActiveAction);
             setStateButton(context, start_x + 4 * add_x,
-                           start_y + (cnty + 1) * add_y, "Go (Run at once)", runAtOnceActiveAction);
+                           start_y + (cnty + 1) * add_y, "Go (Run at once)",
+                           runAtOnceActiveAction);
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
@@ -458,9 +600,7 @@ Queue::Queue(StateStack& stack, Context context)
     speedButton->setPosition(11 * start_x, start_y);
     speedButton->setText("x1 speed");
     speedButton->setToggle(true);
-    speedButton->setCallback([this]() {
-        nodeSaver.ChangeSpeed();
-    });
+    speedButton->setCallback([this]() { nodeSaver.ChangeSpeed(); });
 
     // set Back Button
     ++cnty;
@@ -514,6 +654,14 @@ bool Queue::update(sf::Time dt) {
             if (curState == NodesState::isUpdating) {
                 updatingNode(dt);
             }
+
+            if (curState == NodesState::isPoping) {
+                popingNode(dt);
+            }
+
+            if (curState == NodesState::isPushing) {
+                pushingNode(dt);
+            }
         } else
             timeSinceLastHandleEvent += dt;
     }
@@ -546,6 +694,14 @@ bool Queue::handleEvent(const sf::Event& event) {
 
         if (curState == NodesState::isUpdating) {
             updatingNode(dt, event);
+        }
+
+        if (curState == NodesState::isPoping) {
+            popingNode(dt, event);
+        }
+
+        if (curState == NodesState::isPushing) {
+            pushingNode(dt, event);
         }
         timeSinceLastHandleEvent = sf::Time::Zero;
     }
@@ -673,6 +829,46 @@ void Queue::popMiddleNode(Context context) {
 void Queue::popBackNode(Context context) {
     if (!nodeSaver.popBackNode(mSceneGraph))
         printedError(context, Constants::outOfSizeError);
+}
+
+void Queue::pushingNode(sf::Time dt, const sf::Event& event) {
+    if (usingData1 == "") {
+        if (usingData2 == "") {
+            usingData1 = data[0];
+            usingData2 = data[1];
+        } else {
+            usingData1 = data[1];
+            usingData2 = data[0];
+        }
+    }
+    int id = toNum(usingData1);
+    std::string value = (usingData2);
+    ActionState::ID state =
+        nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(), event);
+
+    if (state == ActionState::DoneFalse) {
+        printedError(getContext(), "Position out of data");
+    }
+
+    if (state == ActionState::DoneTrue) {
+        printedError(getContext(), "Pushing successfully");
+    }
+}
+
+void Queue::popingNode(sf::Time dt, const sf::Event& event) {
+    if (usingData1 == "")
+        usingData1 = data[0];
+    int id = toNum(usingData1);
+
+    ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
+
+    if (state == ActionState::DoneFalse) {
+        printedError(getContext(), "Position out of data");
+    }
+
+    if (state == ActionState::DoneTrue) {
+        printedError(getContext(), "Poping successfully");
+    }
 }
 
 void Queue::searchingNode(sf::Time dt, const sf::Event& event) {

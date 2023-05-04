@@ -50,6 +50,9 @@ class Queue : public State, public Constants {
     void popMiddleNode(Context context);
     void popBackNode(Context context);
 
+    void pushingNode(sf::Time dt, const sf::Event& event = sf::Event());
+    void popingNode(sf::Time dt, const sf::Event& event = sf::Event());
+
     void searchingNode(sf::Time dt, const sf::Event& event = sf::Event());
     void accessingNode(sf::Time dt, const sf::Event& event = sf::Event());
     void updatingNode(sf::Time dt, const sf::Event& event = sf::Event());

@@ -6,7 +6,8 @@
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
 const int numOfSpeedID = 3;
-const sf::Time TimePerUpdateList[numOfSpeedID] = {sf::seconds(1.f / 1.f), sf::seconds(1.f / 2.f), sf::seconds(1.f / 4.f)};
+const sf::Time TimePerUpdateList[numOfSpeedID] = {
+    sf::seconds(1.f / 1.f), sf::seconds(1.f / 2.f), sf::seconds(1.f / 4.f)};
 
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph,
@@ -148,7 +149,75 @@ bool NodeManipulate<TypeNode>::popMiddleNode(SceneNode& mSceneGraph, int id) {
 
 template <typename TypeNode>
 bool NodeManipulate<TypeNode>::popBackNode(SceneNode& mSceneGraph) {
+    int id = takeNumOfNode();
+
     return detachNode(mSceneGraph, takeNumOfNode());
+}
+
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::pushingNode(SceneNode& mSceneGraph, sf::Time dt,
+                                           std::string value, int id,
+                                           State::Context context,
+                                           const sf::Event& event)
+    -> ActionState::ID {
+    updateCurrentSelected(dt, event);
+
+    /////// a little special to make the updating smoother
+
+    if (currentSelected < id && currentSelected <= takeNumOfNode()) {
+        int pos = NewIDHolder.findID(currentSelected);
+        resetColor(mSceneGraph);
+        ptrSaver[pos]->setSelected();
+    }
+
+    if (currentSelected > id) {
+        attachNode(mSceneGraph, id, value, context);
+        resetSelected();
+        resetState();
+        return ActionState::DoneTrue; // update success
+    }
+
+    /////// for smoother
+
+    if (currentSelected > takeNumOfNode() + 1) {
+        resetSelected();
+        resetState();
+        return ActionState::DoneFalse; // out of range
+    }
+
+    return ActionState::isDoing; // is updating
+}
+
+template <typename TypeNode>
+auto NodeManipulate<TypeNode>::popingNode(SceneNode& mSceneGraph, sf::Time dt,
+                                          int id, const sf::Event& event)
+    -> ActionState::ID {
+    updateCurrentSelected(dt, event);
+
+    /////// a little special to make the updating smoother
+
+    if (currentSelected <= id && currentSelected <= takeNumOfNode()) {
+        int pos = NewIDHolder.findID(currentSelected);
+        resetColor(mSceneGraph);
+        ptrSaver[pos]->setSelected();
+    }
+
+    if (currentSelected > id) {
+        detachNode(mSceneGraph, id);
+        resetSelected();
+        resetState();
+        return ActionState::DoneTrue; // update success
+    }
+
+    /////// for smoother
+
+    if (currentSelected > takeNumOfNode()) {
+        resetSelected();
+        resetState();
+        return ActionState::DoneFalse; // out of range
+    }
+
+    return ActionState::isDoing; // is updating
 }
 
 template <typename TypeNode>
@@ -263,6 +332,14 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::setIsUpdating() {
     currentState = NodesState::isUpdating;
 }
 
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsPushing() {
+    currentState = NodesState::isPushing;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::setIsPoping() {
+    currentState = NodesState::isPoping;
+}
+
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsStepByStep() {
     currentActionType = NodesState::StepByStep;
 }
@@ -282,8 +359,8 @@ void NodeManipulate<TypeNode>::updateValueNode(int pos, std::string value) {
 }
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::updateCurrentSelected(
-    sf::Time dt, const sf::Event& event) {
+void NodeManipulate<TypeNode>::updateCurrentSelected(sf::Time dt,
+                                                     const sf::Event& event) {
     if (currentSelected == 0) {
         timeSinceLastUpdate = sf::Time::Zero;
         ++currentSelected;
@@ -296,15 +373,16 @@ void NodeManipulate<TypeNode>::updateCurrentSelected(
         }
 
         if (acceptForChange) {
-            if (currentActionType == NodesState::StepByStep && event.type == sf::Event::KeyPressed) {
+            if (currentActionType == NodesState::StepByStep &&
+                event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Left &&
                     currentSelected >= 2)
                     --currentSelected;
                 if (event.key.code == sf::Keyboard::Right)
                     ++currentSelected;
-            } 
-            
-            if(currentActionType == NodesState::RunAtOnce){
+            }
+
+            if (currentActionType == NodesState::RunAtOnce) {
                 ++currentSelected;
             }
         }
