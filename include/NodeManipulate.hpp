@@ -62,6 +62,8 @@ template <typename TypeNode> class NodeManipulate {
     void setIsStepByStep();
     void setIsRunAtOnce();
 
+    void ChangeSpeed();
+
   private:
     void updateValueNode(int pos, std::string value);
     void updateCurrentSelected(sf::Time dt, const sf::Event& event);
@@ -74,7 +76,9 @@ template <typename TypeNode> class NodeManipulate {
     sf::Time timeSinceLastUpdate;
     bool isStartSetPos = false;
     int currentSelected = 0; // This is ID
-
+    int currentTimeID = 0;
+    sf::Time TimePerUpdate = sf::seconds(1.f / 1.f);
+    
     NodesState::ID currentState = NodesState::nothing;
 
     NodesState::ActionType currentActionType = NodesState::RunAtOnce;

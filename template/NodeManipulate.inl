@@ -4,7 +4,9 @@
 #include <memory>
 
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-const sf::Time TimePerUpdate = sf::seconds(1.f / 5.f);
+
+const int numOfSpeedID = 3;
+const sf::Time TimePerUpdateList[numOfSpeedID] = {sf::seconds(1.f / 1.f), sf::seconds(1.f / 2.f), sf::seconds(1.f / 4.f)};
 
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph,
@@ -219,8 +221,8 @@ auto NodeManipulate<TypeNode>::updatingNode(SceneNode& mSceneGraph, sf::Time dt,
         ptrSaver[pos]->setSelected();
     }
 
-    if (currentSelected > id || (currentSelected == id && currentActionType == NodesState::StepByStep)) {
-        int pos = NewIDHolder.findID(currentSelected - (currentActionType == NodesState::RunAtOnce));
+    if (currentSelected > id) {
+        int pos = NewIDHolder.findID(currentSelected - 1);
         updateValueNode(pos, value);
         resetSelected();
         resetState();
@@ -267,6 +269,11 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::setIsStepByStep() {
 
 template <typename TypeNode> void NodeManipulate<TypeNode>::setIsRunAtOnce() {
     currentActionType = NodesState::RunAtOnce;
+}
+
+template <typename TypeNode> void NodeManipulate<TypeNode>::ChangeSpeed() {
+    currentTimeID = (currentTimeID + 1) % numOfSpeedID;
+    TimePerUpdate = TimePerUpdateList[currentTimeID];
 }
 
 template <typename TypeNode>

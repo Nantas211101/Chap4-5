@@ -66,7 +66,7 @@ void SpeedButton::activate(){
                 break;
 
             case 2:
-                setText("x3 speed");
+                setText("x4 speed");
                 // mSpeedSprite.setTexture(hinh3); // hinh x3 speed;
                 break;
 

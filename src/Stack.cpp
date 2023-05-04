@@ -43,35 +43,14 @@ Stack::Stack(StateStack& stack, Context context)
         auto ManuallyAction = ([this, context, cnty]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-            resetButton(NumInitButton + 1);
-
-            auto tmp = ([]() {
-
-            });
-
-            // Number of nodes
-            setInputButton(context, start_x + 2 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 2 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "Number",
-                     textSize);
-
-            //
-
-            // Value of a node
-            setInputButton(context, start_x + 3 * add_x,
-                           start_y + (cnty + 1) * add_y, "", tmp);
-            InputPosition.push_back(mGUIContainer.takeSize() - 1);
-            setLabel(context, start_x + 3 * add_x + add_x / 2,
-                     start_y + (cnty + 1) * add_y - add_y / 2, "Value",
-                     textSize);
+            resetButton(NumInitButton + 3);
+            printedError(context, "This feature have not include, please wait for next update patch");
         });
 
         auto FileAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-
+            resetButton(NumInitButton + 3);
             auto file_name = FileHolder.select();
             if (file_name.has_value()) {
                 try {
@@ -90,7 +69,7 @@ Stack::Stack(StateStack& stack, Context context)
         auto RandomAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-
+            resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
             nodeSaver.init(mSceneGraph, data, context);
@@ -216,11 +195,11 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", pushBackAction);
+                       start_y + cnty * add_y, "Push", pushfrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to Middle", pushMiddleAction);
+                       start_y + cnty * add_y, "to Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", pushfrontAction);
+                       start_y + cnty * add_y, "to First", ErrorAction);
     });
 
     // set Delete button
@@ -239,7 +218,7 @@ Stack::Stack(StateStack& stack, Context context)
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-            resetButton(NumInitButton + 3);
+            resetButton(NumInitButton + 4);
 
             printedError(context, errorMessage + Name);
         });
@@ -286,16 +265,17 @@ Stack::Stack(StateStack& stack, Context context)
         auto ClearAction = ([this]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
+            resetButton(NumInitButton + 4);
             nodeSaver.reset(mSceneGraph);
         });
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popBackAction);
+                       start_y + cnty * add_y, "Pop", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at Middle", popMiddleAction);
+                       start_y + cnty * add_y, "at Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", popFrontAction);
+                       start_y + cnty * add_y, "at First", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
@@ -333,7 +313,6 @@ Stack::Stack(StateStack& stack, Context context)
         setLabel(context, start_x + (cntx)*add_x + add_x / 2,
                  start_y + cnty * add_y - add_y / 2, "With value", textSize);
 
-        // auto stepByStepActiveAction
 
         auto runAtOneActiveAction([this, context]() {
             resetButton(NumInitButton + 6, false);
@@ -357,12 +336,19 @@ Stack::Stack(StateStack& stack, Context context)
             }
         });
 
+        auto ErrorAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 6, false);
+            printedError(context, errorMessage + Name);
+        });
+
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Go (Step by Step)",
-                       stepByStepActiveAction);
+                       ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Go (Run at once)",
-                       runAtOneActiveAction);
+                       ErrorAction);
     });
 
     // Set Search Button
@@ -378,6 +364,13 @@ Stack::Stack(StateStack& stack, Context context)
 
         auto action = ([this]() {
 
+        });
+
+        auto ErrorAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 2);
+            printedError(context, errorMessage + Name);
         });
 
         resetButton(NumInitButton);
@@ -426,7 +419,7 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Accessing", accessAction);
+                       start_y + cnty * add_y, "Accessing", ErrorAction);
 
         // Searching
 
@@ -470,7 +463,7 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Searching", searchAction);
+                       start_y + cnty * add_y, "Searching", ErrorAction);
     });
 
     // Set Speed Button
@@ -479,10 +472,8 @@ Stack::Stack(StateStack& stack, Context context)
     speedButton->setPosition(11 * start_x, start_y);
     speedButton->setText("x1 speed");
     speedButton->setToggle(true);
-    speedButton->setCallback([this]() {
-        // auto action = ([this](){
-        //     // nothing
-        // });
+    speedButton->setCallback([this, context]() {
+        nodeSaver.ChangeSpeed();
     });
 
     // set Back Button
