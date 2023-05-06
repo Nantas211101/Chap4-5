@@ -32,6 +32,8 @@ void NodeManipulate<TypeNode>::reset(SceneNode& mSceneGraph) {
         mSceneGraph.detachChild(*mNode);
     }
     ptrSaver.clear();
+
+    isNextNullNode = 0;
 }
 
 template <typename TypeNode>
@@ -52,6 +54,8 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
 
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
+
+    bool isSetHead = 0;
 
     for (int i = 0; i < ptrSaver.size(); ++i) {
         int newID = NewIDHolder.takeID(i);
@@ -107,7 +111,7 @@ bool NodeManipulate<TypeNode>::detachNode(SceneNode& mSceneGraph, int id) {
 
 template <typename TypeNode>
 auto NodeManipulate<TypeNode>::takeNumOfNode() -> int {
-    return ptrSaver.size();
+    return ptrSaver.size() - isNextNullNode;
 }
 
 template <typename TypeNode>
@@ -171,9 +175,10 @@ auto NodeManipulate<TypeNode>::pushingNode(SceneNode& mSceneGraph, sf::Time dt,
     }
 
     if (currentSelected > id) {
-        attachNode(mSceneGraph, id, value, context);
         resetSelected();
         resetState();
+        if(!attachNode(mSceneGraph, id, value, context))
+            return ActionState::DoneFalse;
         return ActionState::DoneTrue; // update success
     }
 
@@ -351,6 +356,33 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::setIsRunAtOnce() {
 template <typename TypeNode> void NodeManipulate<TypeNode>::ChangeSpeed() {
     currentTimeID = (currentTimeID + 1) % numOfSpeedID;
     TimePerUpdate = TimePerUpdateList[currentTimeID];
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::setNextNullNode(SceneNode& mSceneGraph,
+                                               State::Context context) {
+    if (!isNextNullNode){
+        pushBackNode(mSceneGraph, "null", context);
+        isNextNullNode = 1;
+    }
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::desetNextNullNode(SceneNode& mSceneGraph,
+                                               State::Context context) {
+    if (isNextNullNode){
+        popBackNode(mSceneGraph);
+        isNextNullNode = 0;
+    }
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::nullManipulate(SceneNode& mSceneGraph,
+                                               State::Context context) {
+    if(takeNumOfNode())
+    setNextNullNode(mSceneGraph, context);
+    if(takeNumOfNode() == 0)
+        desetNextNullNode(mSceneGraph, context);
 }
 
 template <typename TypeNode>

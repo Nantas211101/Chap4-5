@@ -37,14 +37,14 @@ MenuState::MenuState(StateStack &stack, Context context):
 
 
         // Set Button setting
-        auto settingsButton = std::make_shared<GUI::Button>(
-            *context.fonts, *context.textures);
-        settingsButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
-        settingsButton->setText("Setting");
-        settingsButton->setToggle(true);
-        settingsButton->setCallback([this] (){
-            requestStackPush(States::Settings);
-        });
+        // auto settingsButton = std::make_shared<GUI::Button>(
+        //     *context.fonts, *context.textures);
+        // settingsButton->setPosition(OFFSET_X, OFFSET_Y + y_add * (++cnt));
+        // settingsButton->setText("Setting");
+        // settingsButton->setToggle(true);
+        // settingsButton->setCallback([this] (){
+        //     requestStackPush(States::Settings);
+        // });
 
         // set Button exit
         auto exitButton = std::make_shared<GUI::Button>(
@@ -57,7 +57,7 @@ MenuState::MenuState(StateStack &stack, Context context):
         });
 
         mGUIContainer.pack(playButton);
-        mGUIContainer.pack(settingsButton);
+        // mGUIContainer.pack(settingsButton);
         mGUIContainer.pack(exitButton);  
         // mGUIContainer.pack(stackButton);
 }

@@ -3,7 +3,7 @@
 NodeData::NodeData(std::string n, const FontHolder& fonts, int sizeOfText,
                    int sizeOfShape)
     : mShape(), mDisplayText(n, fonts.get(Fonts::Main), sizeOfText) {
-    mShape.setRadius(sizeOfShape / 2);
+    mShape.setRadius(sizeOfShape);
     mShape.setFillColor(sf::Color::Blue);
     setCenterOrigin(mShape);
     // mShape.setOutlineColor(sf::Color::Red);

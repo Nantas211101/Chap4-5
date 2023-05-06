@@ -36,3 +36,7 @@ void StackNode::setSelected(){
 void StackNode::setDeselected(){
     mDataNode->setColor(sf::Color::Blue);
 }
+
+void StackNode::setHeadNode(){
+    mDataNode->setColor(sf::Color::Magenta);
+}

@@ -27,6 +27,7 @@ class StackNode : public SceneNode {
 
     void setSelected();
     void setDeselected();
+    void setHeadNode();
 
   private:
     NodeData* mDataNode;

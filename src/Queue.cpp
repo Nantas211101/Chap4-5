@@ -13,7 +13,6 @@ Queue::Queue(StateStack& stack, Context context)
                  context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
-      isSearching(false),
       usingData1(""),
       usingData2(""),
       timeSinceLastHandleEvent(sf::Time::Zero) {
@@ -57,7 +56,7 @@ Queue::Queue(StateStack& stack, Context context)
                 try {
                     data.clear();
                     nodeSaver.reset(mSceneGraph);
-                    this->data = readIntegerFile(file_name.value());
+                    this->data = readIntegerFile(1, file_name.value());
                     nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
                     // in lo
@@ -73,6 +72,8 @@ Queue::Queue(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
+            if (data.size() > Constants::MAXI::numOfNode - 1)
+                data.pop_back();
             nodeSaver.init(mSceneGraph, data, context);
         });
 
@@ -265,11 +266,11 @@ Queue::Queue(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", pushBackAction);
+                       start_y + cnty * add_y, "Add", pushBackAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to Middle", pushMiddleAction);
+                       start_y + cnty * add_y, "to Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", pushfrontAction);
+                       start_y + cnty * add_y, "to First", ErrorAction);
     });
 
     // set Delete button
@@ -288,7 +289,7 @@ Queue::Queue(StateStack& stack, Context context)
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-            resetButton(NumInitButton + 3);
+            resetButton(NumInitButton + 4);
 
             printedError(context, errorMessage + Name);
         });
@@ -408,11 +409,11 @@ Queue::Queue(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popBackAction);
+                       start_y + cnty * add_y, "Pop", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at Middle", popMiddleAction);
+                       start_y + cnty * add_y, "at Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", popFrontAction);
+                       start_y + cnty * add_y, "at First", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
@@ -425,61 +426,67 @@ Queue::Queue(StateStack& stack, Context context)
     updateButton->setText("Update");
     updateButton->setToggle(true);
     updateButton->setCallback([this, context, cnty]() {
+        // if (nodeSaver.takeCurrentState() != NodesState::nothing)
+        //     return;
+        // resetButton(NumInitButton);
+        // data.clear();
+
+        // auto tmp = ([this]() {
+        //     // nothing here now
+        // });
+
+        // int cntx = 0;
+
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", tmp);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back("");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "At position",
+        //          textSize);
+
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", tmp);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back("");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "With value", textSize);
+
+        // // auto stepByStepActiveAction
+
+        // auto runAtOneActiveAction([this, context]() {
+        //     resetButton(NumInitButton + 6, false);
+        //     if (checkInputError(inputID::Pos, 0) &&
+        //         checkInputError(inputID::Val, 1)) {
+        //         nodeSaver.setIsUpdating();
+        //         nodeSaver.setIsRunAtOnce();
+        //         usingData1 = "";
+        //         usingData2 = "";
+        //     }
+        // });
+
+        // auto stepByStepActiveAction([this, context]() {
+        //     resetButton(NumInitButton + 6, false);
+        //     if (checkInputError(inputID::Pos, 0) &&
+        //         checkInputError(inputID::Val, 1)) {
+        //         nodeSaver.setIsUpdating();
+        //         nodeSaver.setIsStepByStep();
+        //         usingData1 = "";
+        //         usingData2 = "";
+        //     }
+        // });
+
+        // setStateButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "Go (Step by Step)",
+        //                stepByStepActiveAction);
+        // setStateButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "Go (Run at once)",
+        //                runAtOneActiveAction);
         if (nodeSaver.takeCurrentState() != NodesState::nothing)
             return;
         resetButton(NumInitButton);
-        data.clear();
 
-        auto tmp = ([this]() {
-            // nothing here now
-        });
-
-        int cntx = 0;
-
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", tmp);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back("");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "At position", textSize);
-
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", tmp);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back("");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "With value", textSize);
-
-        // auto stepByStepActiveAction
-
-        auto runAtOneActiveAction([this, context]() {
-            resetButton(NumInitButton + 6, false);
-            if (checkInputError(inputID::Pos, 0) &&
-                checkInputError(inputID::Val, 1)) {
-                nodeSaver.setIsUpdating();
-                nodeSaver.setIsRunAtOnce();
-                usingData1 = "";
-                usingData2 = "";
-            }
-        });
-
-        auto stepByStepActiveAction([this, context]() {
-            resetButton(NumInitButton + 6, false);
-            if (checkInputError(inputID::Pos, 0) &&
-                checkInputError(inputID::Val, 1)) {
-                nodeSaver.setIsUpdating();
-                nodeSaver.setIsStepByStep();
-                usingData1 = "";
-                usingData2 = "";
-            }
-        });
-
-        setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Go (Step by Step)",
-                       stepByStepActiveAction);
-        setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Go (Run at once)",
-                       runAtOneActiveAction);
+        printedError(context, errorMessage + Name);
     });
 
     // Set Search Button
@@ -495,6 +502,13 @@ Queue::Queue(StateStack& stack, Context context)
 
         auto action = ([this]() {
 
+        });
+        auto ErrorAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 2);
+
+            printedError(context, errorMessage + Name);
         });
 
         resetButton(NumInitButton);
@@ -545,7 +559,7 @@ Queue::Queue(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Accessing", accessAction);
+                       start_y + cnty * add_y, "Accessing", ErrorAction);
 
         // Searching
 
@@ -591,7 +605,7 @@ Queue::Queue(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Searching", searchAction);
+                       start_y + cnty * add_y, "Searching", ErrorAction);
     });
 
     // Set Speed Button
@@ -637,6 +651,7 @@ void Queue::draw() {
 }
 
 bool Queue::update(sf::Time dt) {
+    nodeSaver.nullManipulate(mSceneGraph, getContext());
     nodeSaver.updatePos(mSceneGraph, dt);
     NodesState::ID curState = nodeSaver.takeCurrentState();
     NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
@@ -680,6 +695,9 @@ bool Queue::handleEvent(const sf::Event& event) {
 
     NodesState::ID curState = nodeSaver.takeCurrentState();
     NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
+    if (event.type == sf::Event::KeyPressed &&
+        event.key.code == sf::Keyboard::Escape)
+        requestStackPush(States::Pause);
     if (curState != NodesState::nothing &&
         curActionType == NodesState::StepByStep) {
         sf::Time dt = timeSinceLastHandleEvent;
@@ -775,7 +793,8 @@ bool Queue::checkInputError(inputID::ID kind, int p) {
             printedError(getContext(),
                          "The position (number) should in [" +
                              std::to_string(Constants::MINI::numOfNode) + ", " +
-                             std::to_string(Constants::MAXI::numOfNode) + "]");
+                             std::to_string(Constants::MAXI::numOfNode - 1) +
+                             "]"); // -1 for 1 null node
             return false;
         }
     }
@@ -847,7 +866,10 @@ void Queue::pushingNode(sf::Time dt, const sf::Event& event) {
         nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(), event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "Position out of data");
+        printedError(getContext(),
+                     "Out of the limit of node[" +
+                         std::to_string(Constants::MINI::numOfNode) + ", " +
+                         std::to_string(Constants::MAXI::numOfNode - 1) + "]");
     }
 
     if (state == ActionState::DoneTrue) {
@@ -863,7 +885,8 @@ void Queue::popingNode(sf::Time dt, const sf::Event& event) {
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "Position out of data");
+        printedError(getContext(),
+                     "You can not delete node in a empty structure");
     }
 
     if (state == ActionState::DoneTrue) {

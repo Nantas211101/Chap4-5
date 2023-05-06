@@ -5,7 +5,7 @@
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application():
-    mWindow(sf::VideoMode(1440, 1000), "Game States (Beta Version) World", sf::Style::Close),
+    mWindow(sf::VideoMode(2560, 1440), "Game States (Beta Version) World", sf::Style::Close),
     mTextures(),
     mFonts(),
     mPlayer(),

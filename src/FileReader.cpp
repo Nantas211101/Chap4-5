@@ -3,7 +3,7 @@
 #include <fstream>
 #include <limits>
 
-std::vector<std::string> readIntegerFile(const std::string& file_name, size_t max_n,
+std::vector<std::string> readIntegerFile(int numOfNullNode, const std::string& file_name, size_t max_n,
                                  int min_val, int max_val) {
     std::ifstream file(file_name);
 
@@ -11,7 +11,7 @@ std::vector<std::string> readIntegerFile(const std::string& file_name, size_t ma
     file >> n;
     if (file.fail())
         throw std::runtime_error{"cannot read an integer"};
-    if (n > max_n)
+    if (n > max_n - numOfNullNode)
         throw std::runtime_error{"data too big"};
 
     std::vector<std::string> res;

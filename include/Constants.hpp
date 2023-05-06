@@ -7,7 +7,7 @@ struct Constants {
     const int numOfAcceptedChar = 11;
 
     struct MAXI {
-        static constexpr int numOfNode = 7;
+        static constexpr int numOfNode = 10;
         static constexpr int valueOfNode = 99;
     };
 

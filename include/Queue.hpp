@@ -67,7 +67,6 @@ class Queue : public State, public Constants {
     std::vector<std::string> data;
     NodeManipulate<StackNode> nodeSaver;
     Randomize randomHolder;
-    bool isSearching;
     std::string usingData1;
     std::string usingData2;
     sf::Time timeSinceLastHandleEvent;

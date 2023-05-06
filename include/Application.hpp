@@ -21,7 +21,7 @@
 #include "DLL.hpp"
 #include "CLL.hpp"
 
-const std::string Path_TitleScreen = "resource/Textures/TitleScreen.png";
+const std::string Path_TitleScreen = "resource/Textures/TitleScreen.jpg";
 const std::string Path_Font = "resource/Sansation.ttf";
 const std::string Path_MenuScreen = "resource/Textures/Menu.jpg";
 const std::string Path_WhiteBackground = "resource/Textures/WhiteBackground.jpg";
