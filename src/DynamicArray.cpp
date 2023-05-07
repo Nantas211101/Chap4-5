@@ -412,11 +412,11 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popBackAction);
+                       start_y + cnty * add_y, "at First", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "at Middle", popMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", popFrontAction);
+                       start_y + cnty * add_y, "at Last", popBackAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
@@ -863,10 +863,13 @@ void DynamicArray::pushingNode(sf::Time dt, const sf::Event& event) {
             id > nodeSaver.takeNumOfNode() + 1) {
             nodeSaver.resetState();
             nodeSaver.resetSelected();
-            printedError(getContext(),
-                         "The position (number) of node should in [" +
-                             std::to_string(Constants::MINI::numOfNode) + ", " +
-                             std::to_string(Constants::MAXI::numOfNode) + "]");
+            printedError(
+                getContext(),
+                "The position (number) of node should in [" +
+                    std::to_string(Constants::MINI::numOfNode) + ", " +
+                    std::to_string(std::min(nodeSaver.takeNumOfNode() + 1,
+                                            Constants::MAXI::numOfNode)) +
+                    "]");
             return;
         }
         takeData();
@@ -877,18 +880,9 @@ void DynamicArray::pushingNode(sf::Time dt, const sf::Event& event) {
         for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
             havePush[i] = 0;
         for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
-            std::cout << a[i] << " ";
-        std::cout << "\n";
-        for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
             tmpNodeSaver.pushBackNode(mSceneGraph, "", getContext());
     }
 
-    // timeSinceLastPushing += dt;
-    // sf::Time delta = nodeSaver.takeTimePerUpdate();
-    // if (timeSinceLastPushing > delta) {
-    //     ++currentIDPushing;
-    //     timeSinceLastPushing -= delta;
-    // }
     ActionTypeManipulate(dt, event, currentIDPushing);
 
     if (currentIDPushing > nodeSaver.takeNumOfNode() + 1) {
@@ -899,47 +893,70 @@ void DynamicArray::pushingNode(sf::Time dt, const sf::Event& event) {
             mSceneGraph); // because the tmpNodeSaver was behind and manipulate
                           // behind so even when using the same SceneGraph it
                           // will not affect the nodeSaver old
-        printedError(getContext(), "Pushing successfully");
+        printedError(getContext(), "Inserting successfully");
         return;
     }
 
     if (currentIDPushing && !havePush[currentIDPushing]) {
-        // tmpNodeSaver.pushBackNode(mSceneGraph, a[currentIDPushing],
-        //                           getContext());
         tmpNodeSaver.setValueOfNode(currentIDPushing, a[currentIDPushing]);
         havePush[currentIDPushing] = 1;
     }
-
-    // ActionState::ID state =
-    //     nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(),
-    //     event);
-
-    // if (state == ActionState::DoneFalse) {
-    //     printedError(getContext(),
-    //                  "Out of the limit of node[" +
-    //                      std::to_string(Constants::MINI::numOfNode) + ", " +
-    //                      std::to_string(Constants::MAXI::numOfNode) + "]");
-    // }
-
-    // if (state == ActionState::DoneTrue) {
-    //     printedError(getContext(), "Pushing successfully");
-    // }
 }
 
 void DynamicArray::popingNode(sf::Time dt, const sf::Event& event) {
-    if (usingData1 == "")
+    bool isChangetmpData = 0;
+    if (usingData1 == "") {
         usingData1 = data[0];
+        isChangetmpData = 1;
+        timeSinceLastPushing = sf::Time::Zero;
+        currentIDPushing = 0;
+    }
     int id = toNum(usingData1);
 
-    ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
+    if (isChangetmpData) {
+        if (nodeSaver.takeNumOfNode() == 0) {
+            printedError(getContext(),
+                         "You can not delete node in a empty structure");
+            return;
+        }
 
-    if (state == ActionState::DoneFalse) {
-        printedError(getContext(),
-                     "You can not delete node in a empty structure");
+        if (id > nodeSaver.takeNumOfNode() ||
+            id < 1) {
+            nodeSaver.resetState();
+            nodeSaver.resetSelected();
+            printedError(getContext(),
+                         "The position (number) of node should in [" +
+                             std::to_string(Constants::MINI::numOfNode) + ", " +
+                             std::to_string(std::min(nodeSaver.takeNumOfNode(), Constants::MAXI::numOfNode)) + "]");
+            return;
+        }
+        takeData();
+        for (int i = id; i < nodeSaver.takeNumOfNode(); ++i) {
+            a[i] = a[i + 1];
+        }
+        for (int i = 1; i <= nodeSaver.takeNumOfNode() - 1; ++i)
+            havePush[i] = 0;
+        for (int i = 1; i <= nodeSaver.takeNumOfNode() - 1; ++i)
+            tmpNodeSaver.pushBackNode(mSceneGraph, "", getContext());
     }
 
-    if (state == ActionState::DoneTrue) {
-        printedError(getContext(), "Poping successfully");
+    ActionTypeManipulate(dt, event, currentIDPushing);
+
+    if (currentIDPushing > nodeSaver.takeNumOfNode() - 1) {
+        nodeSaver.resetState();
+        nodeSaver.resetSelected();
+        nodeSaver.popMiddleNode(mSceneGraph, id);
+        tmpNodeSaver.reset(
+            mSceneGraph); // because the tmpNodeSaver was behind and manipulate
+                          // behind so even when using the same SceneGraph it
+                          // will not affect the nodeSaver old
+        printedError(getContext(), "Deleting successfully");
+        return;
+    }
+
+    if (currentIDPushing && !havePush[currentIDPushing]) {
+        tmpNodeSaver.setValueOfNode(currentIDPushing, a[currentIDPushing]);
+        havePush[currentIDPushing] = 1;
     }
 }
 
