@@ -57,6 +57,10 @@ class DynamicArray : public State, public Constants {
     void accessingNode(sf::Time dt, const sf::Event& event = sf::Event());
     void updatingNode(sf::Time dt, const sf::Event& event = sf::Event());
     ///////
+
+    void takeData();
+    void ActionTypeManipulate(sf::Time dt, const sf::Event& event, int& num);
+  
   private:
     sf::Sprite mBackgroundSprite;
     GUI::Container mGUIContainer;
@@ -66,8 +70,13 @@ class DynamicArray : public State, public Constants {
     SceneNode mSceneGraph;
     std::vector<std::string> data;
     NodeManipulate<StackNode> nodeSaver;
+    NodeManipulate<StackNode> tmpNodeSaver;
+    std::string a[Constants::MAXI::numOfNode + 2];
+    bool havePush[Constants::MAXI::numOfNode + 2];
     Randomize randomHolder;
     std::string usingData1;
     std::string usingData2;
     sf::Time timeSinceLastHandleEvent;
+    sf::Time timeSinceLastPushing;
+    int currentIDPushing;
 };

@@ -19,6 +19,9 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
+    nodeSaver.setTypeOfState(States::DynamicArray);
+    tmpNodeSaver.setTypeOfState(States::DynamicArray);
+
     int cnty = -1;
     // set Init button
     ++cnty;
@@ -56,7 +59,7 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
                 try {
                     data.clear();
                     nodeSaver.reset(mSceneGraph);
-                    this->data = readIntegerFile(1, file_name.value());
+                    this->data = readIntegerFile(0, file_name.value());
                     nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
                     // in lo
@@ -72,7 +75,7 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
-            if(data.size() > Constants::MAXI::numOfNode - 1)
+            if (data.size() > Constants::MAXI::numOfNode)
                 data.pop_back();
             nodeSaver.init(mSceneGraph, data, context);
         });
@@ -266,11 +269,11 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", pushBackAction);
+                       start_y + cnty * add_y, "to First", pushfrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to Middle", pushMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", pushfrontAction);
+                       start_y + cnty * add_y, "to Last", pushBackAction);
     });
 
     // set Delete button
@@ -638,8 +641,8 @@ void DynamicArray::draw() {
 }
 
 bool DynamicArray::update(sf::Time dt) {
-    nodeSaver.nullManipulate(mSceneGraph, getContext());
     nodeSaver.updatePos(mSceneGraph, dt);
+    tmpNodeSaver.updatePos(mSceneGraph, dt, 5);
     NodesState::ID curState = nodeSaver.takeCurrentState();
     NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
 
@@ -720,8 +723,8 @@ bool DynamicArray::handleRealTimeInput() {
 }
 
 void DynamicArray::setStateButton(Context context, int posx, int posy,
-                           const std::string& text,
-                           std::function<void()> action) {
+                                  const std::string& text,
+                                  std::function<void()> action) {
     auto stateButton =
         std::make_shared<GUI::Button>(*context.fonts, *context.textures);
     stateButton->setPosition(posx, posy);
@@ -733,7 +736,7 @@ void DynamicArray::setStateButton(Context context, int posx, int posy,
 }
 
 void DynamicArray::setLabel(Context context, int posx, int posy,
-                     const std::string& text, int sizeoftext) {
+                            const std::string& text, int sizeoftext) {
     auto Label = std::make_shared<GUI::Label>("", *context.fonts, sizeoftext);
     Label->setPosition(posx, posy);
     Label->setText(text);
@@ -741,8 +744,8 @@ void DynamicArray::setLabel(Context context, int posx, int posy,
 }
 
 void DynamicArray::setInputButton(Context context, int posx, int posy,
-                           const std::string& text,
-                           std::function<void()> action) {
+                                  const std::string& text,
+                                  std::function<void()> action) {
     auto stateButton =
         std::make_shared<GUI::InputButton>(*context.fonts, *context.textures);
     stateButton->setPosition(posx, posy);
@@ -757,12 +760,13 @@ void DynamicArray::resetButton(int size, bool isResetInputButton) {
     while (mGUIContainer.isOutOfSize(size))
         mGUIContainer.depackend();
     nodeSaver.resetColor(mSceneGraph);
+    tmpNodeSaver.reset(mSceneGraph);
     if (isResetInputButton)
         InputPosition.clear();
 }
 
 void DynamicArray::printedError(Context context, const std::string& text,
-                         int padding) {
+                                int padding) {
     sf::Vector2f pos = context.window->getView().getCenter();
     setLabel(context, pos.x, pos.y + (padding)*add_y, text, textSize * 2);
 }
@@ -778,9 +782,9 @@ bool DynamicArray::checkInputError(inputID::ID kind, int p) {
         if (!isContain(data[p], Constants::MINI::numOfNode,
                        Constants::MAXI::numOfNode)) {
             printedError(getContext(),
-                         "The position (number) should in [" +
+                         "The position (number) of node should in [" +
                              std::to_string(Constants::MINI::numOfNode) + ", " +
-                             std::to_string(Constants::MAXI::numOfNode - 1) +
+                             std::to_string(Constants::MAXI::numOfNode) +
                              "]"); // -1 for 1 null node
             return false;
         }
@@ -838,6 +842,7 @@ void DynamicArray::popBackNode(Context context) {
 }
 
 void DynamicArray::pushingNode(sf::Time dt, const sf::Event& event) {
+    bool isChangetmpData = 0;
     if (usingData1 == "") {
         if (usingData2 == "") {
             usingData1 = data[0];
@@ -846,22 +851,79 @@ void DynamicArray::pushingNode(sf::Time dt, const sf::Event& event) {
             usingData1 = data[1];
             usingData2 = data[0];
         }
+        isChangetmpData = 1;
+        timeSinceLastPushing = sf::Time::Zero;
+        currentIDPushing = 0;
     }
     int id = toNum(usingData1);
     std::string value = (usingData2);
-    ActionState::ID state =
-        nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(), event);
 
-    if (state == ActionState::DoneFalse) {
-        printedError(getContext(),
-                     "Out of the limit of node[" +
-                         std::to_string(Constants::MINI::numOfNode) + ", " +
-                         std::to_string(Constants::MAXI::numOfNode - 1) + "]");
+    if (isChangetmpData) {
+        if (nodeSaver.takeNumOfNode() + 1 > Constants::MAXI::numOfNode ||
+            id > nodeSaver.takeNumOfNode() + 1) {
+            nodeSaver.resetState();
+            nodeSaver.resetSelected();
+            printedError(getContext(),
+                         "The position (number) of node should in [" +
+                             std::to_string(Constants::MINI::numOfNode) + ", " +
+                             std::to_string(Constants::MAXI::numOfNode) + "]");
+            return;
+        }
+        takeData();
+        for (int i = nodeSaver.takeNumOfNode() + 1; i >= id; --i) {
+            a[i] = a[i - 1];
+        }
+        a[id] = value;
+        for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
+            havePush[i] = 0;
+        for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
+            std::cout << a[i] << " ";
+        std::cout << "\n";
+        for (int i = 1; i <= nodeSaver.takeNumOfNode() + 1; ++i)
+            tmpNodeSaver.pushBackNode(mSceneGraph, "", getContext());
     }
 
-    if (state == ActionState::DoneTrue) {
+    // timeSinceLastPushing += dt;
+    // sf::Time delta = nodeSaver.takeTimePerUpdate();
+    // if (timeSinceLastPushing > delta) {
+    //     ++currentIDPushing;
+    //     timeSinceLastPushing -= delta;
+    // }
+    ActionTypeManipulate(dt, event, currentIDPushing);
+
+    if (currentIDPushing > nodeSaver.takeNumOfNode() + 1) {
+        nodeSaver.resetState();
+        nodeSaver.resetSelected();
+        nodeSaver.pushMiddleNode(mSceneGraph, value, id, getContext());
+        tmpNodeSaver.reset(
+            mSceneGraph); // because the tmpNodeSaver was behind and manipulate
+                          // behind so even when using the same SceneGraph it
+                          // will not affect the nodeSaver old
         printedError(getContext(), "Pushing successfully");
+        return;
     }
+
+    if (currentIDPushing && !havePush[currentIDPushing]) {
+        // tmpNodeSaver.pushBackNode(mSceneGraph, a[currentIDPushing],
+        //                           getContext());
+        tmpNodeSaver.setValueOfNode(currentIDPushing, a[currentIDPushing]);
+        havePush[currentIDPushing] = 1;
+    }
+
+    // ActionState::ID state =
+    //     nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(),
+    //     event);
+
+    // if (state == ActionState::DoneFalse) {
+    //     printedError(getContext(),
+    //                  "Out of the limit of node[" +
+    //                      std::to_string(Constants::MINI::numOfNode) + ", " +
+    //                      std::to_string(Constants::MAXI::numOfNode) + "]");
+    // }
+
+    // if (state == ActionState::DoneTrue) {
+    //     printedError(getContext(), "Pushing successfully");
+    // }
 }
 
 void DynamicArray::popingNode(sf::Time dt, const sf::Event& event) {
@@ -872,7 +934,8 @@ void DynamicArray::popingNode(sf::Time dt, const sf::Event& event) {
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "You can not delete node in a empty structure");
+        printedError(getContext(),
+                     "You can not delete node in a empty structure");
     }
 
     if (state == ActionState::DoneTrue) {
@@ -931,5 +994,39 @@ void DynamicArray::updatingNode(sf::Time dt, const sf::Event& event) {
 
     if (state == ActionState::DoneTrue) {
         printedError(getContext(), "Update successfully");
+    }
+}
+
+void DynamicArray::takeData() {
+    int n = nodeSaver.takeNumOfNode();
+    for (int i = 1; i <= n; ++i) {
+        a[i] = nodeSaver.takeValueOfNode(i);
+    }
+}
+
+void DynamicArray::ActionTypeManipulate(sf::Time dt, const sf::Event& event,
+                                        int& num) {
+    NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
+    bool acceptForChange = 0;
+
+    timeSinceLastPushing += dt;
+    sf::Time delta = nodeSaver.takeTimePerUpdate();
+    if (timeSinceLastPushing > delta) {
+        acceptForChange = 1;
+        timeSinceLastPushing -= delta;
+    }
+
+    if (acceptForChange) {
+        if (curActionType == NodesState::StepByStep &&
+            event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Left && num >= 2)
+                --num;
+            if (event.key.code == sf::Keyboard::Right)
+                ++num;
+        }
+
+        if (curActionType == NodesState::RunAtOnce) {
+            ++num;
+        }
     }
 }

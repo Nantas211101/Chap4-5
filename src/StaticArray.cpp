@@ -19,6 +19,7 @@ StaticArray::StaticArray(StateStack& stack, Context context)
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
+    nodeSaver.setTypeOfState(States::StaticArray);
     int cnty = -1;
     // set Init button
     ++cnty;
@@ -56,7 +57,7 @@ StaticArray::StaticArray(StateStack& stack, Context context)
                 try {
                     data.clear();
                     nodeSaver.reset(mSceneGraph);
-                    this->data = readIntegerFile(1, file_name.value());
+                    this->data = readIntegerFile(0 ,file_name.value());
                     nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
                     // in lo
@@ -72,7 +73,7 @@ StaticArray::StaticArray(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
-            if(data.size() > Constants::MAXI::numOfNode - 1)
+            if(data.size() > Constants::MAXI::numOfNode)
                 data.pop_back();
             nodeSaver.init(mSceneGraph, data, context);
         });
@@ -638,7 +639,6 @@ void StaticArray::draw() {
 }
 
 bool StaticArray::update(sf::Time dt) {
-    nodeSaver.nullManipulate(mSceneGraph, getContext());
     nodeSaver.updatePos(mSceneGraph, dt);
     NodesState::ID curState = nodeSaver.takeCurrentState();
     NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();
@@ -780,7 +780,7 @@ bool StaticArray::checkInputError(inputID::ID kind, int p) {
             printedError(getContext(),
                          "The position (number) should in [" +
                              std::to_string(Constants::MINI::numOfNode) + ", " +
-                             std::to_string(Constants::MAXI::numOfNode - 1) +
+                             std::to_string(Constants::MAXI::numOfNode) +
                              "]"); // -1 for 1 null node
             return false;
         }
@@ -856,7 +856,7 @@ void StaticArray::pushingNode(sf::Time dt, const sf::Event& event) {
         printedError(getContext(),
                      "Out of the limit of node[" +
                          std::to_string(Constants::MINI::numOfNode) + ", " +
-                         std::to_string(Constants::MAXI::numOfNode - 1) + "]");
+                         std::to_string(Constants::MAXI::numOfNode) + "]");
     }
 
     if (state == ActionState::DoneTrue) {

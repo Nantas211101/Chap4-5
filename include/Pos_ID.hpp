@@ -8,7 +8,8 @@ class Pos_ID{
     public:
         Pos_ID();
 
-        bool init(int n);        
+        bool init(int n);  
+        void reset();      
         bool attachID(int id);
         auto detachID(int id) -> int;
 

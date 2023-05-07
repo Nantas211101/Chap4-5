@@ -10,6 +10,11 @@ const sf::Time TimePerUpdateList[numOfSpeedID] = {
     sf::seconds(1.f / 1.f), sf::seconds(1.f / 2.f), sf::seconds(1.f / 4.f)};
 
 template <typename TypeNode>
+void NodeManipulate<TypeNode>::setTypeOfState(States::ID type){
+    stateType = type;
+}
+
+template <typename TypeNode>
 void NodeManipulate<TypeNode>::init(SceneNode& mSceneGraph,
                                     std::vector<std::string> arr,
                                     State::Context context) {
@@ -32,7 +37,7 @@ void NodeManipulate<TypeNode>::reset(SceneNode& mSceneGraph) {
         mSceneGraph.detachChild(*mNode);
     }
     ptrSaver.clear();
-
+    NewIDHolder.reset();
     isNextNullNode = 0;
 }
 
@@ -53,7 +58,7 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
 }
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
+void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt, int padding) {
 
     bool isSetHead = 0;
 
@@ -62,15 +67,15 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt) {
         // int oldID = OldIdHolder.takeID(i);
 
         float posx = start_x + (newID - 1) * add_x;
-        float posy = start_y + add_y * Constants::posPadding_y;
+        float posy = start_y + add_y * (Constants::posPadding_y + padding);
 
         ptrSaver[i]->setPosNode({posx, posy});
 
         posx = start_x + newID * add_x;
-        posy = start_y + add_y * Constants::posPadding_y;
+        posy = start_y + add_y * (Constants::posPadding_y + padding);
         ptrSaver[i]->setEnd({posx, posy});
 
-        if (newID == ptrSaver.size()) {
+        if (newID == ptrSaver.size() || !isDrawArrow()) {
             ptrSaver[i]->setIsDrawArrow(false);
         } else
             ptrSaver[i]->setIsDrawArrow(true);
@@ -118,6 +123,12 @@ template <typename TypeNode>
 auto NodeManipulate<TypeNode>::takeValueOfNode(int id) -> std::string {
     int pos = NewIDHolder.findID(id);
     return ptrSaver[pos]->getValue();
+}
+
+template <typename TypeNode>
+void NodeManipulate<TypeNode>::setValueOfNode(int id, std::string value){
+    int pos = NewIDHolder.findID(id);
+    ptrSaver[pos]->setValue(value);
 }
 
 template <typename TypeNode>
@@ -386,6 +397,11 @@ void NodeManipulate<TypeNode>::nullManipulate(SceneNode& mSceneGraph,
 }
 
 template <typename TypeNode>
+auto NodeManipulate<TypeNode>::takeTimePerUpdate() -> sf::Time{
+    return TimePerUpdate;
+}
+
+template <typename TypeNode>
 void NodeManipulate<TypeNode>::updateValueNode(int pos, std::string value) {
     ptrSaver[pos]->setValue(value);
 }
@@ -419,4 +435,12 @@ void NodeManipulate<TypeNode>::updateCurrentSelected(sf::Time dt,
             }
         }
     }
+}
+
+template <typename TypeNode>
+bool NodeManipulate<TypeNode>::isDrawArrow(){
+    if(stateType == States::DynamicArray || stateType == States::StaticArray)
+        return false;
+    else 
+        return true;
 }

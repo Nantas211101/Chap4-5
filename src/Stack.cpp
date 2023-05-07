@@ -266,11 +266,11 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", pushBackAction);
+                       start_y + cnty * add_y, "Push", pushfrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to Middle", pushMiddleAction);
+                       start_y + cnty * add_y, "to Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", pushfrontAction);
+                       start_y + cnty * add_y, "to First", ErrorAction);
     });
 
     // set Delete button
@@ -289,7 +289,7 @@ Stack::Stack(StateStack& stack, Context context)
         auto ErrorAction = ([this, context]() {
             if (nodeSaver.takeCurrentState() != NodesState::nothing)
                 return;
-            resetButton(NumInitButton + 3);
+            resetButton(NumInitButton + 4);
 
             printedError(context, errorMessage + Name);
         });
@@ -409,11 +409,11 @@ Stack::Stack(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popBackAction);
+                       start_y + cnty * add_y, "Pop", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at Middle", popMiddleAction);
+                       start_y + cnty * add_y, "at Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", popFrontAction);
+                       start_y + cnty * add_y, "at First", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
@@ -426,61 +426,66 @@ Stack::Stack(StateStack& stack, Context context)
     updateButton->setText("Update");
     updateButton->setToggle(true);
     updateButton->setCallback([this, context, cnty]() {
+        // if (nodeSaver.takeCurrentState() != NodesState::nothing)
+        //     return;
+        // resetButton(NumInitButton);
+        // data.clear();
+
+        // auto tmp = ([this]() {
+        //     // nothing here now
+        // });
+
+        // int cntx = 0;
+
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", tmp);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back("");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "At position", textSize);
+
+        // setInputButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "", tmp);
+        // InputPosition.push_back(mGUIContainer.takeSize() - 1);
+        // data.push_back("");
+        // setLabel(context, start_x + (cntx)*add_x + add_x / 2,
+        //          start_y + cnty * add_y - add_y / 2, "With value", textSize);
+
+        // // auto stepByStepActiveAction
+
+        // auto runAtOneActiveAction([this, context]() {
+        //     resetButton(NumInitButton + 6, false);
+        //     if (checkInputError(inputID::Pos, 0) &&
+        //         checkInputError(inputID::Val, 1)) {
+        //         nodeSaver.setIsUpdating();
+        //         nodeSaver.setIsRunAtOnce();
+        //         usingData1 = "";
+        //         usingData2 = "";
+        //     }
+        // });
+
+        // auto stepByStepActiveAction([this, context]() {
+        //     resetButton(NumInitButton + 6, false);
+        //     if (checkInputError(inputID::Pos, 0) &&
+        //         checkInputError(inputID::Val, 1)) {
+        //         nodeSaver.setIsUpdating();
+        //         nodeSaver.setIsStepByStep();
+        //         usingData1 = "";
+        //         usingData2 = "";
+        //     }
+        // });
+
+        // setStateButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "Go (Step by Step)",
+        //                stepByStepActiveAction);
+        // setStateButton(context, start_x + (++cntx) * add_x,
+        //                start_y + cnty * add_y, "Go (Run at once)",
+        //                runAtOneActiveAction);
         if (nodeSaver.takeCurrentState() != NodesState::nothing)
-            return;
-        resetButton(NumInitButton);
-        data.clear();
+                return;
+            resetButton(NumInitButton);
 
-        auto tmp = ([this]() {
-            // nothing here now
-        });
-
-        int cntx = 0;
-
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", tmp);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back("");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "At position", textSize);
-
-        setInputButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "", tmp);
-        InputPosition.push_back(mGUIContainer.takeSize() - 1);
-        data.push_back("");
-        setLabel(context, start_x + (cntx)*add_x + add_x / 2,
-                 start_y + cnty * add_y - add_y / 2, "With value", textSize);
-
-        // auto stepByStepActiveAction
-
-        auto runAtOneActiveAction([this, context]() {
-            resetButton(NumInitButton + 6, false);
-            if (checkInputError(inputID::Pos, 0) &&
-                checkInputError(inputID::Val, 1)) {
-                nodeSaver.setIsUpdating();
-                nodeSaver.setIsRunAtOnce();
-                usingData1 = "";
-                usingData2 = "";
-            }
-        });
-
-        auto stepByStepActiveAction([this, context]() {
-            resetButton(NumInitButton + 6, false);
-            if (checkInputError(inputID::Pos, 0) &&
-                checkInputError(inputID::Val, 1)) {
-                nodeSaver.setIsUpdating();
-                nodeSaver.setIsStepByStep();
-                usingData1 = "";
-                usingData2 = "";
-            }
-        });
-
-        setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Go (Step by Step)",
-                       stepByStepActiveAction);
-        setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Go (Run at once)",
-                       runAtOneActiveAction);
+            printedError(context, errorMessage + Name);
     });
 
     // Set Search Button
@@ -496,6 +501,14 @@ Stack::Stack(StateStack& stack, Context context)
 
         auto action = ([this]() {
 
+        });
+
+        auto ErrorAction = ([this, context]() {
+            if (nodeSaver.takeCurrentState() != NodesState::nothing)
+                return;
+            resetButton(NumInitButton + 2);
+
+            printedError(context, errorMessage + Name);
         });
 
         resetButton(NumInitButton);
@@ -546,7 +559,7 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Accessing", accessAction);
+                       start_y + cnty * add_y, "Accessing", ErrorAction);
 
         // Searching
 
@@ -592,7 +605,7 @@ Stack::Stack(StateStack& stack, Context context)
         });
 
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Searching", searchAction);
+                       start_y + cnty * add_y, "Searching", ErrorAction);
     });
 
     // Set Speed Button

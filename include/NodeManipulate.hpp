@@ -11,6 +11,8 @@
 template <typename TypeNode> class NodeManipulate {
 
   public:
+    void setTypeOfState(States::ID type);
+
     void init(SceneNode& mSceneGraph, std::vector<std::string> arr,
               State::Context context);
 
@@ -19,13 +21,14 @@ template <typename TypeNode> class NodeManipulate {
     void resetSelected();
     void resetState();
 
-    void updatePos(SceneNode& mSceneGraph, sf::Time dt);
+    void updatePos(SceneNode& mSceneGraph, sf::Time dt, int padding = 0);
     bool attachNode(SceneNode& mSceneGraph, int id, std::string value,
                     State::Context context);
     bool detachNode(SceneNode& mSceneGraph, int id);
 
     auto takeNumOfNode() -> int;
     auto takeValueOfNode(int id) -> std::string;
+    void setValueOfNode(int id, std::string value);
 
     ///////// action
 
@@ -77,9 +80,12 @@ template <typename TypeNode> class NodeManipulate {
     void desetNextNullNode(SceneNode& mSceneGraph, State::Context context);
     void nullManipulate(SceneNode& mSceneGraph, State::Context context);
 
+    auto takeTimePerUpdate() -> sf::Time; // only for dynamicarray
+    
   private:
     void updateValueNode(int pos, std::string value);
     void updateCurrentSelected(sf::Time dt, const sf::Event& event);
+    bool isDrawArrow();
 
   private:
     std::vector<TypeNode*> ptrSaver;
@@ -97,6 +103,8 @@ template <typename TypeNode> class NodeManipulate {
     NodesState::ActionType currentActionType = NodesState::RunAtOnce;
 
     bool isNextNullNode = 0;
+
+    States::ID stateType = States::None;
 };
 
 #include "../template/NodeManipulate.inl"

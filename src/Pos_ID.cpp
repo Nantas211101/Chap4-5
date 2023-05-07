@@ -17,6 +17,10 @@ bool Pos_ID::init(int n){
     return true;
 }
 
+void Pos_ID::reset(){
+    init(0);
+}
+
 bool Pos_ID::attachID(int id){
     // Checking whether size_n is max or id is out of reach
     if(size_n == Constants::MAXI::numOfNode || id > size_n + 1 || id < 1) 
