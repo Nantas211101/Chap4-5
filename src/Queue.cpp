@@ -409,7 +409,7 @@ Queue::Queue(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popFrontAction);
+                       start_y + cnty * add_y, "Remove", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "at Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
