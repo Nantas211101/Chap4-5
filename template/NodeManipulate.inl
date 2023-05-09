@@ -10,7 +10,7 @@ const sf::Time TimePerUpdateList[numOfSpeedID] = {
     sf::seconds(1.f / 1.f), sf::seconds(1.f / 2.f), sf::seconds(1.f / 4.f)};
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::setTypeOfState(States::ID type){
+void NodeManipulate<TypeNode>::setTypeOfState(States::ID type) {
     stateType = type;
 }
 
@@ -58,7 +58,8 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::resetState() {
 }
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt, int padding) {
+void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt,
+                                         int padding) {
 
     bool isSetHead = 0;
 
@@ -75,7 +76,12 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt, in
         posy = start_y + add_y * (Constants::posPadding_y + padding);
         ptrSaver[i]->setEnd({posx, posy});
 
-        if (newID == ptrSaver.size() || !isDrawArrow()) {
+        if (stateType == States::CLL) {
+            if (newID == ptrSaver.size())
+                ptrSaver[i]->setLastNode();
+            else
+                ptrSaver[i]->desetLastNode();
+        } else if (newID == ptrSaver.size() || !isDrawArrow()) {
             ptrSaver[i]->setIsDrawArrow(false);
         } else
             ptrSaver[i]->setIsDrawArrow(true);
@@ -126,7 +132,7 @@ auto NodeManipulate<TypeNode>::takeValueOfNode(int id) -> std::string {
 }
 
 template <typename TypeNode>
-void NodeManipulate<TypeNode>::setValueOfNode(int id, std::string value){
+void NodeManipulate<TypeNode>::setValueOfNode(int id, std::string value) {
     int pos = NewIDHolder.findID(id);
     ptrSaver[pos]->setValue(value);
 }
@@ -188,7 +194,7 @@ auto NodeManipulate<TypeNode>::pushingNode(SceneNode& mSceneGraph, sf::Time dt,
     if (currentSelected > id) {
         resetSelected();
         resetState();
-        if(!attachNode(mSceneGraph, id, value, context))
+        if (!attachNode(mSceneGraph, id, value, context))
             return ActionState::DoneFalse;
         return ActionState::DoneTrue; // update success
     }
@@ -372,7 +378,7 @@ template <typename TypeNode> void NodeManipulate<TypeNode>::ChangeSpeed() {
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::setNextNullNode(SceneNode& mSceneGraph,
                                                State::Context context) {
-    if (!isNextNullNode){
+    if (!isNextNullNode) {
         pushBackNode(mSceneGraph, "null", context);
         isNextNullNode = 1;
     }
@@ -380,8 +386,8 @@ void NodeManipulate<TypeNode>::setNextNullNode(SceneNode& mSceneGraph,
 
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::desetNextNullNode(SceneNode& mSceneGraph,
-                                               State::Context context) {
-    if (isNextNullNode){
+                                                 State::Context context) {
+    if (isNextNullNode) {
         popBackNode(mSceneGraph);
         isNextNullNode = 0;
     }
@@ -389,15 +395,15 @@ void NodeManipulate<TypeNode>::desetNextNullNode(SceneNode& mSceneGraph,
 
 template <typename TypeNode>
 void NodeManipulate<TypeNode>::nullManipulate(SceneNode& mSceneGraph,
-                                               State::Context context) {
-    if(takeNumOfNode())
-    setNextNullNode(mSceneGraph, context);
-    if(takeNumOfNode() == 0)
+                                              State::Context context) {
+    if (takeNumOfNode())
+        setNextNullNode(mSceneGraph, context);
+    if (takeNumOfNode() == 0)
         desetNextNullNode(mSceneGraph, context);
 }
 
 template <typename TypeNode>
-auto NodeManipulate<TypeNode>::takeTimePerUpdate() -> sf::Time{
+auto NodeManipulate<TypeNode>::takeTimePerUpdate() -> sf::Time {
     return TimePerUpdate;
 }
 
@@ -437,10 +443,9 @@ void NodeManipulate<TypeNode>::updateCurrentSelected(sf::Time dt,
     }
 }
 
-template <typename TypeNode>
-bool NodeManipulate<TypeNode>::isDrawArrow(){
-    if(stateType == States::DynamicArray || stateType == States::StaticArray)
+template <typename TypeNode> bool NodeManipulate<TypeNode>::isDrawArrow() {
+    if (stateType == States::DynamicArray || stateType == States::StaticArray)
         return false;
-    else 
+    else
         return true;
 }

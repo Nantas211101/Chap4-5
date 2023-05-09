@@ -6,8 +6,6 @@ NodeData::NodeData(std::string n, const FontHolder& fonts, int sizeOfText,
     mShape.setRadius(sizeOfShape);
     mShape.setFillColor(sf::Color::Blue);
     setCenterOrigin(mShape);
-    // mShape.setOutlineColor(sf::Color::Red);
-    // mShape.setOutlineThickness(5.f);
 
     mDisplayText.setFillColor(sf::Color::White);
     setCenterOrigin(mDisplayText);

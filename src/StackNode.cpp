@@ -29,14 +29,12 @@ void StackNode::setValue(std::string value) { mDataNode->setValue(value); }
 
 auto StackNode::getValue() -> std::string { return mDataNode->getValue(); }
 
-void StackNode::setSelected(){
-    mDataNode->setColor(sf::Color(253, 90, 30));
-}
+void StackNode::setSelected() { mDataNode->setColor(sf::Color(253, 90, 30)); }
 
-void StackNode::setDeselected(){
-    mDataNode->setColor(sf::Color::Blue);
-}
+void StackNode::setDeselected() { mDataNode->setColor(sf::Color::Blue); }
 
-void StackNode::setHeadNode(){
-    mDataNode->setColor(sf::Color::Magenta);
-}
+void StackNode::setHeadNode() { mDataNode->setColor(sf::Color::Magenta); }
+
+void StackNode::setLastNode(sf::Vector2f endpos) {}
+
+void StackNode::desetLastNode() {}

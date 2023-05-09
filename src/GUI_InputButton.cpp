@@ -82,10 +82,11 @@ void InputButton::handleEvent(const sf::Event &event){
             tmpText.push_back(event.text.unicode);
     } 
 
-    if(event.type == sf::Event::KeyPressed)
-        if(event.key.code == sf::Keyboard::Return){
-            saveText = tmpText;
-        }   
+    // if(event.type == sf::Event::KeyPressed)
+    //     if(event.key.code == sf::Keyboard::Return){
+    //         saveText = tmpText;
+    //     }   
+    saveText = tmpText;
     mText.setString(tmpText);
     setCenterOrigin(mText);
 }

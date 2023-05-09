@@ -2,6 +2,7 @@
 #include "FileReader.hpp"
 #include "NodesSaverIdentifiers.hpp"
 #include "StringConvert.hpp"
+#include "CircularNode.hpp"
 
 const std::string Name = "DLL";
 
@@ -19,6 +20,7 @@ DLL::DLL(StateStack& stack, Context context)
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
+    nodeSaver.setTypeOfState(States::DLL);
     int cnty = -1;
     // set Init button
     ++cnty;
@@ -616,6 +618,24 @@ DLL::DLL(StateStack& stack, Context context)
     });
 
     nodeSaver.init(mSceneGraph, data, context);
+    
+    
+    // ///////////////////////////////////////////////////////////////////// just test
+    // CircularNode* tmp1 = new CircularNode(*context.fonts, *context.textures);
+    // std::unique_ptr<CircularNode> tmpNode1(tmp1);
+    // mSceneGraph.attachChild(std::move(tmpNode1));
+    // tmp1->setPosNode({start_x, start_y + add_y * 10});
+    // tmp1->setEnd({start_x + add_x, start_y  + add_y * 10});
+
+    // ////
+    // CircularNode* tmp = new CircularNode(*context.fonts, *context.textures);
+    // std::unique_ptr<CircularNode> tmpNode(tmp);
+    // mSceneGraph.attachChild(std::move(tmpNode));
+    // tmp->setPosNode({start_x + add_x * 7, start_y + add_y * 10});
+    // tmp->setEnd({start_x + add_x * 8, start_y  + add_y * 10});
+    // tmp->setLastNode();
+    // /////////////////////////////////////////////////////////////////////
+
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);

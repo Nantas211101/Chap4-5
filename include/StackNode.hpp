@@ -28,6 +28,8 @@ class StackNode : public SceneNode {
     void setSelected();
     void setDeselected();
     void setHeadNode();
+    void setLastNode(sf::Vector2f endpos = {0, 0});
+    void desetLastNode();
 
   private:
     NodeData* mDataNode;

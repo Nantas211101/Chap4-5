@@ -13,7 +13,7 @@
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
-#include "StackNode.hpp"
+#include "CircularNode.hpp"
 #include "State.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -65,7 +65,7 @@ class DLL : public State, public Constants {
     std::vector<int> InputPosition;
     SceneNode mSceneGraph;
     std::vector<std::string> data;
-    NodeManipulate<StackNode> nodeSaver;
+    NodeManipulate<CircularNode> nodeSaver;
     Randomize randomHolder;
     std::string usingData1;
     std::string usingData2;

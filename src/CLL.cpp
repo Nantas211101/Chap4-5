@@ -19,6 +19,7 @@ CLL::CLL(StateStack& stack, Context context)
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
+    nodeSaver.setTypeOfState(States::CLL);
     int cnty = -1;
     // set Init button
     ++cnty;
@@ -638,7 +639,6 @@ void CLL::draw() {
 }
 
 bool CLL::update(sf::Time dt) {
-    nodeSaver.nullManipulate(mSceneGraph, getContext());
     nodeSaver.updatePos(mSceneGraph, dt);
     NodesState::ID curState = nodeSaver.takeCurrentState();
     NodesState::ActionType curActionType = nodeSaver.takeCurrentActionType();

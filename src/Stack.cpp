@@ -270,7 +270,7 @@ Stack::Stack(StateStack& stack, Context context)
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to Middle", ErrorAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", ErrorAction);
+                       start_y + cnty * add_y, "to Last", ErrorAction);
     });
 
     // set Delete button

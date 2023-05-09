@@ -16,6 +16,9 @@ class ArrowData : public SceneNode {
     void update();
     virtual void drawCurrent(sf::RenderTarget& target,
                              sf::RenderStates states) const;
+    
+    void setBackToBegin(sf::Vector2f startPos, sf::Vector2f endPos, float radiusOfNode);
+    void desetBackToBegin();
 
   private:
     sf::Vector2f mStart;
@@ -27,4 +30,13 @@ class ArrowData : public SceneNode {
     bool isStart;
     bool isEnd;
     NodeData* mNextNode;
+
+    // The Back to begin arrow
+    bool isCircleDraw;
+
+    sf::RectangleShape mBody1;
+    sf::RectangleShape mBody2;
+    sf::RectangleShape mBody3;
+    sf::CircleShape mHead1;
+
 };
