@@ -23,7 +23,7 @@ void StackNode::setNextNode(NodeData* mNext) { mArrow->setNextNode(mNext); }
 
 void StackNode::setEnd(sf::Vector2f pos) { mArrow->setEnd({pos.x, pos.y}); }
 
-void StackNode::setIsDrawArrow(bool flag) { mArrow->setDrawFlag(flag); }
+void StackNode::setIsDrawArrow(bool flag, int typee) { mArrow->setDrawFlag(flag); }
 
 void StackNode::setValue(std::string value) { mDataNode->setValue(value); }
 

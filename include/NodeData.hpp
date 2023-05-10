@@ -10,7 +10,7 @@
 class NodeData : public SceneNode {
   public:
     NodeData(std::string n, const FontHolder& fonts, int sizeOfText = 40,
-             int sizeOfShape = 60);
+             int sizeOfShape = 45);
 
     virtual void drawCurrent(sf::RenderTarget& target,
                              const sf::RenderStates states) const;

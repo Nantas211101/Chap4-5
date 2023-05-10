@@ -81,6 +81,13 @@ void NodeManipulate<TypeNode>::updatePos(SceneNode& mSceneGraph, sf::Time dt,
                 ptrSaver[i]->setLastNode();
             else
                 ptrSaver[i]->desetLastNode();
+        } else if (stateType == States::DLL) {
+            if (newID == 1)
+                ptrSaver[i]->setIsDrawArrow(false, 1);
+            else if (newID == ptrSaver.size())
+                ptrSaver[i]->setIsDrawArrow(false);
+            else
+                ptrSaver[i]->setIsDrawArrow(true);
         } else if (newID == ptrSaver.size() || !isDrawArrow()) {
             ptrSaver[i]->setIsDrawArrow(false);
         } else
@@ -380,6 +387,8 @@ void NodeManipulate<TypeNode>::setNextNullNode(SceneNode& mSceneGraph,
                                                State::Context context) {
     if (!isNextNullNode) {
         pushBackNode(mSceneGraph, "null", context);
+        if (stateType == States::DLL)
+            pushFrontNode(mSceneGraph, "null", context);
         isNextNullNode = 1;
     }
 }
@@ -389,6 +398,8 @@ void NodeManipulate<TypeNode>::desetNextNullNode(SceneNode& mSceneGraph,
                                                  State::Context context) {
     if (isNextNullNode) {
         popBackNode(mSceneGraph);
+        if (stateType == States::DLL)
+            popFrontNode(mSceneGraph);
         isNextNullNode = 0;
     }
 }

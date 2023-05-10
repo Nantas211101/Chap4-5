@@ -2,7 +2,7 @@
 #include "FileReader.hpp"
 #include "NodesSaverIdentifiers.hpp"
 #include "StringConvert.hpp"
-#include "CircularNode.hpp"
+#include "DoublyNode.hpp"
 
 const std::string Name = "DLL";
 
@@ -620,21 +620,21 @@ DLL::DLL(StateStack& stack, Context context)
     nodeSaver.init(mSceneGraph, data, context);
     
     
-    // ///////////////////////////////////////////////////////////////////// just test
-    // CircularNode* tmp1 = new CircularNode(*context.fonts, *context.textures);
-    // std::unique_ptr<CircularNode> tmpNode1(tmp1);
+    // // ///////////////////////////////////////////////////////////////////// just test
+    // DoublyNode* tmp1 = new DoublyNode(*context.fonts, *context.textures);
+    // std::unique_ptr<DoublyNode> tmpNode1(tmp1);
     // mSceneGraph.attachChild(std::move(tmpNode1));
     // tmp1->setPosNode({start_x, start_y + add_y * 10});
     // tmp1->setEnd({start_x + add_x, start_y  + add_y * 10});
-
-    // ////
-    // CircularNode* tmp = new CircularNode(*context.fonts, *context.textures);
-    // std::unique_ptr<CircularNode> tmpNode(tmp);
+    // tmp1->setIsDrawArrow(false, 1);
+    // // ////
+    // DoublyNode* tmp = new DoublyNode(*context.fonts, *context.textures);
+    // std::unique_ptr<DoublyNode> tmpNode(tmp);
     // mSceneGraph.attachChild(std::move(tmpNode));
-    // tmp->setPosNode({start_x + add_x * 7, start_y + add_y * 10});
-    // tmp->setEnd({start_x + add_x * 8, start_y  + add_y * 10});
-    // tmp->setLastNode();
-    // /////////////////////////////////////////////////////////////////////
+    // tmp->setPosNode({start_x + add_x, start_y + add_y * 10});
+    // tmp->setEnd({start_x + add_x * 2, start_y  + add_y * 10});
+    // tmp->setIsDrawArrow(false);
+    // // /////////////////////////////////////////////////////////////////////
 
 
     mGUIContainer.pack(initButton);

@@ -7,7 +7,7 @@
 
 class ArrowData : public SceneNode {
   public:
-    ArrowData();
+    ArrowData(bool flag = 0, int padding = 0);
 
     void setStart(sf::Vector2f pos);
     void setEnd(sf::Vector2f pos);
@@ -38,5 +38,11 @@ class ArrowData : public SceneNode {
     sf::RectangleShape mBody2;
     sf::RectangleShape mBody3;
     sf::CircleShape mHead1;
+    // 
+
+    // dll arrow
+    bool revFlag;
+    int y_padding;
+    //
 
 };

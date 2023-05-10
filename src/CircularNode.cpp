@@ -24,7 +24,7 @@ void CircularNode::setNextNode(NodeData* mNext) { mArrow->setNextNode(mNext); }
 
 void CircularNode::setEnd(sf::Vector2f pos) { mArrow->setEnd({pos.x, pos.y}); }
 
-void CircularNode::setIsDrawArrow(bool flag) { mArrow->setDrawFlag(flag); }
+void CircularNode::setIsDrawArrow(bool flag, int type) { mArrow->setDrawFlag(flag); }
 
 void CircularNode::setValue(std::string value) { mDataNode->setValue(value); }
 

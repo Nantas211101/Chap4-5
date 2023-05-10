@@ -9,9 +9,9 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-class StackNode : public SceneNode {
+class DoublyNode : public SceneNode {
   public:
-    explicit StackNode(const FontHolder& fonts, const TextureHolder& texture);
+    explicit DoublyNode(const FontHolder& fonts, const TextureHolder& texture);
     virtual void drawCurrent(sf::RenderTarget& target,
                              sf::RenderStates states) const;
     // NodeData
@@ -23,7 +23,7 @@ class StackNode : public SceneNode {
 
     // Arrow
     void setEnd(sf::Vector2f pos);
-    void setIsDrawArrow(bool flag, int typee = 0);
+    void setIsDrawArrow(bool flag, int type = 0);
 
     void setSelected();
     void setDeselected();
@@ -33,5 +33,6 @@ class StackNode : public SceneNode {
 
   private:
     NodeData* mDataNode;
-    ArrowData* mArrow;
+    ArrowData* mArrowNext;
+    ArrowData* mArrowPrev;
 };

@@ -24,7 +24,7 @@ class CircularNode : public SceneNode {
 
     // Arrow
     void setEnd(sf::Vector2f pos);
-    void setIsDrawArrow(bool flag);
+    void setIsDrawArrow(bool flag, int type = 0);
 
     void setSelected();
     void setDeselected();

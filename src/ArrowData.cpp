@@ -1,8 +1,9 @@
 #include "ArrowData.hpp"
 #include "State.hpp"
 const float Thickness = 20.f;
+const int y_shift = 15.f;
 
-ArrowData::ArrowData()
+ArrowData::ArrowData(bool flag, int padding)
     : mStart(),
       mEnd(),
       mBody(),
@@ -16,7 +17,9 @@ ArrowData::ArrowData()
       mBody1(),
       mBody2(),
       mBody3(),
-      mHead1(Thickness, 3) {
+      mHead1(Thickness, 3),
+      revFlag(0), 
+      y_padding(0) {
 
     mBody.setFillColor(sf::Color::Black);
     mBody1.setFillColor(sf::Color::Black);
@@ -25,17 +28,26 @@ ArrowData::ArrowData()
 
     mHead.setFillColor(sf::Color::Black);
     mHead1.setFillColor(sf::Color::Black);
+
+    revFlag = flag;
+    y_padding = padding;
 }
 
 void ArrowData::setStart(sf::Vector2f pos) {
     isStart = true;
-    mStart = pos;
+    if (revFlag) {
+        mStart = {pos.x + 3.f / 2.f * Thickness, pos.y};
+    } else
+        mStart = pos;
     update();
 }
 
 void ArrowData::setEnd(sf::Vector2f pos) {
     isEnd = true;
-    mEnd = {pos.x - 3.f / 2.f * Thickness, pos.y};
+    if (revFlag) {
+        mEnd = pos;
+    } else
+        mEnd = {pos.x - 3.f / 2.f * Thickness, pos.y};
     update();
 }
 
@@ -53,13 +65,23 @@ void ArrowData::update() {
     if (!isNotDraw)
         return;
 
-    mBody.setSize({mEnd.x - mStart.x, Thickness});
-    setLeftCenterOrigin(mBody);
-    mBody.setPosition(mStart);
+    if (revFlag) {
+        mBody.setSize({mEnd.x - mStart.x, Thickness});
+        setRightCenterOrigin(mBody);
+        mBody.setPosition({mEnd.x, mEnd.y + y_padding * y_shift});
 
-    setCenterOrigin(mHead);
-    mHead.setPosition(mEnd.x + 1.f / 3.f * Thickness, mEnd.y);
-    mHead.setRotation(90);
+        setCenterOrigin(mHead);
+        mHead.setPosition(mStart.x - 1.f / 3.f * Thickness, mEnd.y + y_padding * y_shift);
+        mHead.setRotation(-90);
+    } else {
+        mBody.setSize({mEnd.x - mStart.x, Thickness});
+        setLeftCenterOrigin(mBody);
+        mBody.setPosition({mStart.x, mStart.y  + y_padding * y_shift});
+
+        setCenterOrigin(mHead);
+        mHead.setPosition(mEnd.x + 1.f / 3.f * Thickness, mEnd.y + y_padding * y_shift);
+        mHead.setRotation(90);
+    }
 }
 
 void ArrowData::drawCurrent(sf::RenderTarget& target,
@@ -104,9 +126,9 @@ void ArrowData::setBackToBegin(sf::Vector2f startPos, sf::Vector2f endPos,
 
     ////////////////// mHead1
     setCenterOrigin(mHead1);
-    mHead1.setPosition({mBody3.getPosition().x, mBody3.getPosition().y - mBody3.getSize().y - 1.f / 3.f * Thickness - 5.f});
+    mHead1.setPosition(
+        {mBody3.getPosition().x, mBody3.getPosition().y - mBody3.getSize().y -
+                                     1.f / 3.f * Thickness - 5.f});
 }
 
-void ArrowData::desetBackToBegin(){
-    isCircleDraw = false;
-}
+void ArrowData::desetBackToBegin() { isCircleDraw = false; }
