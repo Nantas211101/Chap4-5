@@ -268,11 +268,11 @@ DLL::DLL(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Push", pushBackAction);
+                       start_y + cnty * add_y, "to First", pushfrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "to Middle", pushMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "to First", pushfrontAction);
+                       start_y + cnty * add_y, "to Last", pushBackAction);
     });
 
     // set Delete button
@@ -411,11 +411,11 @@ DLL::DLL(StateStack& stack, Context context)
 
         int cntx = 0;
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "Pop", popBackAction);
+                       start_y + cnty * add_y, "at First", popFrontAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "at Middle", popMiddleAction);
         setStateButton(context, start_x + (++cntx) * add_x,
-                       start_y + cnty * add_y, "at First", popFrontAction);
+                       start_y + cnty * add_y, "at Last", popBackAction);
         setStateButton(context, start_x + (++cntx) * add_x,
                        start_y + cnty * add_y, "Clear", ClearAction);
     });
