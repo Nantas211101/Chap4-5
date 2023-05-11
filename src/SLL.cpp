@@ -9,8 +9,6 @@ SLL::SLL(StateStack& stack, Context context)
     : State(stack, context),
       mBackgroundSprite(),
       mGUIContainer(),
-      mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
       usingData1(""),
@@ -19,6 +17,7 @@ SLL::SLL(StateStack& stack, Context context)
     sf::Texture& texture = context.textures->get(Textures::WhiteBackground);
     mBackgroundSprite.setTexture(texture);
 
+    nodeSaver.setTypeOfState(States::SLL);
     int cnty = -1;
     // set Init button
     ++cnty;
@@ -634,7 +633,6 @@ void SLL::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
     window.draw(mSceneGraph);
-    mDisplayer.draw(window);
 }
 
 bool SLL::update(sf::Time dt) {
@@ -872,7 +870,7 @@ void SLL::popingNode(sf::Time dt, const sf::Event& event) {
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "You can not delete node in a empty structure");
+        printedError(getContext(), "You can not delete node in a empty structure or at the wrong position");
     }
 
     if (state == ActionState::DoneTrue) {

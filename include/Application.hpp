@@ -10,9 +10,7 @@
 // Include all the state
 #include "TitleState.hpp"
 #include "MenuState.hpp"
-#include "GameState.hpp"
 #include "PauseState.hpp"
-#include "SettingsState.hpp"
 #include "Stack.hpp"
 #include "Queue.hpp"
 #include "StaticArray.hpp"
@@ -52,7 +50,6 @@ class Application{
 		sf::RenderWindow		mWindow;
 		TextureHolder			mTextures;
 	  	FontHolder				mFonts;
-		Player					mPlayer;
 
 		StateStack				mStateStack;
 

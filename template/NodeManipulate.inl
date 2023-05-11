@@ -190,6 +190,11 @@ auto NodeManipulate<TypeNode>::pushingNode(SceneNode& mSceneGraph, sf::Time dt,
     -> ActionState::ID {
     updateCurrentSelected(dt, event);
 
+    int tmpid = id;
+    if (stateType == States::CLL && id == 1) {
+        id = takeNumOfNode() + 1;
+    }
+
     /////// a little special to make the updating smoother
 
     if (currentSelected < id && currentSelected <= takeNumOfNode()) {
@@ -201,6 +206,8 @@ auto NodeManipulate<TypeNode>::pushingNode(SceneNode& mSceneGraph, sf::Time dt,
     if (currentSelected > id) {
         resetSelected();
         resetState();
+        if (tmpid != id)
+            id = tmpid;
         if (!attachNode(mSceneGraph, id, value, context))
             return ActionState::DoneFalse;
         return ActionState::DoneTrue; // update success
@@ -223,6 +230,13 @@ auto NodeManipulate<TypeNode>::popingNode(SceneNode& mSceneGraph, sf::Time dt,
     -> ActionState::ID {
     updateCurrentSelected(dt, event);
 
+    // for
+    int tmpid = id;
+    if (stateType == States::CLL && id == 1) {
+        id = takeNumOfNode();
+    }
+    // CLL
+
     /////// a little special to make the updating smoother
 
     if (currentSelected <= id && currentSelected <= takeNumOfNode()) {
@@ -232,6 +246,8 @@ auto NodeManipulate<TypeNode>::popingNode(SceneNode& mSceneGraph, sf::Time dt,
     }
 
     if (currentSelected > id) {
+        if (id != tmpid) // For
+            id = 1;      // CLL
         detachNode(mSceneGraph, id);
         resetSelected();
         resetState();
@@ -397,9 +413,7 @@ template <typename TypeNode>
 void NodeManipulate<TypeNode>::desetNextNullNode(SceneNode& mSceneGraph,
                                                  State::Context context) {
     if (isNextNullNode) {
-        popBackNode(mSceneGraph);
-        if (stateType == States::DLL)
-            popFrontNode(mSceneGraph);
+        reset(mSceneGraph);
         isNextNullNode = 0;
     }
 }
@@ -409,7 +423,8 @@ void NodeManipulate<TypeNode>::nullManipulate(SceneNode& mSceneGraph,
                                               State::Context context) {
     if (takeNumOfNode())
         setNextNullNode(mSceneGraph, context);
-    if (takeNumOfNode() == 0)
+    else if ((takeNumOfNode() == 0 && stateType == States::SLL) ||
+             (takeNumOfNode() == 1 && stateType == States::DLL))
         desetNextNullNode(mSceneGraph, context);
 }
 
@@ -429,6 +444,8 @@ void NodeManipulate<TypeNode>::updateCurrentSelected(sf::Time dt,
     if (currentSelected == 0) {
         timeSinceLastUpdate = sf::Time::Zero;
         ++currentSelected;
+        if (stateType == States::DLL)
+            ++currentSelected;
     } else {
         bool acceptForChange = 0;
         timeSinceLastUpdate += dt;

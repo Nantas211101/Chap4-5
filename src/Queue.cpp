@@ -9,8 +9,6 @@ Queue::Queue(StateStack& stack, Context context)
     : State(stack, context),
       mBackgroundSprite(),
       mGUIContainer(),
-      mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
       usingData1(""),
@@ -647,7 +645,6 @@ void Queue::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
     window.draw(mSceneGraph);
-    mDisplayer.draw(window);
 }
 
 bool Queue::update(sf::Time dt) {
@@ -886,7 +883,7 @@ void Queue::popingNode(sf::Time dt, const sf::Event& event) {
 
     if (state == ActionState::DoneFalse) {
         printedError(getContext(),
-                     "You can not delete node in a empty structure");
+                     "You can not delete node in a empty structure or at the wrong position");
     }
 
     if (state == ActionState::DoneTrue) {

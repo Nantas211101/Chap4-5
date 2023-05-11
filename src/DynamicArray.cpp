@@ -9,8 +9,6 @@ DynamicArray::DynamicArray(StateStack& stack, Context context)
     : State(stack, context),
       mBackgroundSprite(),
       mGUIContainer(),
-      mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
       usingData1(""),
@@ -637,7 +635,6 @@ void DynamicArray::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
     window.draw(mSceneGraph);
-    mDisplayer.draw(window);
 }
 
 bool DynamicArray::update(sf::Time dt) {
@@ -916,7 +913,7 @@ void DynamicArray::popingNode(sf::Time dt, const sf::Event& event) {
     if (isChangetmpData) {
         if (nodeSaver.takeNumOfNode() == 0) {
             printedError(getContext(),
-                         "You can not delete node in a empty structure");
+                         "You can not delete node in a empty structure or at the wrong position");
             return;
         }
 

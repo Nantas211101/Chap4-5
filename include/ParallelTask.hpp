@@ -1,22 +1,22 @@
-#pragma once
-#include <SFML/Graphics.hpp>
+// #pragma once
+// #include <SFML/Graphics.hpp>
 
-const float waitTime = 5.f;
+// const float waitTime = 5.f;
 
-class ParallelTask{
-    public:
-        ParallelTask();
+// class ParallelTask{
+//     public:
+//         ParallelTask();
 
-        void execute();
-        auto isFinished() -> bool;
-        auto getPercentComplete() -> float;
+//         void execute();
+//         auto isFinished() -> bool;
+//         auto getPercentComplete() -> float;
 
-    private:
-        void runTask();
+//     private:
+//         void runTask();
 
-    private:
-        sf::Thread mThread;
-        bool mFinished;
-        sf::Clock mElapsedTime;
-        sf::Mutex mMutex;
-};
+//     private:
+//         sf::Thread mThread;
+//         bool mFinished;
+//         sf::Clock mElapsedTime;
+//         sf::Mutex mMutex;
+// };

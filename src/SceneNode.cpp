@@ -73,16 +73,16 @@ auto SceneNode::getWorldPosition() -> sf::Vector2f const
     return getWorldTransform() * sf::Vector2f();
 }
 
-auto SceneNode::getCategory() -> unsigned int const
-{
-    return Category::Scene;
-}
+// auto SceneNode::getCategory() -> unsigned int const
+// {
+//     return Category::Scene;
+// }
 
-void SceneNode::onCommand(const Command &command, sf::Time dt)
-{
-    if (command.category & getCategory())
-        command.action(*this, dt);
+// void SceneNode::onCommand(const Command &command, sf::Time dt)
+// {
+//     if (command.category & getCategory())
+//         command.action(*this, dt);
 
-    for (Ptr &child : mChildren)
-        child->onCommand(command, dt);
-}
+//     for (Ptr &child : mChildren)
+//         child->onCommand(command, dt);
+// }

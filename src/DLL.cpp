@@ -1,8 +1,8 @@
 #include "DLL.hpp"
+#include "DoublyNode.hpp"
 #include "FileReader.hpp"
 #include "NodesSaverIdentifiers.hpp"
 #include "StringConvert.hpp"
-#include "DoublyNode.hpp"
 
 const std::string Name = "DLL";
 
@@ -10,8 +10,6 @@ DLL::DLL(StateStack& stack, Context context)
     : State(stack, context),
       mBackgroundSprite(),
       mGUIContainer(),
-      mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
       usingData1(""),
@@ -74,7 +72,7 @@ DLL::DLL(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
-            if(data.size() > Constants::MAXI::numOfNode - 1)
+            if (data.size() > Constants::MAXI::numOfNode - 1)
                 data.pop_back();
             nodeSaver.init(mSceneGraph, data, context);
         });
@@ -618,24 +616,6 @@ DLL::DLL(StateStack& stack, Context context)
     });
 
     nodeSaver.init(mSceneGraph, data, context);
-    
-    
-    // // ///////////////////////////////////////////////////////////////////// just test
-    // DoublyNode* tmp1 = new DoublyNode(*context.fonts, *context.textures);
-    // std::unique_ptr<DoublyNode> tmpNode1(tmp1);
-    // mSceneGraph.attachChild(std::move(tmpNode1));
-    // tmp1->setPosNode({start_x, start_y + add_y * 10});
-    // tmp1->setEnd({start_x + add_x, start_y  + add_y * 10});
-    // tmp1->setIsDrawArrow(false, 1);
-    // // ////
-    // DoublyNode* tmp = new DoublyNode(*context.fonts, *context.textures);
-    // std::unique_ptr<DoublyNode> tmpNode(tmp);
-    // mSceneGraph.attachChild(std::move(tmpNode));
-    // tmp->setPosNode({start_x + add_x, start_y + add_y * 10});
-    // tmp->setEnd({start_x + add_x * 2, start_y  + add_y * 10});
-    // tmp->setIsDrawArrow(false);
-    // // /////////////////////////////////////////////////////////////////////
-
 
     mGUIContainer.pack(initButton);
     mGUIContainer.pack(insertButton);
@@ -654,7 +634,6 @@ void DLL::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
     window.draw(mSceneGraph);
-    mDisplayer.draw(window);
 }
 
 bool DLL::update(sf::Time dt) {
@@ -740,8 +719,8 @@ bool DLL::handleRealTimeInput() {
 }
 
 void DLL::setStateButton(Context context, int posx, int posy,
-                           const std::string& text,
-                           std::function<void()> action) {
+                         const std::string& text,
+                         std::function<void()> action) {
     auto stateButton =
         std::make_shared<GUI::Button>(*context.fonts, *context.textures);
     stateButton->setPosition(posx, posy);
@@ -752,8 +731,8 @@ void DLL::setStateButton(Context context, int posx, int posy,
     mGUIContainer.pack(stateButton);
 }
 
-void DLL::setLabel(Context context, int posx, int posy,
-                     const std::string& text, int sizeoftext) {
+void DLL::setLabel(Context context, int posx, int posy, const std::string& text,
+                   int sizeoftext) {
     auto Label = std::make_shared<GUI::Label>("", *context.fonts, sizeoftext);
     Label->setPosition(posx, posy);
     Label->setText(text);
@@ -761,8 +740,8 @@ void DLL::setLabel(Context context, int posx, int posy,
 }
 
 void DLL::setInputButton(Context context, int posx, int posy,
-                           const std::string& text,
-                           std::function<void()> action) {
+                         const std::string& text,
+                         std::function<void()> action) {
     auto stateButton =
         std::make_shared<GUI::InputButton>(*context.fonts, *context.textures);
     stateButton->setPosition(posx, posy);
@@ -781,8 +760,7 @@ void DLL::resetButton(int size, bool isResetInputButton) {
         InputPosition.clear();
 }
 
-void DLL::printedError(Context context, const std::string& text,
-                         int padding) {
+void DLL::printedError(Context context, const std::string& text, int padding) {
     sf::Vector2f pos = context.window->getView().getCenter();
     setLabel(context, pos.x, pos.y + (padding)*add_y, text, textSize * 2);
 }
@@ -869,6 +847,8 @@ void DLL::pushingNode(sf::Time dt, const sf::Event& event) {
     }
     int id = toNum(usingData1);
     std::string value = (usingData2);
+    if (nodeSaver.takeNumOfNode())
+        id += 1;
     ActionState::ID state =
         nodeSaver.pushingNode(mSceneGraph, dt, value, id, getContext(), event);
 
@@ -888,11 +868,13 @@ void DLL::popingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "")
         usingData1 = data[0];
     int id = toNum(usingData1);
-
+    if (nodeSaver.takeNumOfNode())
+        id += 1;
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "You can not delete node in a empty structure");
+        printedError(getContext(),
+                     "You can not delete node in a empty structure or at the wrong position");
     }
 
     if (state == ActionState::DoneTrue) {
@@ -921,7 +903,8 @@ void DLL::accessingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "")
         usingData1 = data[0];
     int id = toNum(usingData1);
-
+    if (nodeSaver.takeNumOfNode())
+        id += 1;
     ActionState::ID state = nodeSaver.accessingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
@@ -941,7 +924,8 @@ void DLL::updatingNode(sf::Time dt, const sf::Event& event) {
     }
     int id = toNum(usingData1);
     std::string value = usingData2;
-
+    if (nodeSaver.takeNumOfNode())
+        id += 1;
     ActionState::ID state =
         nodeSaver.updatingNode(mSceneGraph, dt, id, value, event);
 

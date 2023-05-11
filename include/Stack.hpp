@@ -1,7 +1,6 @@
 #pragma once
 #include "ArrowData.hpp"
 #include "Constants.hpp"
-#include "DisplayCode.hpp"
 #include "GUI_Button.hpp"
 #include "GUI_Container.hpp"
 #include "GUI_FileSelector.hpp"
@@ -61,7 +60,6 @@ class Stack : public State, public Constants {
     sf::Sprite mBackgroundSprite;
     GUI::Container mGUIContainer;
     GUI::FileSelector FileHolder;
-    DisplayCode mDisplayer;
     std::vector<int> InputPosition;
     SceneNode mSceneGraph;
     std::vector<std::string> data;

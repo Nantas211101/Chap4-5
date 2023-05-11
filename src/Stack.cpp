@@ -9,8 +9,6 @@ Stack::Stack(StateStack& stack, Context context)
     : State(stack, context),
       mBackgroundSprite(),
       mGUIContainer(),
-      mDisplayer(*context.window, 5, textSize, add_x * 2, add_y,
-                 context.fonts->get(Fonts::Main)),
       mSceneGraph(),
       randomHolder(),
       usingData1(""),
@@ -647,7 +645,6 @@ void Stack::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mGUIContainer);
     window.draw(mSceneGraph);
-    mDisplayer.draw(window);
 }
 
 bool Stack::update(sf::Time dt) {
@@ -885,7 +882,7 @@ void Stack::popingNode(sf::Time dt, const sf::Event& event) {
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(), "You can not delete node in a empty structure");
+        printedError(getContext(), "You can not delete node in a empty structure or at the wrong position");
     }
 
     if (state == ActionState::DoneTrue) {

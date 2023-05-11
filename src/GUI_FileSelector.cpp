@@ -30,24 +30,4 @@ std::optional<std::string> FileSelector::select() {
     }
 }
 
-// bool FileSelector::checkText() {
-//     for (char c : textSave) {
-//         bool ok = false;
-//         for (int i = 0; i < Constants::numOfAcceptedChar; ++i)
-//             if (c == Constants::acceptedChar[i]) {
-//                 ok = true;
-//             }
-//         if (!ok)
-//             return false;
-//     }
-// }
-
-// FileSelector::takeInformation(int& n, std::vector<int>& arraySave) {
-//     std::string num = "";
-//     for (char c : textSave) {
-//         if (c != ' ')
-//             ;
-//     }
-// }
-
 } // namespace GUI

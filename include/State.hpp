@@ -12,17 +12,15 @@ const int textSize = 20;
 const int NumInitButton = 7;
 const std::string errorMessage = "You can not do this action in ";
 class StateStack;  
-class Player;
 class State{
     public:
         typedef std::unique_ptr<State> S_Ptr;
         struct Context{
-            Context(sf::RenderWindow &window, TextureHolder &textures, FontHolder &fonts, Player &player);
+            Context(sf::RenderWindow &window, TextureHolder &textures, FontHolder &fonts);
             
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
-            Player* player;
         };
     
     public:

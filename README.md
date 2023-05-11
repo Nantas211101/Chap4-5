@@ -1,4 +1,4 @@
-how to build
+How to build
 
 The first time ^^
 ```pwsh

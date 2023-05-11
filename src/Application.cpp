@@ -5,17 +5,17 @@
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application():
-    mWindow(sf::VideoMode(2560, 1440), "Game States (Beta Version) World", sf::Style::Close),
+    mWindow(sf::VideoMode(2560, 1440), "Game States (Beta Version) World", sf::Style::Fullscreen),
     mTextures(),
     mFonts(),
-    mPlayer(),
-    mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)),
+    mStateStack(State::Context(mWindow, mTextures, mFonts)),
     mStayText(),
     mStayUpdateTime(),
     mStayNumFrames(0){
         // Not let the key repeat
         mWindow.setKeyRepeatEnabled(false);
-        
+        // mWindow.create()
+
         // Loading resource
         mFonts.load(Fonts::Main, Path_Font);
         mTextures.load(Textures::TitleScreen, Path_TitleScreen);
@@ -38,8 +38,6 @@ Application::Application():
 void Application::registerStates(){
     mStateStack.registerState<TitleState>(States::Title);
     mStateStack.registerState<MenuState>(States::Menu);
-    mStateStack.registerState<SettingsState>(States::Settings);
-    mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);   
     mStateStack.registerState<Stack>(States::Stack);
     mStateStack.registerState<Queue>(States::Queue);

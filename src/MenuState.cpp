@@ -7,15 +7,15 @@ MenuState::MenuState(StateStack &stack, Context context):
         mBackgroundSprite.setTexture(texture);
         
         // set Button play
-        auto playButton = std::make_shared<GUI::Button>(
-            *context.fonts, *context.textures);
-        playButton->setPosition(OFFSET_X, OFFSET_Y);
-        playButton->setText("Play");
-        playButton->setToggle(true);
-        playButton->setCallback([this] (){
-            requestStackPop();
-            requestStackPush(States::Game);
-        });
+        // auto playButton = std::make_shared<GUI::Button>(
+        //     *context.fonts, *context.textures);
+        // playButton->setPosition(OFFSET_X, OFFSET_Y);
+        // playButton->setText("Play");
+        // playButton->setToggle(true);
+        // playButton->setCallback([this] (){
+        //     requestStackPop();
+        //     requestStackPush(States::Game);
+        // });
 
         // set Button Stack
         // auto stackButton = std::make_shared<GUI::Button>(
@@ -56,7 +56,7 @@ MenuState::MenuState(StateStack &stack, Context context):
             requestStackPop();
         });
 
-        mGUIContainer.pack(playButton);
+        // mGUIContainer.pack(playButton);
         // mGUIContainer.pack(settingsButton);
         mGUIContainer.pack(exitButton);  
         // mGUIContainer.pack(stackButton);
