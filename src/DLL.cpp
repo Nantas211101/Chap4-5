@@ -120,7 +120,10 @@ DLL::DLL(StateStack& stack, Context context)
             auto stepByStepActiveAction = ([this, context] {
                 resetButton(NumInitButton + 7, false);
                 data.push_back("");
-                data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                if (nodeSaver.takeNumOfNode() == 0)
+                    data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                else
+                    data[1] = std::to_string(nodeSaver.takeNumOfNode());
                 if (checkInputError(inputID::Val, 0) &&
                     checkInputError(inputID::Pos, 1)) {
                     nodeSaver.setIsPushing();
@@ -133,7 +136,10 @@ DLL::DLL(StateStack& stack, Context context)
             auto runAtOneActiveAction = ([this, context] {
                 resetButton(NumInitButton + 7, false);
                 data.push_back("");
-                data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                if (nodeSaver.takeNumOfNode() == 0)
+                    data[1] = std::to_string(nodeSaver.takeNumOfNode() + 1);
+                else
+                    data[1] = std::to_string(nodeSaver.takeNumOfNode());
                 if (checkInputError(inputID::Val, 0) &&
                     checkInputError(inputID::Pos, 1)) {
                     nodeSaver.setIsPushing();
@@ -301,7 +307,7 @@ DLL::DLL(StateStack& stack, Context context)
             auto stepByStepActiveAction = ([this, context] {
                 resetButton(NumInitButton + 6);
                 data.clear();
-                data.push_back(std::to_string(nodeSaver.takeNumOfNode()));
+                data.push_back(std::to_string(nodeSaver.takeNumOfNode() - 1));
                 if (checkInputError(inputID::Pos, 0)) {
                     nodeSaver.setIsPoping();
                     nodeSaver.setIsStepByStep();
@@ -312,7 +318,7 @@ DLL::DLL(StateStack& stack, Context context)
             auto runAtOneActiveAction = ([this, context] {
                 resetButton(NumInitButton + 6);
                 data.clear();
-                data.push_back(std::to_string(nodeSaver.takeNumOfNode()));
+                data.push_back(std::to_string(nodeSaver.takeNumOfNode() - 1));
                 if (checkInputError(inputID::Pos, 0)) {
                     nodeSaver.setIsPoping();
                     nodeSaver.setIsRunAtOnce();
@@ -868,13 +874,19 @@ void DLL::popingNode(sf::Time dt, const sf::Event& event) {
     if (usingData1 == "")
         usingData1 = data[0];
     int id = toNum(usingData1);
+    if(nodeSaver.takeNumOfNode() <= 1){
+        printedError(getContext(), "You can not delete node in a empty "
+                                   "structure or at the wrong position");
+        nodeSaver.resetState();
+        return;
+    }
     if (nodeSaver.takeNumOfNode())
         id += 1;
     ActionState::ID state = nodeSaver.popingNode(mSceneGraph, dt, id, event);
 
     if (state == ActionState::DoneFalse) {
-        printedError(getContext(),
-                     "You can not delete node in a empty structure or at the wrong position");
+        printedError(getContext(), "You can not delete node in a empty "
+                                   "structure or at the wrong position");
     }
 
     if (state == ActionState::DoneTrue) {

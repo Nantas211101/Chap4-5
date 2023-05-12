@@ -423,8 +423,8 @@ void NodeManipulate<TypeNode>::nullManipulate(SceneNode& mSceneGraph,
                                               State::Context context) {
     if (takeNumOfNode())
         setNextNullNode(mSceneGraph, context);
-    else if ((takeNumOfNode() == 0 && stateType == States::SLL) ||
-             (takeNumOfNode() == 1 && stateType == States::DLL))
+    if ((takeNumOfNode() == 0 && stateType == States::SLL) ||
+        (takeNumOfNode() == 1 && stateType == States::DLL))
         desetNextNullNode(mSceneGraph, context);
 }
 
