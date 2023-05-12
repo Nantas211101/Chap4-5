@@ -56,7 +56,7 @@ DLL::DLL(StateStack& stack, Context context)
                 try {
                     data.clear();
                     nodeSaver.reset(mSceneGraph);
-                    this->data = readIntegerFile(1, file_name.value());
+                    this->data = readIntegerFile(2, file_name.value());
                     nodeSaver.init(mSceneGraph, data, context);
                 } catch (std::exception& e) {
                     // in lo
@@ -72,7 +72,7 @@ DLL::DLL(StateStack& stack, Context context)
             resetButton(NumInitButton + 3);
             nodeSaver.reset(mSceneGraph);
             data = randomHolder.randListData();
-            if (data.size() > Constants::MAXI::numOfNode - 1)
+            while (data.size() > Constants::MAXI::numOfNode - 2)
                 data.pop_back();
             nodeSaver.init(mSceneGraph, data, context);
         });
