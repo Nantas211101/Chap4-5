@@ -16,6 +16,8 @@ class TitleState : public State{
     private:
         sf::Sprite mBackgroundSprite;
         sf::Text mText;
+        sf::Text mDirectorText;
+        sf::Text mProjectText;
         bool isShowText;
         bool isFocus;
         sf::Time mTextTimeEffected;

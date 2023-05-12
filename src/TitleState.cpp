@@ -4,15 +4,37 @@ TitleState::TitleState(StateStack &stack, Context context):
     State(stack, context),
     mBackgroundSprite(),
     mText(),
+    mDirectorText(),
+    mProjectText(),
     isShowText(true),
     isFocus(true),
     mTextTimeEffected(sf::Time::Zero){
         // context.textures is a pointer so->
     mBackgroundSprite.setTexture(context.textures->get(Textures::TitleScreen));
+
+    sf::Vector2f pos = context.window->getView().getSize();
+
+    //
     mText.setFont(context.fonts->get(Fonts::Main));
     mText.setString("Press any key to begin");
     setCenterOrigin(mText);
-    mText.setPosition(context.window->getView().getSize() / 2.f);
+    mText.setPosition(pos / 2.f);
+    //
+
+    //
+    mDirectorText.setFont(context.fonts->get(Fonts::Main));
+    mDirectorText.setString("by Vo Truong Thinh - 22125100 - 22TT2");
+    setCenterOrigin(mDirectorText);
+    mDirectorText.setPosition({pos.x / 2.f, pos.y / 2.f - 6 * add_y});
+    //
+
+    //
+    mProjectText.setFont(context.fonts->get(Fonts::Main));
+    mProjectText.setString("Star Rail VISUALGO");
+    setCenterOrigin(mProjectText);
+    mProjectText.setScale({2.5, 2.5});
+    mProjectText.setPosition({pos.x / 2.f, pos.y / 2.f - 8 * add_y});
+    //
 }
 
 bool TitleState::handleEvent(const sf::Event &event){
@@ -59,6 +81,8 @@ void TitleState::draw(){
     sf::RenderWindow &mWindow = *getContext().window;
     mWindow.draw(mBackgroundSprite);
     
+    mWindow.draw(mProjectText);
+    mWindow.draw(mDirectorText);
     // Make the text blink blink
     if(isShowText)
         mWindow.draw(mText);
