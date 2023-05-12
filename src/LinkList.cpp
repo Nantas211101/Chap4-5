@@ -43,7 +43,7 @@ bool LinkList::push(std::string x, int k){
         tmp->data = x;
         tmp->pNext = pHead;
         pHead = tmp;
-        return;   
+        return true;   
     }
     Node* cur = pHead;
     for(int i = 1; i < k - 1; ++i)
@@ -53,7 +53,7 @@ bool LinkList::push(std::string x, int k){
     tmp->data = x;
     tmp->pNext = cur->pNext;
     cur->pNext = tmp;
-    return;
+    return true;
 }
 
 bool LinkList::pop(int k){
@@ -64,7 +64,7 @@ bool LinkList::pop(int k){
         Node* tmp = pHead;
         pHead = pHead->pNext;
         delete tmp;
-        return;
+        return true;
     }
     Node* cur = pHead;
     for(int i = 1; i < k - 1; ++i)
@@ -73,4 +73,5 @@ bool LinkList::pop(int k){
     Node* tmp = cur->pNext;
     cur->pNext = cur->pNext->pNext;
     delete tmp;
+    return true;
 }
