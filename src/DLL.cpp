@@ -780,11 +780,11 @@ bool DLL::checkInputError(inputID::ID kind, int p) {
         }
 
         if (!isContain(data[p], Constants::MINI::numOfNode,
-                       Constants::MAXI::numOfNode)) {
+                       Constants::MAXI::numOfNode - 2)) {
             printedError(getContext(),
                          "The position (number) should in [" +
                              std::to_string(Constants::MINI::numOfNode) + ", " +
-                             std::to_string(Constants::MAXI::numOfNode - 1) +
+                             std::to_string(Constants::MAXI::numOfNode - 2) +
                              "]"); // -1 for 1 null node
             return false;
         }
@@ -862,7 +862,7 @@ void DLL::pushingNode(sf::Time dt, const sf::Event& event) {
         printedError(getContext(),
                      "Out of the limit of node[" +
                          std::to_string(Constants::MINI::numOfNode) + ", " +
-                         std::to_string(Constants::MAXI::numOfNode - 1) + "]");
+                         std::to_string(Constants::MAXI::numOfNode - 2) + "]");
     }
 
     if (state == ActionState::DoneTrue) {
