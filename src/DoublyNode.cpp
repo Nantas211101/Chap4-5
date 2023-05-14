@@ -38,10 +38,8 @@ void DoublyNode::setEnd(sf::Vector2f pos) {
 }
 
 void DoublyNode::setIsDrawArrow(bool flag, int type) { 
-    if(type == 0)
-        mArrowNext->setDrawFlag(flag); 
-    else 
-        mArrowPrev->setDrawFlag(flag);
+    mArrowNext->setDrawFlag(flag); 
+    mArrowPrev->setDrawFlag(flag);
 }
 
 void DoublyNode::setValue(std::string value) { mDataNode->setValue(value); }
